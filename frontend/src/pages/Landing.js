@@ -5,7 +5,6 @@ import "../styles.css";
 export default function Landing() {
   const navigate = useNavigate();
 
-  // Teacher avatars (5, small, horizontal)
   const teachers = [
     { name: "Emma", avatar: "/emma.png" },
     { name: "Liam", avatar: "/liam.png" },
@@ -15,18 +14,18 @@ export default function Landing() {
   ];
 
   return (
-    <div>
-      <header className="header">
+    <div className="App">
+      <header className="App-header">
         <img
           src="/logo.png"
           alt="Language Learning Arcade Logo"
-          className="header-logo"
+          className="App-logo"
           onError={(e) => (e.target.src = "https://via.placeholder.com/200x60?text=Logo")}
         />
         <nav>
-          <a href="/about" aria-label="Go to about page">About</a>
-          <a href="/login" aria-label="Sign up for Language Learning Arcade">Sign Up</a>
-          <a href="/app" aria-label="Start learning English">Start Learning</a>
+          <a href="/about" aria-label="Go to about page" className="App-link">About</a>
+          <a href="/login" aria-label="Sign up for Language Learning Arcade" className="App-link">Sign Up</a>
+          <a href="/app" aria-label="Start learning English" className="App-link">Start Learning</a>
         </nav>
       </header>
       <div className="landing-container">
@@ -34,7 +33,7 @@ export default function Landing() {
         <p className="landing-subtitle">Master English through interactive games, personalized lessons, and AI-driven feedback.</p>
         <div className="hero-section">
           <img
-            src="/hero.png" // Updated to hero.png
+            src="/hero.png"
             alt="Language Learning Hero"
             className="hero-image"
             onError={(e) => (e.target.src = "https://via.placeholder.com/800x400?text=Hero+Image")}

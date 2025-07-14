@@ -60,7 +60,7 @@ body {
   position: relative;
   text-align: center;
   box-sizing: border-box;
-  overflow-x: hidden; /* Prevent horizontal scroll */
+  overflow-x: hidden;
 }
 
 .container::before {
@@ -93,14 +93,46 @@ body {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
   text-align: left;
   box-sizing: border-box;
-  overflow-x: hidden; /* Strictly prevent horizontal scroll */
-  word-break: break-word; /* Break long words to prevent overflow */
+  overflow-x: hidden;
+  word-break: break-word;
 }
 
-.lesson-plan-container h1,
-.lesson-plan-container h2,
-.lesson-plan-container h3,
-.lesson-plan-container p,
+.lesson-plan-container h1 {
+  color: #333;
+  text-align: center;
+  max-width: 100%;
+  word-break: break-word;
+  font-size: 3em; /* Increased for larger lesson headings */
+  font-weight: 900;
+}
+
+.lesson-plan-container h2 {
+  color: #333;
+  text-align: center;
+  max-width: 100%;
+  word-break: break-word;
+  font-size: 2.2em; /* Increased for larger lesson subheadings */
+  font-weight: 700;
+}
+
+.lesson-plan-container h3 {
+  color: #333;
+  text-align: center;
+  max-width: 100%;
+  word-break: break-word;
+  font-size: 1.8em; /* Increased for larger lesson subheadings */
+  font-weight: 700;
+}
+
+.lesson-plan-container p {
+  color: #333;
+  text-align: left; /* Left-align paragraphs for readability */
+  max-width: 100%;
+  word-break: break-word;
+  font-size: 1.4em; /* Increased for larger lesson text */
+  font-weight: 600;
+}
+
 .worksheet-container h1,
 .worksheet-container h2,
 .worksheet-container h3,
@@ -112,7 +144,7 @@ body {
   color: #333;
   text-align: center;
   max-width: 100%;
-  word-break: break-word; /* Prevent long text from overflowing */
+  word-break: break-word;
 }
 
 .lesson-plan-container img,
@@ -136,18 +168,18 @@ body {
 .notepad-textarea,
 .worksheet-textarea {
   width: 100%;
-  max-width: 100%; /* Ensure textarea doesn't exceed container */
+  max-width: 100%;
   border: 1px solid #A89FD6;
   border-radius: 8px;
-  padding: 8px; /* Reduced padding for smaller size */
-  font-size: 1em; /* Smaller font size */
-  max-height: 150px; /* Limit height to make notepad smaller */
+  padding: 6px; /* Further reduced padding */
+  font-size: 0.9em; /* Smaller font size for compact notepad */
+  max-height: 120px; /* Reduced height for smaller notepad */
   color: #333;
   background: #F8F8F8;
   font-family: 'Comic Neue', sans-serif;
   box-sizing: border-box;
   resize: vertical;
-  overflow-x: hidden; /* Prevent horizontal scroll */
+  overflow-x: hidden;
 }
 
 /* Landing Page */
@@ -368,17 +400,18 @@ body {
   color: #333;
   text-align: left;
   max-width: 100%;
-  word-break: break-word; /* Prevent long text from overflowing */
+  word-break: break-word;
 }
 
 .markdown-content h2 {
   color: #7A6BC4;
   font-weight: 900;
   margin: 20px 0 10px;
+  font-size: 2.2em; /* Increased for lesson content */
 }
 
 .markdown-content p {
-  font-size: 1.1em;
+  font-size: 1.4em; /* Increased for lesson content */
   margin: 10px 0;
 }
 
@@ -412,7 +445,7 @@ body {
   text-align: left;
   word-break: break-word;
   overflow: hidden;
-  text-overflow: ellipsis; /* Truncate overly long content */
+  text-overflow: ellipsis;
 }
 
 /* About Page */

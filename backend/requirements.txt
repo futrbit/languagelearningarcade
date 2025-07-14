@@ -13,3 +13,4 @@ markdown==3.7
 gunicorn
 flask-cors>=3.0.10
 flask
+httpx>=0.23.0

@@ -76,7 +76,7 @@ export default function ClassGenerator() {
         const token = await auth.currentUser.getIdToken();
         const res = await axios.get(`${API_URL}/remaining-calls`, {
           headers: { Authorization: `Bearer ${token}` },
-          timeout: 10000,
+          timeout: 60000,
         });
         setRemainingCalls(res.data.remaining_calls.generate);
       } catch (err) {
@@ -296,7 +296,7 @@ export default function ClassGenerator() {
 
       const res = await axios.post(`${API_URL}/generate-class`, payload, {
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-        timeout: 30000,
+        timeout: 60000,
       });
 
       setClassPlan(res.data.class_plan);

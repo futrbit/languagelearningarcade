@@ -25,13 +25,22 @@ load_dotenv()
 app = FastAPI()
 
 # Initialize Firebase Admin SDK
-firebase_json_path = r"C:\Users\leebu\Desktop\language-learning-arcade\backend\serviceAccountKey.json"
-if not os.path.exists(firebase_json_path):
-    logger.error(f"Firebase service account JSON not found at: {firebase_json_path}")
-    raise FileNotFoundError(f"Firebase service account JSON not found at: {firebase_json_path}")
+import json
+firebase_json = os.getenv("FIREBASE_SERVICE_ACCOUNT_JSON")
+
+if not firebase_json:
+    logger.error("FIREBASE_SERVICE_ACCOUNT_JSON environment variable not set.")
+    raise FileNotFoundError("Missing Firebase credentials in environment variable.")
+
 try:
-    initialize_app(credentials.Certificate(firebase_json_path))
-    logger.info("Firebase Admin SDK initialized.")
+    firebase_credentials_dict = json.loads(firebase_json)
+    cred = credentials.Certificate(firebase_credentials_dict)
+    initialize_app(cred)
+    logger.info("Firebase initialized from environment variable.")
+except Exception as e:
+    logger.error(f"Firebase initialization failed: {e}")
+    raise SystemExit("Firebase initialization failed.")
+
 except Exception as e:
     logger.error(f"Failed to initialize Firebase: {e}")
     raise SystemExit("Firebase initialization failed.")

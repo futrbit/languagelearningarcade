@@ -9,10 +9,10 @@ import os
 import logging
 import redis
 from datetime import date, datetime, timedelta
-from fastapi.responses import JSONResponse
-from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.requests import Request
 import json
+import bleach
+import time
+import re
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -23,21 +23,6 @@ load_dotenv()
 
 # Initialize FastAPI app
 app = FastAPI()
-
-# --- Preflight OPTIONS Middleware to fix CORS preflight ---
-class PreflightMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next):
-        if request.method == "OPTIONS":
-            response = JSONResponse({"ok": True})
-            origin = request.headers.get("origin", "*")
-            response.headers["Access-Control-Allow-Origin"] = origin
-            response.headers["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS, PUT, DELETE"
-            response.headers["Access-Control-Allow-Headers"] = request.headers.get("access-control-request-headers", "*")
-            response.headers["Access-Control-Allow-Credentials"] = "true"
-            return response
-        return await call_next(request)
-
-app.add_middleware(PreflightMiddleware)
 
 # CORS configuration
 app.add_middleware(
@@ -89,14 +74,17 @@ async def shutdown_event():
 # Initialize Redis client (supports Redis Cloud with SSL)
 redis_client = None
 try:
-    redis_client = redis.Redis(
-        host=os.getenv("REDIS_HOST", "localhost"),
-        port=int(os.getenv("REDIS_PORT", 6379)),
-        username=os.getenv("REDIS_USERNAME", "default"),  # For Redis Cloud
-        password=os.getenv("REDIS_PASSWORD"),             # For Redis Cloud
-        decode_responses=True,
-        ssl=True,                                          # Important for Redis Cloud SSL
-    )
+    if os.getenv("REDIS_URL"):
+        redis_client = redis.Redis.from_url(os.getenv("REDIS_URL"), decode_responses=True)
+    else:
+        redis_client = redis.Redis(
+            host=os.getenv("REDIS_HOST", "localhost"),
+            port=int(os.getenv("REDIS_PORT", 6379)),
+            username=os.getenv("REDIS_USERNAME", "default"),  # For Redis Cloud
+            password=os.getenv("REDIS_PASSWORD"),             # For Redis Cloud
+            decode_responses=True,
+            ssl=True,                                          # Important for Redis Cloud SSL
+        )
     redis_client.ping()
     logger.info("Successfully connected to Redis.")
 except redis.exceptions.ConnectionError as e:
@@ -161,7 +149,6 @@ def check_api_limit(user_id: str, endpoint: str) -> int:
         fallback_limits[key] = fallback_limits.get(key, 0) + 1
 
     return max_calls_per_day - (calls + 1)
-
 
 # Pydantic Models
 class ClassRequest(BaseModel):
@@ -422,3 +409,11 @@ Respond in markdown.
 async def health_check():
     return {"status": "ok"}
 
+# Redis health check route
+@app.get("/redis-health")
+async def redis_health():
+    try:
+        redis_client.ping()
+        return {"status": "Redis connected"}
+    except redis.exceptions.RedisError as e:
+        return {"status": "Redis unavailable", "error": str(e)}

@@ -73,21 +73,22 @@ async def shutdown_event():
     await http_client.aclose()
     logger.info("HTTP client closed on shutdown.")
 
-# Initialize Redis client
-redis_host = os.getenv("REDIS_HOST", "localhost")
-redis_port = int(os.getenv("REDIS_PORT", 6380))
+# Initialize Redis client (Redis Cloud with SSL)
 redis_client = None
 try:
     redis_client = redis.Redis(
-        host=redis_host,
-        port=redis_port,
-        db=0,
-        decode_responses=True
+        host=os.getenv("REDIS_HOST", "localhost"),
+        port=int(os.getenv("REDIS_PORT", 6379)),
+        username=os.getenv("REDIS_USERNAME", "default"),  # Required for Redis Cloud
+        password=os.getenv("REDIS_PASSWORD"),             # Required for Redis Cloud
+        decode_responses=True,
+        ssl=True                                           # VERY IMPORTANT for Redis Cloud
     )
     redis_client.ping()
     logger.info("Successfully connected to Redis.")
 except redis.exceptions.ConnectionError as e:
     logger.warning(f"Could not connect to Redis: {e}. Falling back to in-memory rate limiting.")
+
 
 # In-memory fallback for rate limiting
 fallback_limits = {}

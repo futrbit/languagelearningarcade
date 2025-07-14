@@ -1,8 +1,8 @@
 from fastapi import FastAPI, HTTPException, Depends, Header
-from pydantic import BaseModel, Field, validator
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field, validator
 from dotenv import load_dotenv
-from openai import AsyncOpenAI  # Use async client
+from openai import AsyncOpenAI
 from firebase_admin import credentials, auth, initialize_app
 import httpx
 import os
@@ -13,6 +13,8 @@ import json
 import bleach
 import time
 import re
+from starlette.requests import Request
+from starlette.responses import JSONResponse
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -30,12 +32,21 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",
         "http://127.0.0.1:3000",
-        "https://llafrontend.onrender.com",  # Your frontend domain
+        "https://llafrontend.onrender.com",
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Debug middleware to log headers
+@app.middleware("http")
+async def log_headers(request: Request, call_next):
+    logger.info(f"Request: {request.method} {request.url}")
+    logger.info(f"Request headers: {dict(request.headers)}")
+    response = await call_next(request)
+    logger.info(f"Response headers: {dict(response.headers)}")
+    return response
 
 # Initialize Firebase Admin SDK
 firebase_json = os.getenv("FIREBASE_SERVICE_ACCOUNT_JSON")
@@ -71,7 +82,7 @@ async def shutdown_event():
     await http_client.aclose()
     logger.info("HTTP client closed on shutdown.")
 
-# Initialize Redis client (supports Redis Cloud with SSL)
+# Initialize Redis client
 redis_client = None
 try:
     if os.getenv("REDIS_URL"):
@@ -80,10 +91,10 @@ try:
         redis_client = redis.Redis(
             host=os.getenv("REDIS_HOST", "localhost"),
             port=int(os.getenv("REDIS_PORT", 6379)),
-            username=os.getenv("REDIS_USERNAME", "default"),  # For Redis Cloud
-            password=os.getenv("REDIS_PASSWORD"),             # For Redis Cloud
+            username=os.getenv("REDIS_USERNAME", "default"),
+            password=os.getenv("REDIS_PASSWORD"),
             decode_responses=True,
-            ssl=True,                                          # Important for Redis Cloud SSL
+            ssl=True,
         )
     redis_client.ping()
     logger.info("Successfully connected to Redis.")
@@ -96,6 +107,7 @@ fallback_limits = {}
 # Authentication Dependency
 async def get_current_user(authorization: str = Header(None)):
     if not authorization or not authorization.startswith("Bearer "):
+        logger.error("Invalid or missing Authorization header")
         raise HTTPException(
             status_code=401,
             detail="Invalid or missing Authorization header. Expected 'Bearer <token>'",
@@ -139,7 +151,6 @@ def check_api_limit(user_id: str, endpoint: str) -> int:
     if redis_client:
         try:
             redis_client.incr(key)
-            # Set expiration at midnight UTC
             next_day = datetime.utcnow().date() + timedelta(days=1)
             expire_time = int(datetime.combine(next_day, datetime.min.time()).timestamp())
             redis_client.expireat(key, expire_time)
@@ -221,7 +232,13 @@ async def get_remaining_calls_endpoint(user: dict = Depends(get_current_user)):
         "submit": max_calls_per_day - submit_calls
     }
     logger.info(f"User {user_id} - Remaining calls: {remaining}")
-    return {"remaining_calls": remaining}
+    return JSONResponse(
+        content={"remaining_calls": remaining},
+        headers={
+            "Access-Control-Allow-Origin": "https://llafrontend.onrender.com",
+            "Access-Control-Allow-Credentials": "true",
+        }
+    )
 
 @app.post("/generate-class")
 async def generate_class(req: ClassRequest, user: dict = Depends(get_current_user)):
@@ -404,7 +421,7 @@ Respond in markdown.
         logger.error(f"User {user_id} - Unexpected error in submit-answer: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
-# Additional health check route for testing
+# Additional health check route
 @app.get("/health")
 async def health_check():
     return {"status": "ok"}

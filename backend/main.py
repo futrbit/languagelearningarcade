@@ -6,16 +6,13 @@ from openai import AsyncOpenAI  # Use async client
 from firebase_admin import credentials, auth, initialize_app
 import httpx
 import os
-import time
 import logging
 import redis
 from datetime import date, datetime, timedelta
-import re
-import markdown
-import bleach
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
+import json
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -48,7 +45,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",
         "http://127.0.0.1:3000",
-        "https://llafrontend.onrender.com",  # ✅ Must be here for your frontend domain
+        "https://llafrontend.onrender.com",  # Your frontend domain
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -56,9 +53,7 @@ app.add_middleware(
 )
 
 # Initialize Firebase Admin SDK
-import json
 firebase_json = os.getenv("FIREBASE_SERVICE_ACCOUNT_JSON")
-
 if not firebase_json:
     logger.error("FIREBASE_SERVICE_ACCOUNT_JSON environment variable not set.")
     raise FileNotFoundError("Missing Firebase credentials in environment variable.")
@@ -78,11 +73,11 @@ if not openai_api_key:
     logger.error("OPENAI_API_KEY not set.")
     raise ValueError("OPENAI_API_KEY not set.")
 
-# Explicitly create httpx client without proxies
+# HTTPX async client for OpenAI
 http_client = httpx.AsyncClient(
     limits=httpx.Limits(max_connections=100, max_keepalive_connections=20),
     timeout=30.0,
-    follow_redirects=True
+    follow_redirects=True,
 )
 client = AsyncOpenAI(api_key=openai_api_key, http_client=http_client)
 
@@ -91,16 +86,16 @@ async def shutdown_event():
     await http_client.aclose()
     logger.info("HTTP client closed on shutdown.")
 
-# Initialize Redis client (Redis Cloud with SSL)
+# Initialize Redis client (supports Redis Cloud with SSL)
 redis_client = None
 try:
     redis_client = redis.Redis(
         host=os.getenv("REDIS_HOST", "localhost"),
         port=int(os.getenv("REDIS_PORT", 6379)),
-        username=os.getenv("REDIS_USERNAME", "default"),  # Required for Redis Cloud
-        password=os.getenv("REDIS_PASSWORD"),             # Required for Redis Cloud
+        username=os.getenv("REDIS_USERNAME", "default"),  # For Redis Cloud
+        password=os.getenv("REDIS_PASSWORD"),             # For Redis Cloud
         decode_responses=True,
-        ssl=True                                           # VERY IMPORTANT for Redis Cloud
+        ssl=True,                                          # Important for Redis Cloud SSL
     )
     redis_client.ping()
     logger.info("Successfully connected to Redis.")
@@ -150,13 +145,14 @@ def check_api_limit(user_id: str, endpoint: str) -> int:
         raise HTTPException(
             status_code=429,
             detail=f"Daily {endpoint} limit ({max_calls_per_day}) reached. Try again tomorrow or upgrade to premium!",
-            headers={"X-Remaining-Calls": "0"}
+            headers={"X-Remaining-Calls": "0"},
         )
 
     if redis_client:
         try:
             redis_client.incr(key)
-            next_day = date.today() + timedelta(days=1)
+            # Set expiration at midnight UTC
+            next_day = datetime.utcnow().date() + timedelta(days=1)
             expire_time = int(datetime.combine(next_day, datetime.min.time()).timestamp())
             redis_client.expireat(key, expire_time)
         except redis.exceptions.RedisError:
@@ -165,6 +161,7 @@ def check_api_limit(user_id: str, endpoint: str) -> int:
         fallback_limits[key] = fallback_limits.get(key, 0) + 1
 
     return max_calls_per_day - (calls + 1)
+
 
 # Pydantic Models
 class ClassRequest(BaseModel):

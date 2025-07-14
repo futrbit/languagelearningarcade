@@ -38,11 +38,11 @@ export default function ClassGenerator() {
     : "http://127.0.0.1:8000";
 
   const teachers = [
-    { name: "Emma", avatar: "/avatars/emma.png" },
-    { name: "Liam", avatar: "/avatars/liam.png" },
-    { name: "Olivia", avatar: "/avatars/olivia.png" },
-    { name: "Noah", avatar: "/avatars/noah.png" },
-    { name: "Sophia", avatar: "/avatars/sophia.png" },
+    { name: "Emma", avatar: "/emma.png" },
+    { name: "Liam", avatar: "/liam.png" },
+    { name: "Olivia", avatar: "/olivia.png" },
+    { name: "Noah", avatar: "/noah.png" },
+    { name: "Sophia", avatar: "/sophia.png" },
   ];
 
   const speakingModules = {

@@ -11,3 +11,5 @@ pydantic==2.9.2
 bleach==6.1.0
 markdown==3.7
 gunicorn
+flask-cors>=3.0.10
+flask

@@ -13,6 +13,9 @@ from datetime import date, datetime, timedelta
 import re
 import markdown
 import bleach
+from fastapi.responses import JSONResponse
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -23,6 +26,34 @@ load_dotenv()
 
 # Initialize FastAPI app
 app = FastAPI()
+
+# --- Preflight OPTIONS Middleware to fix CORS preflight ---
+class PreflightMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        if request.method == "OPTIONS":
+            response = JSONResponse({"ok": True})
+            origin = request.headers.get("origin", "*")
+            response.headers["Access-Control-Allow-Origin"] = origin
+            response.headers["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS, PUT, DELETE"
+            response.headers["Access-Control-Allow-Headers"] = request.headers.get("access-control-request-headers", "*")
+            response.headers["Access-Control-Allow-Credentials"] = "true"
+            return response
+        return await call_next(request)
+
+app.add_middleware(PreflightMiddleware)
+
+# CORS configuration
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "https://llafrontend.onrender.com",  # ✅ Must be here for your frontend domain
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Initialize Firebase Admin SDK
 import json
@@ -40,24 +71,6 @@ try:
 except Exception as e:
     logger.error(f"Firebase initialization failed: {e}")
     raise SystemExit("Firebase initialization failed.")
-
-except Exception as e:
-    logger.error(f"Failed to initialize Firebase: {e}")
-    raise SystemExit("Firebase initialization failed.")
-
-# CORS configuration
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "https://llafrontend.onrender.com",  # ✅ MUST be here
-    ],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 
 # Initialize OpenAI client
 openai_api_key = os.getenv("OPENAI_API_KEY")
@@ -93,7 +106,6 @@ try:
     logger.info("Successfully connected to Redis.")
 except redis.exceptions.ConnectionError as e:
     logger.warning(f"Could not connect to Redis: {e}. Falling back to in-memory rate limiting.")
-
 
 # In-memory fallback for rate limiting
 fallback_limits = {}
@@ -205,7 +217,7 @@ async def get_remaining_calls_endpoint(user: dict = Depends(get_current_user)):
     max_calls_per_day = 5
     generate_key = f"generate_calls:{user_id}:{today}"
     submit_key = f"submit_calls:{user_id}:{today}"
-    
+
     if redis_client:
         try:
             generate_calls = redis_client.get(generate_key) or 0
@@ -216,10 +228,10 @@ async def get_remaining_calls_endpoint(user: dict = Depends(get_current_user)):
     else:
         generate_calls = fallback_limits.get(generate_key, 0)
         submit_calls = fallback_limits.get(submit_key, 0)
-    
+
     generate_calls = int(generate_calls)
     submit_calls = int(submit_calls)
-    
+
     remaining = {
         "generate": max_calls_per_day - generate_calls,
         "submit": max_calls_per_day - submit_calls
@@ -346,54 +358,70 @@ Friendly tone. Markdown format.
 
         class_plan = response.choices[0].message.content or "No lesson plan generated."
         class_plan = bleach.clean(class_plan, tags=["b", "strong", "i", "em", "a"], attributes={"a": ["href"]}, strip=True)
-        badge_match = re.search(r'## Badge\n.*?🏅 \*\*(.*?)\*\*', class_plan, re.DOTALL)
-        badge = badge_match.group(1) if badge_match else "Lesson Star"
+        badge_match = re.search(r"🏅\s*\*\*(.*?)\*\*", class_plan)
+        badge_name = badge_match.group(1) if badge_match else "Language Learner"
 
-        return {"class_plan": class_plan, "badge": badge, "remaining_calls": remaining_calls}
-    except redis.exceptions.RedisError as e:
-        logger.error(f"User {user_id} - Redis error: {e}")
-        raise HTTPException(status_code=503, detail="Service unavailable: Database error")
+        return {
+            "class_plan": class_plan,
+            "badge": badge_name,
+            "remaining_calls": remaining_calls
+        }
     except HTTPException as he:
         raise he
     except Exception as e:
-        logger.error(f"User {user_id} - Error generating class: {str(e)}", exc_info=True)
-        raise HTTPException(status_code=500, detail=f"Failed to generate class: {str(e)}")
+        logger.error(f"User {user_id} - Unexpected error in generate-class: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 @app.post("/submit-answer")
 async def submit_answer(req: AnswerRequest, user: dict = Depends(get_current_user)):
     user_id = user["user_id"]
     try:
         remaining_calls = check_api_limit(user_id, "submit")
-        logger.info(f"User {user_id} - Received answer submission.")
+        logger.info(f"User {user_id} - Submitting answer: {req.dict()}")
+
         prompt = f"""
-Evaluate the following answer for a {req.student_level} level {req.skill_focus} lesson for {req.reason}:
-Student's Answer: {req.answer}
-Contextual Class Plan:
+You are an AI teacher evaluating a student's answer.
+
+Student Level: {req.student_level}
+Skill Focus: {req.skill_focus}
+Reason for learning: {req.reason}
+
+Student's Answer:
+{req.answer}
+
+Class Plan for Reference:
 {req.class_plan}
-Provide 2-3 sentences of constructive feedback in markdown, focusing on {req.skill_focus} skills.
+
+Provide:
+- Detailed constructive feedback in 1-2 paragraphs.
+- Corrections if necessary.
+- Suggestions for improvement.
+
+Use a positive and encouraging tone.
+Respond in markdown.
 """
-        try:
-            response = await client.chat.completions.create(
-                model="gpt-4o-mini",
-                messages=[{"role": "user", "content": prompt}],
-                temperature=0.7
-            )
-        except Exception as e:
-            logger.error(f"User {user_id} - OpenAI error: {str(e)}")
-            if "rate_limit" in str(e).lower():
-                raise HTTPException(status_code=429, detail="OpenAI rate limit exceeded. Try again later.")
-            raise HTTPException(status_code=503, detail=f"OpenAI service unavailable: {str(e)}")
+
+        response = await client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.8
+        )
 
         feedback = response.choices[0].message.content or "No feedback generated."
-        feedback = bleach.clean(feedback, tags=["b", "strong", "i", "em"], strip=True)
-        logger.info(f"User {user_id} - Feedback generated: {feedback[:50]}...")
+        feedback = bleach.clean(feedback, tags=["b", "strong", "i", "em", "a"], attributes={"a": ["href"]}, strip=True)
 
-        return {"feedback": feedback, "remaining_calls": remaining_calls}
-    except redis.exceptions.RedisError as e:
-        logger.error(f"User {user_id} - Redis error: {e}")
-        raise HTTPException(status_code=503, detail="Service unavailable: Database error")
+        return {
+            "feedback": feedback,
+            "remaining_calls": remaining_calls
+        }
     except HTTPException as he:
         raise he
     except Exception as e:
-        logger.error(f"User {user_id} - Error submitting answer: {str(e)}", exc_info=True)
-        raise HTTPException(status_code=500, detail=f"Failed to submit answer: {str(e)}")
+        logger.error(f"User {user_id} - Unexpected error in submit-answer: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+# Additional health check route for testing
+@app.get("/health")
+async def health_check():
+    return {"status": "ok"}
+

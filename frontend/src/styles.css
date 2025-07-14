@@ -6,7 +6,7 @@ body {
   font-family: 'Montserrat', sans-serif;
   margin: 0;
   padding: 0 0 80px; /* Space for fixed footer */
-  background: linear-gradient(135deg, #B0A4E3, #9B8AD6); /* Light purple gradient */
+  background: linear-gradient(135deg, #B0A4E3, #9B8AD6);
   color: #333;
   min-height: 100vh;
   line-height: 1.6;
@@ -36,7 +36,7 @@ body {
 }
 
 .header nav a:hover {
-  color: #FFD700; /* Bright yellow */
+  color: #FFD700;
   transform: scale(1.1);
 }
 
@@ -58,8 +58,9 @@ body {
   border-radius: 12px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
   position: relative;
-  overflow: hidden;
   text-align: center;
+  box-sizing: border-box; /* Ensure padding doesn't cause overflow */
+  overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 .container::before {
@@ -76,6 +77,64 @@ body {
 .container > * {
   position: relative;
   z-index: 1;
+  max-width: 100%; /* Ensure child elements don't exceed container width */
+  box-sizing: border-box;
+}
+
+/* Lesson, Worksheet, and Notepad Pages */
+.lesson-plan-container,
+.worksheet-container,
+.notepad-container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  background: linear-gradient(to right, #E6E1F5, #F0EEFA);
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  text-align: left;
+  box-sizing: border-box;
+  overflow-x: hidden; /* Prevent horizontal scroll in lesson box */
+}
+
+.lesson-plan-container h1,
+.lesson-plan-container h2,
+.lesson-plan-container h3,
+.lesson-plan-container p,
+.worksheet-container h1,
+.worksheet-container h2,
+.worksheet-container h3,
+.worksheet-container p,
+.notepad-container h1,
+.notepad-container h2,
+.notepad-container h3,
+.notepad-container p {
+  color: #333;
+  text-align: center;
+  max-width: 100%; /* Prevent text from overflowing */
+}
+
+.lesson-plan-container img,
+.worksheet-container img,
+.notepad-container img {
+  max-width: 100%; /* Ensure images stay within container */
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border-radius: 8px;
+}
+
+.notepad-textarea,
+.worksheet-textarea {
+  width: 100%;
+  border: 1px solid #A89FD6;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 1.1em;
+  color: #333;
+  background: #F8F8F8;
+  font-family: 'Comic Neue', sans-serif;
+  box-sizing: border-box;
+  resize: vertical; /* Allow vertical resize only */
 }
 
 /* Landing Page */
@@ -191,47 +250,6 @@ body {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 }
 
-/* Lesson, Worksheet, and Notepad Pages */
-.lesson-plan-container,
-.worksheet-container,
-.notepad-container {
-  max-width: 1200px;
-  margin: 20px auto;
-  padding: 20px;
-  background: linear-gradient(to right, #E6E1F5, #F0EEFA);
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-  text-align: left;
-}
-
-.lesson-plan-container h1,
-.lesson-plan-container h2,
-.lesson-plan-container h3,
-.lesson-plan-container p,
-.worksheet-container h1,
-.worksheet-container h2,
-.worksheet-container h3,
-.worksheet-container p,
-.notepad-container h1,
-.notepad-container h2,
-.notepad-container h3,
-.notepad-container p {
-  color: #333;
-  text-align: center;
-}
-
-.notepad-textarea,
-.worksheet-textarea {
-  width: 100%;
-  border: 1px solid #A89FD6;
-  border-radius: 8px;
-  padding: 12px;
-  font-size: 1.1em;
-  color: #333;
-  background: #F8F8F8;
-  font-family: 'Comic Neue', sans-serif;
-}
-
 /* Progress Bars */
 .progress-bar-container {
   margin: 20px 0;
@@ -336,6 +354,8 @@ body {
   font-family: 'Comic Neue', sans-serif;
   color: #333;
   text-align: left;
+  max-width: 100%;
+  overflow-x: auto; /* Allow horizontal scroll for tables if needed */
 }
 
 .markdown-content h2 {
@@ -358,6 +378,25 @@ body {
 
 .markdown-content a:hover {
   color: #FF8C00;
+}
+
+.markdown-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 15px 0;
+  color: #333;
+  background: #F8F8F8;
+  border-radius: 8px;
+  overflow: hidden;
+  table-layout: fixed; /* Prevent table from stretching */
+}
+
+.markdown-table th,
+.markdown-table td {
+  border: 1px solid #A89FD6;
+  padding: 10px;
+  text-align: left;
+  word-wrap: break-word; /* Ensure long text wraps */
 }
 
 /* About Page */
@@ -415,9 +454,4 @@ body {
 .footer p {
   margin: 0;
   font-size: 1.1em;
-}
-
-.feedback h4 {
-  margin-top: 0;
-  color: #7A6BC4; /* Purple for consistency */
 }

@@ -59,7 +59,7 @@ body {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
   position: relative;
   text-align: center;
-  box-sizing: border-box; /* Ensure padding doesn't cause overflow */
+  box-sizing: border-box;
   overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
@@ -77,7 +77,7 @@ body {
 .container > * {
   position: relative;
   z-index: 1;
-  max-width: 100%; /* Ensure child elements don't exceed container width */
+  max-width: 100%;
   box-sizing: border-box;
 }
 
@@ -93,7 +93,8 @@ body {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
   text-align: left;
   box-sizing: border-box;
-  overflow-x: hidden; /* Prevent horizontal scroll in lesson box */
+  overflow-x: hidden; /* Strictly prevent horizontal scroll */
+  word-break: break-word; /* Break long words to prevent overflow */
 }
 
 .lesson-plan-container h1,
@@ -110,31 +111,43 @@ body {
 .notepad-container p {
   color: #333;
   text-align: center;
-  max-width: 100%; /* Prevent text from overflowing */
+  max-width: 100%;
+  word-break: break-word; /* Prevent long text from overflowing */
 }
 
 .lesson-plan-container img,
 .worksheet-container img,
 .notepad-container img {
-  max-width: 100%; /* Ensure images stay within container */
+  max-width: 100%;
   height: auto;
   display: block;
   margin: 0 auto;
   border-radius: 8px;
 }
 
+.lesson-plan-container video,
+.worksheet-container video,
+.notepad-container video {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
 .notepad-textarea,
 .worksheet-textarea {
   width: 100%;
+  max-width: 100%; /* Ensure textarea doesn't exceed container */
   border: 1px solid #A89FD6;
   border-radius: 8px;
-  padding: 12px;
-  font-size: 1.1em;
+  padding: 8px; /* Reduced padding for smaller size */
+  font-size: 1em; /* Smaller font size */
+  max-height: 150px; /* Limit height to make notepad smaller */
   color: #333;
   background: #F8F8F8;
   font-family: 'Comic Neue', sans-serif;
   box-sizing: border-box;
-  resize: vertical; /* Allow vertical resize only */
+  resize: vertical;
+  overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 /* Landing Page */
@@ -355,7 +368,7 @@ body {
   color: #333;
   text-align: left;
   max-width: 100%;
-  overflow-x: auto; /* Allow horizontal scroll for tables if needed */
+  word-break: break-word; /* Prevent long text from overflowing */
 }
 
 .markdown-content h2 {
@@ -374,6 +387,7 @@ body {
   text-decoration: none;
   font-weight: 700;
   transition: color 0.3s ease;
+  word-break: break-word;
 }
 
 .markdown-content a:hover {
@@ -388,15 +402,17 @@ body {
   background: #F8F8F8;
   border-radius: 8px;
   overflow: hidden;
-  table-layout: fixed; /* Prevent table from stretching */
+  table-layout: fixed;
 }
 
 .markdown-table th,
 .markdown-table td {
   border: 1px solid #A89FD6;
-  padding: 10px;
+  padding: 8px;
   text-align: left;
-  word-wrap: break-word; /* Ensure long text wraps */
+  word-break: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Truncate overly long content */
 }
 
 /* About Page */

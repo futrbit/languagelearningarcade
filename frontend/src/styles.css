@@ -1,0 +1,668 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Comic+Neue:wght@400;700&display=swap');
+
+body {
+  font-family: 'Montserrat', sans-serif; /* Primary font for professional look */
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #B0A4E3 0%, #9B8AD6 100%); /* Light purple gradient */
+  color: #333; /* Dark text for general readability, overridden where needed */
+  padding-bottom: 80px; /* Space for fixed footer */
+  min-height: 100vh; /* Ensure full viewport height */
+}
+
+/* Header: Centered nav above logo with playful hover effects */
+.header {
+  background: linear-gradient(to bottom, #B0A4E3, #9B8AD6); /* Light purple gradient */
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Stronger shadow for depth */
+}
+
+.header nav {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.header nav a {
+  color: white;
+  margin: 0 15px;
+  text-decoration: none;
+  font-size: 1.2em; /* Larger for prominence */
+  font-weight: 700;
+  transition: color 0.3s ease, transform 0.2s ease;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Subtle text shadow for pop */
+}
+
+.header nav a:hover {
+  color: #FFD700; /* Bright yellow for hover */
+  transform: scale(1.1); /* Slight scale-up for gamified feel */
+}
+
+.header-logo {
+  height: 60px; /* Slightly larger logo */
+  transition: transform 0.3s ease;
+}
+
+.header-logo:hover {
+  transform: rotate(5deg); /* Playful tilt on hover */
+}
+
+/* Landing Container: Fun, centered, high-contrast */
+.landing-container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 30px;
+  background: linear-gradient(to right, #E6E1F5, #F0EEFA); /* Very light purple gradient */
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  color: #333; /* Dark text for readability */
+  position: relative;
+  overflow: hidden; /* For rounded corners */
+}
+
+.landing-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.2), transparent); /* Subtle overlay */
+  z-index: 0;
+}
+
+.landing-container > * {
+  position: relative;
+  z-index: 1; /* Ensure content is above overlay */
+}
+
+.landing-container h1 {
+  font-size: 2.8em;
+  font-weight: 900;
+  color: #7A6BC4; /* Vibrant purple for headings */
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.landing-container h3 {
+  font-size: 1.6em;
+  font-weight: 700;
+  color: #7A6BC4; /* Vibrant purple */
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+
+.landing-container p {
+  font-size: 1.2em;
+  font-weight: 600;
+  margin: 10px 0;
+  color: #333; /* Ensure readability */
+}
+
+.hero-image {
+  max-width: 100%;
+  border-radius: 12px;
+  margin-top: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.hero-image:hover {
+  transform: scale(1.02); /* Subtle zoom for interactivity */
+}
+
+.features {
+  margin-top: 20px;
+  font-family: 'Comic Neue', sans-serif; /* Playful font for features */
+}
+
+/* Avatar Container: Playful and centered */
+.avatar-container {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.avatar-item {
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.avatar-item:hover {
+  transform: scale(1.1); /* Playful hover effect */
+}
+
+.avatar-image {
+  width: 60px; /* Slightly larger avatars */
+  height: 60px;
+  border-radius: 50%;
+  border: 3px solid #7A6BC4; /* Purple border */
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.avatar-selected .avatar-image {
+  border-color: #FFD700; /* Yellow border for selected avatar */
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Button Styles: Vibrant and gamified */
+.button-primary {
+  background: linear-gradient(to right, #7A6BC4, #6A5ACD); /* Purple gradient */
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.2em;
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s ease, transform 0.2s ease;
+  margin-top: 20px;
+}
+
+.button-primary:hover {
+  background: linear-gradient(to right, #6A5ACD, #7A6BC4); /* Darker purple on hover */
+  transform: translateY(-3px);
+}
+
+.button-selected {
+  background: linear-gradient(to right, #A89FD6, #7A6BC4); /* Light purple gradient */
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.3);
+}
+
+.button-fancy {
+  background: linear-gradient(to right, #FFD700, #FF8C00); /* Yellow-orange for contrast */
+  color: #333;
+  border: none;
+  padding: 14px 30px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1.2em;
+  font-weight: 700;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.button-fancy:hover {
+  background: linear-gradient(to right, #FF8C00, #FFD700);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Fix for Homework and Progress Pages */
+.lesson-plan-container,
+.worksheet-container,
+.notepad-container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  background: linear-gradient(to right, #E6E1F5, #F0EEFA); /* Very light purple gradient */
+  border-radius: 12px;
+  box-shadow: 0 0px 20px rgba(0, 0, 0, 0.2);
+  color: #333; /* Dark text for readability */
+  text-align: left; /* Left-align for content, override if needed */
+}
+
+.lesson-plan-container h1,
+.lesson-plan-container h2,
+.lesson-plan-container h3,
+.lesson-plan-container p,
+.worksheet-container h1,
+.worksheet-container h2,
+.worksheet-container h3,
+.worksheet-container p,
+.notepad-container h1,
+.notepad-container h2,
+.notepad-container h3,
+.notepad-container p {
+  color: #333; /* Ensure text is readable */
+  text-align: center; /* Center headings and paragraphs unless specified */
+}
+
+.notepad-textarea,
+.worksheet-textarea {
+  width: 100%;
+  border: 1px solid #A89FD6; /* Light purple border */
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 1.1em;
+  color: #333;
+  background: #F8F8F8; /* Light grey for contrast */
+  font-family: 'Comic Neue', sans-serif; /* Playful font */
+}
+
+/* Progress Bar: Gamified (Main) */
+.progress-bar-container {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.progress-bar {
+  background-color: #e0e0e0;
+  border-radius: 10px;
+  height: 30px; /* Main progress bar */
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  background: linear-gradient(90deg, #4caf50, #81c784); /* Green gradient for main progress */
+  height: 100%;
+  transition: width 0.5s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  border-radius: 10px;
+}
+
+.progress-text {
+  color: white;
+  font-weight: bold;
+  padding-right: 10px;
+}
+
+/* Skill-Specific Progress Bars: Smaller */
+.skill-progress-container {
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 600px; /* Constrain width for better layout */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.skill-progress {
+  text-align: left;
+}
+
+.skill-progress h4 {
+  color: #7A6BC4; /* Vibrant purple */
+  font-weight: 700;
+  margin: 10px 0 5px;
+  font-family: 'Comic Neue', sans-serif; /* Playful font */
+  font-size: 1.2em;
+}
+
+.skill-progress-bar {
+  background-color: #e0e0e0;
+  border-radius: 8px;
+  height: 20px; /* Smaller than main progress bar */
+  overflow: hidden;
+  position: relative;
+  width: 100%; /* Ensure full width */
+}
+
+.skill-progress-fill {
+  background: linear-gradient(90deg, #7A6BC4, #A89FD6); /* Purple gradient for skills */
+  height: 100%;
+  transition: width 0.5s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  border-radius: 8px;
+}
+
+.skill-progress-text {
+  color: white;
+  font-weight: bold;
+  font-size: 0.9em; /* Smaller text */
+  padding-right: 8px;
+}
+
+/* Badges: Gamified */
+.badges ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.badges li {
+  background-color: #ffca28; /* Yellow badge */
+  padding: 5px 15px;
+  border-radius: 15px;
+  font-weight: bold;
+}
+
+.module-badge {
+  background: linear-gradient(to right, #FFD700, #FF8C00); /* Yellow-orange for module completion */
+  padding: 8px 20px;
+  border-radius: 15px;
+  font-weight: 900;
+  color: #333;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  animation: badgePulse 1s ease-in-out;
+}
+
+@keyframes badgePulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.badge {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.badge-item {
+  background: linear-gradient(to right, #FFD700, #FF8C00); /* Yellow-orange badge */
+  padding: 10px 20px;
+  border-radius: 15px;
+  font-weight: 700;
+  color: #333;
+  display: inline-block;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Lesson Plan Markdown Content */
+.markdown-content {
+  font-family: 'Comic Neue', sans-serif; /* Playful font for lesson content */
+  color: #333;
+}
+
+.markdown-content h2 {
+  color: #7A6BC4; /* Vibrant purple */
+  font-weight: 900;
+  margin: 20px 0 10px;
+  text-align: left; /* Left-align for readability */
+}
+
+.markdown-content p {
+  font-size: 1.1em;
+  margin: 10px 0;
+  text-align: left;
+}
+
+.markdown-content a {
+  color: #FFD700; /* Yellow links for video */
+  text-decoration: none;
+  font-weight: 700;
+  transition: color 0.3s ease;
+}
+
+.markdown-content a:hover {
+  color: #FF8C00; /* Orange on hover */
+}
+
+/* About Page */
+.about-container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 30px;
+  background: linear-gradient(to right, #E6E1F5, #F0EEFA); /* Very light purple gradient */
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  color: #333;
+}
+
+.about-container h2 {
+  color: #7A6BC4; /* Vibrant purple */
+  font-weight: 900;
+  font-size: 2em;
+  margin-bottom: 20px;
+  font-family: 'Comic Neue', sans-serif; /* Playful font */
+  animation: bounce 2s infinite;
+}
+
+.about-container h3 {
+  color: #7A6BC4;
+  font-weight: 700;
+  font-size: 1.6em;
+  margin: 20px 0 10px;
+  font-family: 'Comic Neue', sans-serif;
+}
+
+.about-container p {
+  font-size: 1.2em;
+  margin: 10px 0;
+  text-align: left; /* Left-align for readability */
+}
+
+/* Team Avatars for About Page */
+.team-avatars {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.team-avatar {
+  text-align: center;
+}
+
+.team-avatar img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid #7A6BC4;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.team-avatar img:hover {
+  transform: scale(1.1);
+  border-color: #FFD700;
+}
+
+.team-avatar p {
+  font-family: 'Comic Neue', sans-serif;
+  font-weight: 700;
+  color: #333;
+  margin: 5px 0 0;
+}
+
+/* Mock Progress Bar for About Page */
+.about-progress {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.about-progress-bar {
+  background-color: #e0e0e0;
+  border-radius: 8px;
+  height: 20px;
+  overflow: hidden;
+  position: relative;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.about-progress-fill {
+  background: linear-gradient(90deg, #7A6BC4, #A89FD6); /* Purple gradient */
+  height: 100%;
+  width: 50%; /* Static for demo */
+  transition: width 0.5s ease-in-out;
+  border-radius: 8px;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* General Containers */
+.section-border {
+  border: 2px solid #A89FD6; /* Light purple border */
+  padding: 15px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1); /* Subtle white overlay */
+}
+
+.reason-buttons {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.reason-buttons button {
+  margin: 0;
+}
+
+.error-text {
+  color: #DC143C;
+  margin-top: 10px;
+  font-weight: 700;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Drag and Drop: Gamified */
+.drag-drop-container {
+  margin-top: 20px;
+}
+
+.drag-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+}
+
+.drag-item {
+  background: linear-gradient(to right, #F0EEFA, #D8D2F0); /* Light purple gradient */
+  padding: 12px;
+  border-radius: 8px;
+  cursor: move;
+  color: #333;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.drag-item:hover {
+  transform: scale(1.05);
+}
+
+.drop-zones {
+  display: flex;
+  gap: 20px;
+  margin-top: 15px;
+  justify-content: center;
+}
+
+.drop-zone {
+  flex: 1;
+  min-height: 120px;
+  border: 3px dashed #FFD700; /* Yellow for fun */
+  padding: 15px;
+  border-radius: 10px;
+  background: #F8F8F8;
+  transition: background 0.3s ease;
+}
+
+.drop-zone:hover {
+  background: #F0EEFA; /* Light purple on hover */
+}
+
+.dropped-item {
+  background: linear-gradient(to right, #D8D2F0, #C1B8E6); /* Light purple gradient */
+  padding: 12px;
+  margin: 5px 0;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #333;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.drag-controls {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.drag-feedback {
+  color: #7A6BC4; /* Purple feedback text */
+  font-weight: 700;
+  font-size: 1.1em;
+}
+
+/* Markdown Tables */
+.markdown-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 15px 0;
+  color: #333;
+  background: #F8F8F8;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.markdown-table th,
+.markdown-table td {
+  border: 1px solid #A89FD6; /* Light purple border */
+  padding: 10px;
+  text-align: left;
+}
+
+.markdown-header {
+  color: #7A6BC4; /* Purple header text */
+  font-weight: 700;
+}
+
+.markdown-paragraph strong {
+  font-weight: 700;
+}
+
+.markdown-list {
+  margin: 15px 0;
+  padding-left: 25px;
+  text-align: left;
+  color: #333;
+}
+
+.markdown-video {
+  margin: 15px 0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.exercise-item {
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #F0EEFA; /* Light purple background */
+  border-radius: 10px;
+}
+
+/* Footer: Playful and centered */
+.footer {
+  text-align: center;
+  padding: 15px;
+  background: linear-gradient(to bottom, #B0A4E3, #9B8AD6); /* Light purple gradient */
+  color: white;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.3);
+  font-family: 'Comic Neue', sans-serif;
+}
+
+.footer p {
+  margin: 0;
+  font-size: 1.1em;
+}
+
+/* Homework Feedback */
+.feedback {
+  margin-top: 20px;
+  background-color: #f5f5f5;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.feedback h4 {
+  margin-top: 0;
+  color: #7A6BC4; /* Purple for consistency */
+}

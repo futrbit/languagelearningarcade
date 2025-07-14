@@ -1,84 +1,258 @@
 /* Import Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Comic+Neue:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Open+Sans:wght@400;600&display=swap');
 
 /* Global Styles */
-body {
+.App {
+  text-align: center;
   font-family: 'Montserrat', sans-serif;
-  margin: 0;
-  padding: 0 0 80px; /* Space for fixed footer */
-  background: linear-gradient(135deg, #B0A4E3, #9B8AD6);
-  color: #333;
+  padding: 1rem;
   min-height: 100vh;
-  line-height: 1.6;
+  background: linear-gradient(135deg, #B0A4E3 0%, #9B8AD6 100%);
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* Header */
-.header {
+.App-header {
   background: linear-gradient(to bottom, #B0A4E3, #9B8AD6);
+  min-height: 60vh; /* Retained from your CSS */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   color: white;
-  padding: 15px 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  text-align: center;
-}
-
-.header nav {
-  margin-bottom: 15px;
-}
-
-.header nav a {
-  color: white;
-  margin: 0 15px;
-  text-decoration: none;
-  font-size: 1.2em;
-  font-weight: 700;
-  transition: color 0.3s ease, transform 0.2s ease;
+  padding: 2rem;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  width: 100%;
 }
 
-.header nav a:hover {
-  color: #FFD700;
-  transform: scale(1.1);
-}
-
-.header-logo {
-  height: 60px;
+.App-logo {
+  height: 150px; /* Larger logo from your CSS */
+  margin-bottom: 1rem;
   transition: transform 0.3s ease;
 }
 
-.header-logo:hover {
-  transform: rotate(5deg);
+.App-logo:hover {
+  transform: scale(1.05);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.App-header nav {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+}
+
+.App-link {
+  color: #FFD700;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-size: 1.1em;
+}
+
+.App-link:hover {
+  color: #FF8C00;
+}
+
+@media (max-width: 600px) {
+  .App-header {
+    font-size: 1rem;
+    padding: 1rem;
+    min-height: 40vh; /* Adjusted for mobile */
+  }
+
+  .App-logo {
+    height: 100px;
+  }
 }
 
 /* General Container Styling */
 .container {
   max-width: 1200px;
-  margin: 20px auto;
-  padding: 30px;
-  background: linear-gradient(to right, #E6E1F5, #F0EEFA);
+  margin: 40px auto;
+  padding: 40px;
+  background: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-  position: relative;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   text-align: center;
   box-sizing: border-box;
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
+/* Landing Page */
+.landing-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+.landing-title {
+  font-size: 3.5em;
+  font-weight: 900;
+  color: #ffffff; /* White to match header */
+  margin: 0;
+  line-height: 1.2;
+  text-align: center;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.landing-subtitle {
+  font-size: 1.6em;
+  font-weight: 400;
+  font-family: 'Open Sans', sans-serif;
+  color: #ffffff;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Hero Section */
+.hero-section {
+  max-width: 900px;
   width: 100%;
-  height: 100%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.2), transparent);
-  z-index: 0;
+  display: flex;
+  justify-content: center;
+  margin: 30px 0;
 }
 
-.container > * {
-  position: relative;
-  z-index: 1;
+.hero-image {
   max-width: 100%;
-  box-sizing: border-box;
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.hero-image:hover {
+  transform: scale(1.03);
+}
+
+/* Features Section */
+.features {
+  margin: 40px 0;
+  max-width: 800px;
+  text-align: left;
+}
+
+.features h3 {
+  font-size: 1.8em;
+  font-weight: 700;
+  color: #6A5ACD;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.features ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 20px;
+}
+
+.features li {
+  font-size: 1.2em;
+  font-family: 'Open Sans', sans-serif;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.features li::before {
+  content: "✓";
+  color: #6A5ACD;
+  font-weight: bold;
+}
+
+/* Teacher Avatars */
+.avatar-container {
+  margin: 40px 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar-container h3 {
+  font-size: 1.8em;
+  font-weight: 700;
+  color: #6A5ACD;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.teacher-row {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.teacher-item {
+  text-align: center;
+}
+
+.teacher-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid #6A5ACD;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.teacher-avatar:hover {
+  transform: scale(1.1);
+}
+
+.teacher-item p {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 600;
+  color: #333;
+  margin: 5px 0 0;
+  font-size: 1em;
+}
+
+/* Buttons */
+.button-primary {
+  background: #6A5ACD;
+  color: white;
+  border: none;
+  padding: 15px 40px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.3em;
+  font-weight: 700;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s ease, transform 0.2s ease;
+  margin-top: 20px;
+}
+
+.button-primary:hover {
+  background: #5A4ABF;
+  transform: translateY(-3px);
 }
 
 /* Lesson, Worksheet, and Notepad Pages */
@@ -88,9 +262,9 @@ body {
   max-width: 1200px;
   margin: 20px auto;
   padding: 20px;
-  background: linear-gradient(to right, #E6E1F5, #F0EEFA);
+  background: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   text-align: left;
   box-sizing: border-box;
   overflow-x: hidden;
@@ -102,7 +276,7 @@ body {
   text-align: center;
   max-width: 100%;
   word-break: break-word;
-  font-size: 3.5em; /* Larger for prominent lesson headings */
+  font-size: 3.5em;
   font-weight: 900;
 }
 
@@ -111,7 +285,7 @@ body {
   text-align: center;
   max-width: 100%;
   word-break: break-word;
-  font-size: 2.5em; /* Larger for lesson subheadings */
+  font-size: 2.5em;
   font-weight: 700;
 }
 
@@ -120,16 +294,16 @@ body {
   text-align: center;
   max-width: 100%;
   word-break: break-word;
-  font-size: 2em; /* Larger for lesson subheadings */
+  font-size: 2em;
   font-weight: 700;
 }
 
 .lesson-plan-container p {
   color: #333;
-  text-align: left; /* Left-align for readability */
+  text-align: left;
   max-width: 100%;
   word-break: break-word;
-  font-size: 1.6em; /* Larger for lesson body text */
+  font-size: 1.6em;
   font-weight: 600;
 }
 
@@ -172,127 +346,14 @@ body {
   border: 1px solid #A89FD6;
   border-radius: 8px;
   padding: 6px;
-  font-size: 0.9em; /* Kept small for compact notepad */
+  font-size: 0.9em;
   max-height: 120px;
   color: #333;
   background: #F8F8F8;
-  font-family: 'Comic Neue', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   box-sizing: border-box;
   resize: vertical;
   overflow-x: hidden;
-}
-
-/* Landing Page */
-.landing-container h1 {
-  font-size: 2.8em;
-  font-weight: 900;
-  color: #7A6BC4;
-  margin-bottom: 20px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.landing-container h3 {
-  font-size: 1.6em;
-  font-weight: 700;
-  color: #7A6BC4;
-  margin: 30px 0 20px;
-}
-
-.landing-container p {
-  font-size: 1.2em;
-  font-weight: 600;
-  color: #333;
-  margin: 10px 0;
-}
-
-.hero-image {
-  max-width: 100%;
-  border-radius: 12px;
-  margin-top: 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease;
-}
-
-.hero-image:hover {
-  transform: scale(1.02);
-}
-
-/* Features Section */
-.features {
-  margin-top: 20px;
-  font-family: 'Comic Neue', sans-serif;
-}
-
-/* Avatars */
-.avatar-container {
-  display: flex;
-  gap: 15px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 20px;
-}
-
-.avatar-item {
-  text-align: center;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-
-.avatar-item:hover {
-  transform: scale(1.1);
-}
-
-.avatar-image {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  border: 3px solid #7A6BC4;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.avatar-selected .avatar-image {
-  border-color: #FFD700;
-  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
-}
-
-/* Buttons */
-.button-primary {
-  background: linear-gradient(to right, #7A6BC4, #6A5ACD);
-  color: white;
-  border: none;
-  padding: 12px 25px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1.2em;
-  font-weight: 700;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  transition: background 0.3s ease, transform 0.2s ease;
-  margin-top: 20px;
-}
-
-.button-primary:hover {
-  background: linear-gradient(to right, #6A5ACD, #7A6BC4);
-  transform: translateY(-3px);
-}
-
-.button-fancy {
-  background: linear-gradient(to right, #FFD700, #FF8C00);
-  color: #333;
-  border: none;
-  padding: 14px 30px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 1.2em;
-  font-weight: 700;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-}
-
-.button-fancy:hover {
-  background: linear-gradient(to right, #FF8C00, #FFD700);
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 }
 
 /* Progress Bars */
@@ -309,7 +370,7 @@ body {
 }
 
 .progress-fill {
-  background: linear-gradient(90deg, #4caf50, #81c784);
+  background: #6A5ACD;
   height: 100%;
   transition: width 0.5s ease-in-out;
   display: flex;
@@ -333,10 +394,10 @@ body {
 }
 
 .skill-progress h4 {
-  color: #7A6BC4;
+  color: #6A5ACD;
   font-weight: 700;
   margin: 10px 0 5px;
-  font-family: 'Comic Neue', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: 1.2em;
 }
 
@@ -348,7 +409,7 @@ body {
 }
 
 .skill-progress-fill {
-  background: linear-gradient(90deg, #7A6BC4, #A89FD6);
+  background: #6A5ACD;
   height: 100%;
   transition: width 0.5s ease-in-out;
   border-radius: 8px;
@@ -372,31 +433,31 @@ body {
 }
 
 .badges li {
-  background: #ffca28;
+  background: #FFD700;
   padding: 5px 15px;
   border-radius: 15px;
   font-weight: bold;
 }
 
 .module-badge {
-  background: linear-gradient(to right, #FFD700, #FF8C00);
+  background: #FFD700;
   padding: 8px 20px;
   border-radius: 15px;
   font-weight: 900;
   color: #333;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   animation: badgePulse 1s ease-in-out;
 }
 
 @keyframes badgePulse {
-  0% { transform: scale(1); }
+  from { transform: scale(1); }
   50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
+  to { transform: scale(1); }
 }
 
 /* Markdown Content */
 .markdown-content {
-  font-family: 'Comic Neue', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   color: #333;
   text-align: left;
   max-width: 100%;
@@ -404,27 +465,27 @@ body {
 }
 
 .markdown-content h2 {
-  color: #7A6BC4;
+  color: #6A5ACD;
   font-weight: 900;
   margin: 20px 0 10px;
-  font-size: 2.5em; /* Larger for lesson content */
+  font-size: 2.5em;
 }
 
 .markdown-content p {
-  font-size: 1.6em; /* Larger for lesson content */
+  font-size: 1.6em;
   margin: 10px 0;
 }
 
 .markdown-content a {
-  color: #FFD700;
+  color: #6A5ACD;
   text-decoration: none;
-  font-weight: 700;
+  font-weight: 600;
   transition: color 0.3s ease;
   word-break: break-word;
 }
 
 .markdown-content a:hover {
-  color: #FF8C00;
+  color: #5A4ABF;
 }
 
 .markdown-table {
@@ -450,11 +511,11 @@ body {
 
 /* About Page */
 .about-container h2 {
-  color: #7A6BC4;
+  color: #6A5ACD;
   font-weight: 900;
   font-size: 2em;
   margin-bottom: 20px;
-  font-family: 'Comic Neue', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   animation: bounce 2s infinite;
 }
 
@@ -470,8 +531,8 @@ body {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  border: 3px solid #7A6BC4;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+  border: 3px solid #6A5ACD;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
   transition: transform 0.3s ease, border-color 0.3s ease;
 }
 
@@ -481,8 +542,8 @@ body {
 }
 
 .team-avatar p {
-  font-family: 'Comic Neue', sans-serif;
-  font-weight: 700;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 600;
   color: #333;
   margin: 5px 0 0;
 }
@@ -490,17 +551,17 @@ body {
 /* Footer */
 .footer {
   text-align: center;
-  padding: 15px;
-  background: linear-gradient(to bottom, #B0A4E3, #9B8AD6);
-  color: white;
+  padding: 20px;
+  background: #ffffff;
+  color: #555;
   position: fixed;
   bottom: 0;
   width: 100%;
-  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.3);
-  font-family: 'Comic Neue', sans-serif;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  font-family: 'Open Sans', sans-serif;
 }
 
 .footer p {
   margin: 0;
-  font-size: 1.1em;
+  font-size: 1em;
 }

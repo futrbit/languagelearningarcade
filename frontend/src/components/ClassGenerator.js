@@ -34,7 +34,7 @@ export default function ClassGenerator() {
   const [remainingCalls, setRemainingCalls] = useState(null);
 
   const API_URL = process.env.NODE_ENV === "production"
-    ? "https://language-arcade-backend.onrender.com"
+    ? "https://languagelearningarcade.onrender.com"
     : "http://127.0.0.1:8000";
 
   const teachers = [

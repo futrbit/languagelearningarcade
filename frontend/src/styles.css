@@ -5,7 +5,7 @@
 .App {
   text-align: center;
   font-family: 'Montserrat', sans-serif;
-  padding: 1rem;
+  padding: 1rem 1rem 100px; /* Increased padding-bottom for footer space */
   min-height: 100vh;
   background: linear-gradient(135deg, #B0A4E3 0%, #9B8AD6 100%);
   color: #333;
@@ -17,7 +17,7 @@
 /* Header */
 .App-header {
   background: linear-gradient(to bottom, #B0A4E3, #9B8AD6);
-  min-height: 60vh; /* Retained from your CSS */
+  min-height: 60vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -29,7 +29,7 @@
 }
 
 .App-logo {
-  height: 150px; /* Larger logo from your CSS */
+  height: 150px;
   margin-bottom: 1rem;
   transition: transform 0.3s ease;
 }
@@ -75,7 +75,7 @@
   .App-header {
     font-size: 1rem;
     padding: 1rem;
-    min-height: 40vh; /* Adjusted for mobile */
+    min-height: 40vh;
   }
 
   .App-logo {
@@ -105,12 +105,14 @@
   flex-direction: column;
   align-items: center;
   gap: 40px;
+  padding-bottom: 80px; /* Extra space for button visibility */
 }
 
+/* Title and Subtitle */
 .landing-title {
   font-size: 3.5em;
   font-weight: 900;
-  color: #ffffff; /* White to match header */
+  color: #ffffff;
   margin: 0;
   line-height: 1.2;
   text-align: center;
@@ -248,6 +250,7 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   transition: background 0.3s ease, transform 0.2s ease;
   margin-top: 20px;
+  margin-bottom: 40px; /* Extra space to avoid footer overlap */
 }
 
 .button-primary:hover {
@@ -559,6 +562,7 @@
   width: 100%;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
   font-family: 'Open Sans', sans-serif;
+  z-index: 1000; /* Ensure footer stays on top */
 }
 
 .footer p {

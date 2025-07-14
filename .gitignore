@@ -67,3 +67,13 @@ node_modules/
 
 # dataconnect generated files
 .dataconnect
+
+# Firebase service account keys
+/backend/languagelearningarcade-firebase-adminsdk-fbsvc-c990ec5fe7.json
+/backend/firebase-adminsdk.json
+/backend/serviceAccountKey.json
+
+# Ignore other secrets you may want to add later
+*.key
+*.pem
+*.env.local

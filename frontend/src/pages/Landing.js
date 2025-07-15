@@ -1,80 +1,31 @@
+// src/components/LandingPage.js
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "../styles.css";
 
-export default function Landing() {
+export default function LandingPage() {
   const navigate = useNavigate();
 
-  const teachers = [
-    { name: "Emma", avatar: "/emma.png" },
-    { name: "Liam", avatar: "/liam.png" },
-    { name: "Olivia", avatar: "/olivia.png" },
-    { name: "Noah", avatar: "/noah.png" },
-    { name: "Sophia", avatar: "/sophia.png" },
-  ];
+  const handleStartLearning = () => {
+    const user = localStorage.getItem("user"); // Or replace with auth context
+    if (user) {
+      navigate("/school");
+    } else {
+      navigate("/login");
+    }
+  };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img
-          src="/logo.png"
-          alt="Language Learning Arcade Logo"
-          className="App-logo"
-          onError={(e) => (e.target.src = "https://via.placeholder.com/200x60?text=Logo")}
-        />
-        <nav>
-          <a href="/about" aria-label="Go to about page" className="App-link">About</a>
-          <a href="/login" aria-label="Sign up for Language Learning Arcade" className="App-link">Sign Up</a>
-          <a href="/app" aria-label="Start learning English" className="App-link">Start Learning</a>
-        </nav>
-      </header>
-      <div className="landing-container">
-        <h1 className="landing-title">Welcome to the Language Learning Arcade</h1>
-        <p className="landing-subtitle">Master English through interactive games, personalized lessons, and AI-driven feedback.</p>
-        <div className="hero-section">
-          <img
-            src="/hero.png"
-            alt="Language Learning Hero"
-            className="hero-image"
-            onError={(e) => (e.target.src = "https://via.placeholder.com/800x400?text=Hero+Image")}
-          />
-        </div>
-        <div className="features">
-          <h3>Why Learn with Us?</h3>
-          <ul>
-            <li><strong>Personalized Lessons</strong>: Tailored to your level and goals.</li>
-            <li><strong>AI-Powered Learning</strong>: Real-time feedback to boost progress.</li>
-            <li><strong>Gamified Experience</strong>: Earn badges and unlock achievements.</li>
-            <li><strong>Expert Teachers</strong>: Learn from Emma, Liam, Olivia, Noah, or Sophia.</li>
-          </ul>
-        </div>
-        <div className="avatar-container">
-          <h3>Meet Our Teachers</h3>
-          <div className="teacher-row">
-            {teachers.map((teacher) => (
-              <div key={teacher.name} className="teacher-item">
-                <img
-                  src={teacher.avatar}
-                  alt={`Teacher ${teacher.name}`}
-                  className="teacher-avatar"
-                  onError={(e) => (e.target.src = "/avatars/default.png")}
-                />
-                <p>{teacher.name}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-        <button
-          className="button-primary"
-          onClick={() => navigate("/login")}
-          aria-label="Get started with Language Learning Arcade"
-        >
-          Start Your Journey
-        </button>
+    <div className="section-border" style={{ padding: "40px", marginTop: "30px" }}>
+      <h1>🎮 Language Learning Arcade</h1>
+      <p style={{ fontSize: "1.2rem", color: "white", marginBottom: "30px" }}>
+        Play games. Earn points. Master English!
+      </p>
+
+      <div style={{ display: "flex", justifyContent: "center", gap: "20px", flexWrap: "wrap" }}>
+        <button onClick={handleStartLearning}>Start Learning</button>
+        <button onClick={() => navigate("/signup")}>Sign Up</button>
+        <button onClick={() => navigate("/about")}>About</button>
       </div>
-      <footer className="footer">
-        <p>© 2025 Language Learning Arcade. Built with Passion & Innovation.</p>
-      </footer>
     </div>
   );
 }

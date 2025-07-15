@@ -19,6 +19,11 @@ import Progress from "./components/Progress";
 import SchoolMap from "./components/SchoolMap";
 import WordChainGame from "./components/WordChainGame";
 import QuizGame from "./components/QuizGame";
+import GuessTheWord from "./components/GuessTheWord";
+import MemoryMatch from "./components/MemoryMatch";
+import FastGrammarRace from "./components/FastGrammarRace";
+import DialogueFillIn from "./components/DialogueFillIn";
+import GamesRoom from "./components/GamesRoom";
 import SetupPage from "./components/SetupPage";
 import About from "./components/About";
 
@@ -35,7 +40,7 @@ function MainApp({ user, setUser }) {
       }
       return {};
     } catch (err) {
-      console.error("Error parsing course data in MainApp:", err);
+      console.error("Error parsing course data:", err);
       return {};
     }
   });
@@ -51,7 +56,7 @@ function MainApp({ user, setUser }) {
           setCourse({});
         }
       } catch (err) {
-        console.error("Error updating course data in MainApp:", err);
+        console.error("Error syncing course from storage:", err);
         setCourse({});
       }
     };
@@ -59,23 +64,6 @@ function MainApp({ user, setUser }) {
     return () => window.removeEventListener("storage", handleStorageChange);
   }, [user]);
 
-  const vocab = ["cat", "tiger", "rabbit", "tarantula", "ant", "tortoise", "elephant", "tapir"];
-  const quizQuestions = [
-    {
-      question: "What is the capital of England?",
-      options: ["London", "Paris", "New York", "Berlin"],
-      correctAnswer: "London",
-    },
-    {
-      question: "Choose the correct past tense: I ___ to the store yesterday.",
-      options: ["go", "went", "gone", "going"],
-      correctAnswer: "went",
-    },
-  ];
-
-  const isBusiness = course.reason?.toLowerCase().includes("business");
-  const isTravel = course.reason?.toLowerCase().includes("travel");
-  const moduleReason = isBusiness ? "business" : isTravel ? "travel" : "personal";
   const speakingCompleted = course.skills?.find(s => s.skill === "Speaking")?.lessons?.filter(l => l.module_lesson && l.completed).length || 0;
 
   const canAccessRoom = (room) => {
@@ -92,23 +80,16 @@ function MainApp({ user, setUser }) {
     try {
       await signOut(auth);
       setUser(null);
-      localStorage.removeItem("currentUser");
-      localStorage.removeItem("users");
-      localStorage.removeItem(`course_${user}`);
-      localStorage.removeItem(`badges_${user}`);
-      localStorage.removeItem(`used_content_${user}`);
-      localStorage.removeItem(`homework_${user}`);
-      localStorage.removeItem("lessons");
-      localStorage.removeItem("setupComplete");
+      localStorage.clear();
       navigate("/login");
     } catch (error) {
-      console.error("Error logging out:", error);
-      alert("Failed to log out. Please try again.");
+      console.error("Logout failed:", error);
+      alert("Logout failed. Please try again.");
     }
   };
 
   const renderContent = () => {
-    if (!user) return <p>Please log in to access the arcade.</p>;
+    if (!user) return <p>Please log in to access the app.</p>;
 
     if (mode === "course" && selectedRoom && !canAccessRoom(selectedRoom)) {
       const incompleteSkill = course.skills?.find(s => (s.completed || 0) < (s.required || 0));
@@ -116,7 +97,7 @@ function MainApp({ user, setUser }) {
         <p style={{ fontSize: "18px" }}>
           🔒 This room is locked in Course Mode.{" "}
           {speakingCompleted < 5
-            ? `Complete ${5 - speakingCompleted} more ${moduleReason} Speaking lessons.`
+            ? `Complete ${5 - speakingCompleted} more Speaking lessons.`
             : selectedRoom === "arcade"
             ? "Complete 2 Vocabulary lessons to unlock the Game Room."
             : selectedRoom === "library"
@@ -130,29 +111,32 @@ function MainApp({ user, setUser }) {
       case "classroom1":
         return <ClassGenerator course={course} />;
       case "arcade":
-        return <WordChainGame words={vocab} />;
+        return <GamesRoom />;
       case "library":
-        return <QuizGame questions={quizQuestions} />;
+        return (
+          <div style={{ padding: "20px" }}>
+            <h3>Library 📚</h3>
+            <p>Coming soon: Reading and writing activities.</p>
+          </div>
+        );
       case "media":
         return (
-          <div style={{ maxWidth: "400px", padding: "20px" }}>
-            <h3>Media Room</h3>
-            <p>Video & Song lessons coming soon!</p>
+          <div style={{ padding: "20px" }}>
+            <h3>Media Room 🎧</h3>
+            <p>Watch, listen, and learn! Coming soon.</p>
           </div>
         );
       default:
         return (
-          <div style={{ maxWidth: "400px", padding: "20px", fontSize: "18px" }}>
+          <div style={{ padding: "20px", fontSize: "18px" }}>
             <h2>Welcome to the Language Learning Arcade!</h2>
-            <p>Click a room to start your quest.</p>
+            <p>Select a room to start your journey.</p>
             {mode === "course" && (
-              <p>
-                In Course Mode, complete your Speaking module lessons to unlock other rooms.
-              </p>
+              <p>In Course Mode, you must complete speaking lessons to unlock new areas.</p>
             )}
             {course.reason && (
               <p>
-                Your learning reason: <strong>{course.reason}</strong>
+                Your goal: <strong>{course.reason}</strong>
               </p>
             )}
           </div>
@@ -162,7 +146,7 @@ function MainApp({ user, setUser }) {
 
   return (
     <div style={{ padding: "20px", fontFamily: "'Segoe UI', sans-serif" }}>
-      <div style={{ marginBottom: 10, display: "flex", justifyContent: "space-between" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
         <div>Logged in as: <strong>{user}</strong></div>
         <div>
           <button onClick={() => navigate("/homework")}>📚 Homework</button>
@@ -172,7 +156,7 @@ function MainApp({ user, setUser }) {
         </div>
       </div>
 
-      <div style={{ marginBottom: "20px" }}>
+      <div style={{ marginBottom: 20 }}>
         <strong>🧭 Mode:</strong>
         <button onClick={() => setMode("arcade")}>🎮 Arcade</button>
         <button onClick={() => setMode("course")}>📘 Course</button>
@@ -203,15 +187,13 @@ export default function App() {
           const userDoc = await getDoc(doc(db, "users", userId));
           if (userDoc.exists()) {
             const userData = userDoc.data();
-
-            // NEW LOGIC: Read setupComplete from Firestore
             setNeedsSetup(!userData?.setupComplete);
 
             const users = JSON.parse(localStorage.getItem("users") || "{}");
             users[userId] = {
               studentLevel: userData.studentLevel || "A1",
               age: userData.age || 18,
-              why: userData.why || "personal growth",
+              why: userData.why || "personal",
               displayName: userData.displayName || "User",
             };
             localStorage.setItem("users", JSON.stringify(users));
@@ -219,16 +201,14 @@ export default function App() {
             setNeedsSetup(true);
           }
         } catch (error) {
-          console.error("Error checking user profile:", error);
-          setError("Failed to load user profile. Please try logging in again.");
+          console.error("Error checking profile:", error);
+          setError("Failed to load user profile.");
           setNeedsSetup(true);
         }
       } else {
         setUser(null);
         setNeedsSetup(false);
-        localStorage.removeItem("currentUser");
-        localStorage.removeItem("users");
-        localStorage.removeItem("setupComplete");
+        localStorage.clear();
       }
       setAuthLoading(false);
     });
@@ -247,11 +227,7 @@ export default function App() {
           path="/app"
           element={
             user ? (
-              needsSetup ? (
-                <Navigate to="/setup" />
-              ) : (
-                <MainApp user={user} setUser={setUser} />
-              )
+              needsSetup ? <Navigate to="/setup" /> : <MainApp user={user} setUser={setUser} />
             ) : (
               <Navigate to="/login" />
             )
@@ -265,25 +241,20 @@ export default function App() {
                 onSave={async (formData) => {
                   try {
                     const userId = auth.currentUser?.uid;
-                    if (!userId) throw new Error("No user logged in");
+                    if (!userId) throw new Error("No user found");
 
-                    const missingFields = [];
-                    if (!formData.studentLevel) missingFields.push("Student Level");
-                    if (!formData.age || isNaN(formData.age)) missingFields.push("Age");
-                    if (!formData.reason) missingFields.push("Reason");
-                    if (missingFields.length > 0) {
-                      throw new Error(`Missing or invalid fields: ${missingFields.join(", ")}.`);
+                    if (!formData.studentLevel || !formData.age || !formData.reason) {
+                      throw new Error("All fields are required.");
                     }
 
-                    const userProfileRef = doc(db, "users", userId);
                     await setDoc(
-                      userProfileRef,
+                      doc(db, "users", userId),
                       {
                         studentLevel: formData.studentLevel,
-                        age: parseInt(formData.age, 10) || 18,
+                        age: parseInt(formData.age, 10),
                         why: formData.reason,
                         displayName: auth.currentUser?.displayName || "User",
-                        setupComplete: true, // ✔️ ADDED
+                        setupComplete: true,
                       },
                       { merge: true }
                     );
@@ -291,15 +262,8 @@ export default function App() {
                     const courseData = {
                       level: formData.studentLevel,
                       reason: formData.reason,
-                      age: parseInt(formData.age, 10) || 18,
-                      skills: [
-                        "Speaking",
-                        "Listening",
-                        "Grammar",
-                        "Vocabulary",
-                        "Reading",
-                        "Writing",
-                      ].map((skill) => ({
+                      age: parseInt(formData.age, 10),
+                      skills: ["Speaking", "Listening", "Grammar", "Vocabulary", "Reading", "Writing"].map(skill => ({
                         skill,
                         required: 4,
                         completed: 0,
@@ -307,21 +271,10 @@ export default function App() {
                       })),
                     };
                     localStorage.setItem(`course_${userId}`, JSON.stringify(courseData));
-                    localStorage.setItem(`badges_${userId}`, JSON.stringify([]));
-
-                    const users = JSON.parse(localStorage.getItem("users") || "{}");
-                    users[userId] = {
-                      studentLevel: formData.studentLevel,
-                      age: parseInt(formData.age, 10) || 18,
-                      why: formData.reason,
-                      displayName: auth.currentUser?.displayName || "User",
-                    };
-                    localStorage.setItem("users", JSON.stringify(users));
-
                     setNeedsSetup(false);
                   } catch (error) {
-                    console.error("Error saving setup data (App.js onSave):", error.message, error);
-                    alert(`Failed to save profile: ${error.message}. Please try again.`);
+                    console.error("Setup save error:", error.message);
+                    alert("Error saving setup: " + error.message);
                   }
                 }}
               />
@@ -333,6 +286,7 @@ export default function App() {
         <Route path="/homework" element={user ? <Homework /> : <Navigate to="/login" />} />
         <Route path="/lessons" element={user ? <Lessons /> : <Navigate to="/login" />} />
         <Route path="/progress" element={user ? <Progress /> : <Navigate to="/login" />} />
+        <Route path="/games" element={user ? <GamesRoom /> : <Navigate to="/login" />} />
       </Routes>
     </BrowserRouter>
   );

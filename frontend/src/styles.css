@@ -1,95 +1,170 @@
-/* ========== Header Reduced Height ========== */
-.App-header, .header {
-  min-height: 25vh;
-  padding: 1rem;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Open+Sans:wght@400;600&display=swap');
+
+/* Global Styles */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Montserrat', sans-serif;
+  background: linear-gradient(135deg, #B0A4E3 0%, #9B8AD6 100%);
+  color: #333;
 }
 
-/* ========== Avatars Horizontal & Compact on Landing ========== */
+/* Header */
+.App-header, .header {
+  background: linear-gradient(to bottom, #B0A4E3, #9B8AD6);
+  min-height: 30vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  padding: 1rem;
+  width: 100%;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.App-logo, .header-logo {
+  height: 80px;
+  transition: transform 0.3s ease;
+}
+
+.App-logo:hover, .header-logo:hover {
+  transform: scale(1.05);
+}
+
+/* Landing */
+.landing-title {
+  font-size: 3.5em;
+  font-weight: 900;
+  color: #ffffff;
+  margin-bottom: 0.5em;
+  text-align: center;
+}
+
+.landing-subtitle,
+.features li,
+.features h3 {
+  color: white;
+  font-size: 1.8em;
+  text-align: center;
+  font-family: 'Open Sans', sans-serif;
+}
+
+/* Avatars */
 .avatar-container {
   display: flex;
-  flex-direction: row;
   justify-content: center;
-  gap: 15px;
+  gap: 30px;
   flex-wrap: nowrap;
   overflow-x: auto;
-  padding: 10px 0;
+  padding: 10px;
+  margin: 30px 0;
 }
+
+.avatar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .avatar-image {
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 3px solid #6A5ACD;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
 }
 
-/* ========== White Text on Blue Backgrounds ========== */
-.container,
-.app-container,
+.avatar-image:hover {
+  transform: scale(1.1);
+}
+
+.avatar-item p {
+  font-size: 1.1em;
+  color: white;
+  font-weight: 600;
+  margin-top: 5px;
+}
+
+/* Section Borders */
 .section-border {
-  color: white;
+  border: 2px dotted #6A5ACD;
+  border-radius: 12px;
+  padding: 20px;
+  background-color: white;
+  margin-bottom: 30px;
 }
 
-/* ========== Landing Page Text Sizing ========== */
-.landing-title,
-.landing-subtitle {
-  font-size: 2.5rem;
-  text-align: center;
-  color: white;
-}
-
-/* ========== Dotted School Map Box ========== */
-.school-section {
-  border: 3px dotted #FFD700;
-  background: #1e0f3f;
-  padding: 30px;
+/* School Map */
+.school-map-container {
+  border: 2px dotted #FFD700;
   border-radius: 10px;
+  padding: 20px;
+  background: #ffffff;
 }
 
-/* ========== Vertical Game Layout + Colorful Backgrounds ========== */
-.games-grid {
+/* Game Room */
+.games-room {
   display: flex;
   flex-direction: column;
   gap: 40px;
-  width: 100%;
-}
-.game-card {
-  padding: 30px;
-  border-radius: 12px;
-  border: 2px solid #FFD700;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
-  width: 100%;
-}
-.game-card:nth-child(1) {
-  background: #1E90FF; /* Blue */
-}
-.game-card:nth-child(2) {
-  background: #32CD32; /* Lime Green */
-}
-.game-card:nth-child(3) {
-  background: #FF69B4; /* Hot Pink */
-}
-.game-card:nth-child(4) {
-  background: #FFA500; /* Orange */
-}
-.game-card:nth-child(5) {
-  background: #8A2BE2; /* Blue Violet */
-}
-.game-card:nth-child(6) {
-  background: #00CED1; /* Dark Turquoise */
-}
-.game-card:nth-child(7) {
-  background: #FF4500; /* Orange Red */
-}
-.game-card:nth-child(8) {
-  background: #2E8B57; /* Sea Green */
-}
-.game-card:nth-child(9) {
-  background: #DC143C; /* Crimson */
-}
-.game-card:nth-child(10) {
-  background: #20B2AA; /* Light Sea Green */
 }
 
-/* ========== Game Titles Arcade Font ========== */
+.game-card {
+  background: #fffbe7;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-left: 6px solid #FFD700;
+  transition: transform 0.2s ease;
+  margin-bottom: 20px;
+}
+
+.game-card:hover {
+  transform: translateY(-5px);
+}
+
 .game-card h3 {
-  font-size: 2rem;
-  font-family: 'Press Start 2P', cursive;
-  color: white;
+  font-size: 2em;
+  font-weight: 800;
+  color: #6A5ACD;
+  margin-bottom: 10px;
+}
+
+/* Buttons */
+button {
+  background-color: #FFD700;
+  border: none;
+  padding: 12px 20px;
+  font-weight: bold;
+  font-size: 1em;
+  color: #333;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  margin: 5px;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background-color: #FFC300;
+  transform: scale(1.05);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .landing-title {
+    font-size: 2.5em;
+  }
+  .landing-subtitle {
+    font-size: 1.4em;
+  }
+  .avatar-image {
+    width: 60px;
+    height: 60px;
+  }
+  .game-card h3 {
+    font-size: 1.5em;
+  }
 }

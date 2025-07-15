@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useMemo } from "react";
-import Markdown from "react-markdown"; // Fixed: Use 'Markdown' instead of 'ReactMarkdown'
+import Markdown from "react-markdown";
 import rehypeSanitize from "rehype-sanitize";
 import Notepad from "./Notepad.js";
 import axios from "axios";
 import { auth, db } from "../firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import "../styles.css";
 
 export default function ClassGenerator() {
@@ -32,9 +32,11 @@ export default function ClassGenerator() {
   const [vocabulary, setVocabulary] = useState([]);
   const [exercises, setExercises] = useState([]);
   const [remainingCalls, setRemainingCalls] = useState(null);
+  const [savedLessons, setSavedLessons] = useState([]);
+  const [savedHomework, setSavedHomework] = useState([]);
 
   const API_URL = process.env.NODE_ENV === "production"
-    ? "https://languagelearningarcade.onrender.com"
+    ? "https://language-arcade-backend.onrender.com"
     : "http://127.0.0.1:8000";
 
   const teachers = [
@@ -76,7 +78,7 @@ export default function ClassGenerator() {
         const token = await auth.currentUser.getIdToken();
         const res = await axios.get(`${API_URL}/remaining-calls`, {
           headers: { Authorization: `Bearer ${token}` },
-          timeout: 60000,
+          timeout: 10000,
         });
         setRemainingCalls(res.data.remaining_calls.generate);
       } catch (err) {
@@ -88,13 +90,47 @@ export default function ClassGenerator() {
             ? "Please log in to check remaining lessons."
             : err.message === "User not authenticated"
             ? "Please log in to access lessons."
-            : "Failed to fetch remaining lessons. Try again later."
+            : "Failed to fetch remaining lessons. Try again."
         );
         setRemainingCalls(0);
       }
     };
+
+    const loadData = async () => {
+      // Load from localStorage
+      const lessons = JSON.parse(localStorage.getItem(`lessons_${currentUser}`) || "[]");
+      const homework = JSON.parse(localStorage.getItem(`homework_${currentUser}`) || "[]");
+      console.log("Loaded lessons:", lessons);
+      console.log("Loaded homework:", homework);
+      setSavedLessons(lessons);
+      setSavedHomework(homework);
+
+      // Load from Firestore
+      if (auth.currentUser) {
+        try {
+          const userDoc = await getDoc(doc(db, "users", currentUser));
+          if (userDoc.exists()) {
+            const data = userDoc.data();
+            if (data.lessons) {
+              localStorage.setItem(`lessons_${currentUser}`, JSON.stringify(data.lessons));
+              setSavedLessons(data.lessons);
+            }
+            if (data.homework) {
+              localStorage.setItem(`homework_${currentUser}`, JSON.stringify(data.homework));
+              setSavedHomework(data.homework);
+            }
+            console.log("Loaded Firestore data:", data);
+          }
+        } catch (error) {
+          console.error("Error loading Firestore data:", error);
+          setError("Failed to load lessons from server. Check ad blockers or network settings.");
+        }
+      }
+    };
+
     fetchRemainingCalls();
-  }, [API_URL]); // Fixed: Added API_URL to dependency array
+    loadData();
+  }, [API_URL, currentUser]);
 
   const initializeCourse = () => {
     let course = JSON.parse(localStorage.getItem(`course_${currentUser}`) || "{}");
@@ -163,7 +199,20 @@ export default function ClassGenerator() {
       console.log("Updated Firestore course for", userId, ":", course);
     } catch (error) {
       console.error("Error updating Firestore:", error);
-      setError("Failed to sync progress with server.");
+      setError("Failed to sync progress with server. Check ad blockers or network settings.");
+    }
+  };
+
+  const syncLessonsToFirestore = async (userId, lessons, homework) => {
+    try {
+      if (!auth.currentUser || auth.currentUser.uid !== userId) {
+        throw new Error("User not authenticated");
+      }
+      await setDoc(doc(db, "users", userId), { lessons, homework }, { merge: true });
+      console.log("Synced lessons and homework to Firestore for", userId, ":", { lessons, homework });
+    } catch (error) {
+      console.error("Error syncing lessons to Firestore:", error);
+      setError("Failed to sync lessons with server. Check ad blockers or network settings.");
     }
   };
 
@@ -296,7 +345,7 @@ export default function ClassGenerator() {
 
       const res = await axios.post(`${API_URL}/generate-class`, payload, {
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-        timeout: 60000,
+        timeout: 30000,
       });
 
       setClassPlan(res.data.class_plan);
@@ -305,10 +354,17 @@ export default function ClassGenerator() {
       const dragMatch = res.data.class_plan.match(/## Quick Check\n([\s\S]*?)(?=\n##|$)/);
       if (dragMatch) {
         const quickCheckText = dragMatch[1];
-        const items = quickCheckText.match(/- \[ \] ([^\n]+)/g)?.map((item) => item.replace(/- \[ \] /, "")) || [];
-        setDragItems(items);
+        const items = quickCheckText.match(/- \[\s*\] ([^\n]+)/g)?.map((item) => item.replace(/- \[\s*\] /, "")) || [];
+        if (items.length === 0) {
+          console.warn("Quick Check section found but no items parsed:", quickCheckText);
+          setDragItems(["Placeholder 1", "Placeholder 2", "Placeholder 3", "Placeholder 4"]);
+        } else {
+          setDragItems(items);
+        }
+        console.log("Parsed dragItems:", items);
       } else {
-        console.warn("No Quick Check section found");
+        console.warn("No Quick Check section found in classPlan:", res.data.class_plan);
+        setDragItems(["Placeholder 1", "Placeholder 2", "Placeholder 3", "Placeholder 4"]);
       }
 
       const vocabMatch = res.data.class_plan.match(/## Vocabulary\n([\s\S]*?)(?=\n##|$)/);
@@ -316,7 +372,7 @@ export default function ClassGenerator() {
         const vocabText = vocabMatch[1];
         const lines = vocabText.split("\n").filter((line) => line.startsWith("|") && !line.includes("---"));
         const vocabData = lines.map((line) => {
-          const [, word, meaning, example] = line.split("|").map((cell) => cell.trim()); // Removed unused '_'
+          const [, word, meaning, example] = line.split("|").map((cell) => cell.trim());
           return { word, meaning, example };
         });
         setVocabulary(vocabData);
@@ -333,7 +389,7 @@ export default function ClassGenerator() {
         console.warn("No Exercises section found");
       }
 
-      const lessons = JSON.parse(localStorage.getItem("lessons") || "[]").slice(-50);
+      const lessons = JSON.parse(localStorage.getItem(`lessons_${currentUser}`) || "[]").slice(-50);
       const newLesson = {
         classPlan: res.data.class_plan,
         studentLevel,
@@ -345,14 +401,18 @@ export default function ClassGenerator() {
         completed: false,
         module_lesson: skillFocus === "Speaking" ? getNextModuleLesson() : 0,
       };
-      localStorage.setItem("lessons", JSON.stringify([...lessons, newLesson]));
-      console.log("Lesson saved:", newLesson);
+      lessons.push(newLesson);
+      localStorage.setItem(`lessons_${currentUser}`, JSON.stringify(lessons));
+      console.log("Lesson saved to localStorage:", newLesson);
+      setSavedLessons(lessons);
 
       const updatedContent = {
         phrases: [...(usedContent.phrases || []), ...dragItems],
         vocab: [...(usedContent.vocab || []), ...vocabulary.map((v) => v.word)],
       };
       localStorage.setItem(`used_content_${currentUser}`, JSON.stringify(updatedContent));
+
+      await syncLessonsToFirestore(currentUser, lessons, JSON.parse(localStorage.getItem(`homework_${currentUser}`) || "[]"));
     } catch (err) {
       console.error("Class generation error:", err);
       setError(
@@ -362,7 +422,7 @@ export default function ClassGenerator() {
           ? "Please log in to generate lessons."
           : err.code === "ECONNABORTED"
           ? "Request timed out. Please try again."
-          : err.response?.data?.detail || "Error generating class. Try again."
+          : err.response?.data?.detail || "Error generating class. Check ad blockers or network settings."
       );
       setRemainingCalls(err.response?.data?.remaining_calls || 0);
     } finally {
@@ -380,7 +440,7 @@ export default function ClassGenerator() {
       return;
     }
 
-    setLoading(true); // Using 'loading' instead of unused 'submitting'
+    setLoading(true);
     try {
       const token = await auth.currentUser.getIdToken();
       const res = await axios.post(
@@ -401,13 +461,14 @@ export default function ClassGenerator() {
       setFeedback(res.data.feedback);
       setRemainingCalls(res.data.remaining_calls);
 
-      const lessons = JSON.parse(localStorage.getItem("lessons") || "[]").slice(-50);
+      const lessons = JSON.parse(localStorage.getItem(`lessons_${currentUser}`) || "[]").slice(-50);
       const lastLesson = lessons[lessons.length - 1];
       if (lastLesson) {
         lastLesson.feedback = res.data.feedback;
         lastLesson.completed = true;
-        localStorage.setItem("lessons", JSON.stringify(lessons));
+        localStorage.setItem(`lessons_${currentUser}`, JSON.stringify(lessons));
         console.log("Updated lesson with feedback and completed:", lastLesson);
+        setSavedLessons(lessons);
 
         const course = initializeCourse();
         const skill = course.skills.find((s) => s.skill === skillFocus);
@@ -426,6 +487,8 @@ export default function ClassGenerator() {
           console.warn(`Skill ${skillFocus} not found`);
           setError(`Skill ${skillFocus} not found in course`);
         }
+
+        await syncLessonsToFirestore(currentUser, lessons, JSON.parse(localStorage.getItem(`homework_${currentUser}`) || "[]"));
       }
     } catch (err) {
       console.error("Error submitting answer:", err);
@@ -436,7 +499,7 @@ export default function ClassGenerator() {
           ? "Please log in to submit answers."
           : err.code === "ECONNABORTED"
           ? "Request timed out. Please try again."
-          : err.response?.data?.detail || "Failed to submit answer."
+          : err.response?.data?.detail || "Failed to submit answer. Check ad blockers or network settings."
       );
       setRemainingCalls(err.response?.data?.remaining_calls || 0);
     } finally {
@@ -482,6 +545,8 @@ export default function ClassGenerator() {
 
       saved.push(newEntry);
       localStorage.setItem(key, JSON.stringify(saved));
+      console.log("Homework saved to localStorage:", newEntry);
+      setSavedHomework(saved);
 
       const badgeMatch = classPlan.match(/## Badge\n.*?🏅 \*\*(.*?)\*\*/s);
       const badgeName = badgeMatch ? badgeMatch[1].trim() : "Lesson Star";
@@ -506,10 +571,12 @@ export default function ClassGenerator() {
         setError(`Skill ${skillFocus} not found in course`);
       }
 
+      await syncLessonsToFirestore(currentUser, JSON.parse(localStorage.getItem(`lessons_${currentUser}`) || "[]"), saved);
+
       alert(`📚 Saved to Homework! Earned badge: ${badgeName}`);
     } catch (err) {
       console.error("Error saving homework:", err);
-      setError("Failed to save: " + err.message);
+      setError("Failed to save: Check ad blockers or network settings.");
     }
   };
 
@@ -579,8 +646,8 @@ export default function ClassGenerator() {
   const suggestedSkill = useMemo(() => {
     if (!courseData.skills) return { skill: "Any", lessonsLeft: 0 };
     const skill = courseData.skills.find((s) => s.completed < s.required && validSkills.includes(s.skill));
-    return skill ? { skill: skill.skill, lessonsLeft: skill.required - skill.completed } : { skill: "Any", lessonsLeft: 0 };
-  }, [courseData.skills, validSkills]); // Fixed: Added validSkills to dependency array
+    return skill ? { skill: skill.skill, lessonsLeft: skill.required - s.completed } : { skill: "Any", lessonsLeft: 0 };
+  }, [courseData.skills, validSkills]);
 
   return (
     <div>
@@ -602,7 +669,7 @@ export default function ClassGenerator() {
         {remainingCalls === 0 && (
           <button
             className="button-primary"
-            onClick={() => window.location.href = "https://x.ai/grok"} // Replace with actual Stripe link
+            onClick={() => window.location.href = "https://x.ai/grok"}
             style={{ width: "100%", marginBottom: 15 }}
           >
             Go Premium for Unlimited Lessons!
@@ -726,6 +793,8 @@ export default function ClassGenerator() {
                 vocabulary={vocabulary}
                 exercises={exercises}
                 skillFocus={skillFocus}
+                savedLessons={savedLessons}
+                savedHomework={savedHomework}
               />
             </div>
           </div>

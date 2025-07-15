@@ -21,12 +21,14 @@ const Notepad = ({
   skillFocus,
   savedLessons,
   savedHomework,
-  classPlan, // Added prop
+  classPlan,
 }) => {
   const [notes, setNotes] = useState("");
   const [exerciseAnswers, setExerciseAnswers] = useState({});
   const [flippedCards, setFlippedCards] = useState({});
   const [audioPlayed, setAudioPlayed] = useState(false);
+
+  console.log("Notepad props:", { skillFocus, vocabulary }); // Debug log
 
   const handleSubmit = () => {
     if (!notes.trim()) {
@@ -157,7 +159,7 @@ const Notepad = ({
     <div className="flashcards-container">
       <h3>Vocabulary Flashcards</h3>
       {vocabulary.length === 0 ? (
-        <p className="error-text">No vocabulary items available.</p>
+        <p className="error-text">No vocabulary items available. Try generating a new lesson.</p>
       ) : (
         <div className="flashcards">
           {vocabulary.map((item, index) => (
@@ -247,7 +249,7 @@ const Notepad = ({
       ) : (
         <p className="error-text">No saved lessons or homework found. Try generating or saving a lesson.</p>
       )}
-      {skillFocus === "Vocabulary" && renderFlashcards()}
+      {vocabulary.length > 0 && renderFlashcards()} {/* Show flashcards if vocabulary exists */}
       {vocabulary.length > 0 && skillFocus !== "Vocabulary" && (
         <div className="vocabulary-container">
           <h3>Vocabulary</h3>

@@ -205,15 +205,19 @@
   text-align: center;
 }
 
-.teacher-row, .avatar-container > div:not(.avatar-item) {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  flex-wrap: wrap;
+.teacher-row, .avatar-container {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 20px !important;
+  justify-content: center !important;
+  flex-wrap: wrap !important;
 }
 
 .teacher-item, .avatar-item {
   text-align: center;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .teacher-avatar, .avatar-image {
@@ -243,18 +247,22 @@
 }
 
 /* Ensure avatars stay small and horizontal in lesson page */
+.app-container .avatar-container,
 .lesson-plan-container .avatar-container,
-.lesson-plan-container .teacher-row,
+.app-container .avatar-item,
 .lesson-plan-container .avatar-item,
+.app-container .avatar-image,
 .lesson-plan-container .avatar-image {
-  width: auto !important;
   display: flex !important;
   flex-direction: row !important;
   justify-content: center !important;
   align-items: center !important;
+  width: auto !important;
 }
 
+.app-container .avatar-image,
 .lesson-plan-container .avatar-image,
+.app-container .teacher-avatar,
 .lesson-plan-container .teacher-avatar {
   width: 50px !important;
   height: 50px !important;

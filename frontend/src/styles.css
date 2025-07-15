@@ -15,7 +15,7 @@
 }
 
 /* Header */
-.App-header {
+.App-header, .header {
   background: linear-gradient(to bottom, #B0A4E3, #9B8AD6);
   min-height: 60vh;
   display: flex;
@@ -28,18 +28,18 @@
   width: 100%;
 }
 
-.App-logo {
+.App-logo, .header-logo {
   height: 150px;
   margin-bottom: 1rem;
   transition: transform 0.3s ease;
 }
 
-.App-logo:hover {
+.App-logo:hover, .header-logo:hover {
   transform: scale(1.05);
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
+  .App-logo, .header-logo {
     animation: App-logo-spin infinite 20s linear;
   }
 }
@@ -53,13 +53,13 @@
   }
 }
 
-.App-header nav {
+.App-header nav, .header nav {
   display: flex;
   gap: 30px;
   justify-content: center;
 }
 
-.App-link {
+.App-link, .header nav a {
   color: #FFD700;
   font-weight: 700;
   text-decoration: none;
@@ -67,24 +67,24 @@
   font-size: 1.1em;
 }
 
-.App-link:hover {
+.App-link:hover, .header nav a:hover {
   color: #FF8C00;
 }
 
 @media (max-width: 600px) {
-  .App-header {
+  .App-header, .header {
     font-size: 1rem;
     padding: 1rem;
     min-height: 40vh;
   }
 
-  .App-logo {
+  .App-logo, .header-logo {
     height: 100px;
   }
 }
 
 /* General Container Styling */
-.container {
+.container, .app-container {
   max-width: 1200px;
   margin: 40px auto;
   padding: 40px;
@@ -205,31 +205,32 @@
   text-align: center;
 }
 
-.teacher-row {
+.teacher-row, .avatar-container > div:not(.avatar-item) {
   display: flex;
   gap: 20px;
   justify-content: center;
   flex-wrap: wrap;
 }
 
-.teacher-item {
+.teacher-item, .avatar-item {
   text-align: center;
 }
 
-.teacher-avatar {
-  width: 50px !important; /* Enforce 50px size */
+.teacher-avatar, .avatar-image {
+  width: 50px !important;
   height: 50px !important;
   border-radius: 50%;
   border: 2px solid #6A5ACD;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
+  cursor: pointer;
 }
 
-.teacher-avatar:hover {
+.teacher-avatar:hover, .avatar-image:hover {
   transform: scale(1.1);
 }
 
-.teacher-item p {
+.teacher-item p, .avatar-item p {
   font-family: 'Open Sans', sans-serif;
   font-weight: 600;
   color: #333;
@@ -237,25 +238,30 @@
   font-size: 1em;
 }
 
+.avatar-item.avatar-selected .avatar-image {
+  border: 3px solid #FFD700 !important;
+}
+
 /* Ensure avatars stay small and horizontal in lesson page */
 .lesson-plan-container .avatar-container,
 .lesson-plan-container .teacher-row,
-.lesson-plan-container .teacher-item,
-.lesson-plan-container .teacher-avatar {
-  width: auto !important; /* Prevent resizing */
+.lesson-plan-container .avatar-item,
+.lesson-plan-container .avatar-image {
+  width: auto !important;
   display: flex !important;
   flex-direction: row !important;
   justify-content: center !important;
   align-items: center !important;
 }
 
+.lesson-plan-container .avatar-image,
 .lesson-plan-container .teacher-avatar {
   width: 50px !important;
   height: 50px !important;
 }
 
 /* Buttons */
-.button-primary {
+.button-primary, .button-fancy {
   background: #6A5ACD;
   color: white;
   border: none;
@@ -270,9 +276,19 @@
   margin-bottom: 40px;
 }
 
-.button-primary:hover {
+.button-primary:hover, .button-fancy:hover {
   background: #5A4ABF;
   transform: translateY(-3px);
+}
+
+.button-primary:disabled, .button-fancy:disabled {
+  background: #999;
+  cursor: not-allowed;
+}
+
+.button-selected {
+  background: #FFD700;
+  color: #333;
 }
 
 /* Lesson, Worksheet, and Notepad Pages */
@@ -484,19 +500,19 @@
   word-break: break-word;
 }
 
-.markdown-content h2 {
+.markdown-header {
   color: #6A5ACD;
   font-weight: 900;
   margin: 20px 0 10px;
   font-size: 2.5em;
 }
 
-.markdown-content p {
+.markdown-paragraph {
   font-size: 1.6em;
   margin: 10px 0;
 }
 
-.markdown-content a {
+.markdown-link {
   color: #6A5ACD;
   text-decoration: none;
   font-weight: 600;
@@ -504,7 +520,7 @@
   word-break: break-word;
 }
 
-.markdown-content a:hover {
+.markdown-link:hover {
   color: #5A4ABF;
 }
 
@@ -585,4 +601,38 @@
 .footer p {
   margin: 0;
   font-size: 1em;
+}
+
+/* Class Generator Specific Styles */
+.reason-buttons {
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.reason-buttons div {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.section-border {
+  border: 1px solid #A89FD6;
+  border-radius: 8px;
+  padding: 15px;
+}
+
+.error-text {
+  color: #ff4444;
+  font-weight: 600;
+  margin: 10px 0;
+}
+
+.limit-text {
+  font-size: 1.1em;
+  color: #333;
+  margin: 10px 0;
 }

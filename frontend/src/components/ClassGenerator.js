@@ -36,7 +36,7 @@ export default function ClassGenerator() {
   const [savedHomework, setSavedHomework] = useState([]);
 
   const API_URL = process.env.NODE_ENV === "production"
-    ? "https://language-arcade-backend.onrender.com"
+    ? "https://languagelearningarcade.onrender.com"
     : "http://127.0.0.1:8000";
 
   const teachers = [
@@ -81,22 +81,21 @@ export default function ClassGenerator() {
         const lastCallDate = localStorage.getItem(`lastCallDate_${currentUser}`);
         const today = new Date().toDateString();
         
-        // Check if it's a new day to reset local cache
         if (lastCallDate !== today) {
-          localStorage.setItem(`remainingCalls_${currentUser}`, "5"); // Reset to 5 for free tier
+          localStorage.setItem(`remainingCalls_${currentUser}`, "5");
           localStorage.setItem(`lastCallDate_${currentUser}`, today);
           console.log("Reset remainingCalls to 5 for new day:", today);
         }
 
         const cachedCalls = parseInt(localStorage.getItem(`remainingCalls_${currentUser}`) || "5", 10);
-        setRemainingCalls(cachedCalls); // Set initial state from cache
+        setRemainingCalls(cachedCalls);
 
         const res = await axios.get(`${API_URL}/remaining-calls`, {
           headers: { Authorization: `Bearer ${token}` },
           timeout: 10000,
         });
         
-        const serverCalls = res.data.remaining_calls.generate || 0;
+        const serverCalls = res.data.remaining_calls?.generate || 0;
         setRemainingCalls(serverCalls);
         localStorage.setItem(`remainingCalls_${currentUser}`, serverCalls.toString());
         localStorage.setItem(`lastCallDate_${currentUser}`, today);
@@ -108,23 +107,26 @@ export default function ClassGenerator() {
       } catch (err) {
         console.error("Error fetching remaining calls:", err);
         const cachedCalls = parseInt(localStorage.getItem(`remainingCalls_${currentUser}`) || "5", 10);
-        setRemainingCalls(cachedCalls); // Fallback to cached value
+        setRemainingCalls(cachedCalls);
         setError(
           err.response?.status === 429
             ? "You've reached your daily lesson limit (5). Try again tomorrow!"
             : err.response?.status === 401
             ? "Please log in to check remaining lessons."
+            : err.response?.status === 404
+            ? "Credits endpoint not found. Contact support."
             : err.message === "User not authenticated"
             ? "Please log in to access lessons."
             : err.code === "ECONNABORTED"
             ? "Request timed out. Using cached credits: " + cachedCalls
+            : err.message.includes("Network Error")
+            ? "Network error: Check your internet connection or ad blockers."
             : "Failed to fetch remaining lessons. Using cached credits: " + cachedCalls + ". Check ad blockers or network settings."
         );
       }
     };
 
     const loadData = async () => {
-      // Load from localStorage
       const lessons = JSON.parse(localStorage.getItem(`lessons_${currentUser}`) || "[]");
       const homework = JSON.parse(localStorage.getItem(`homework_${currentUser}`) || "[]");
       console.log("Loaded lessons:", lessons);
@@ -132,7 +134,6 @@ export default function ClassGenerator() {
       setSavedLessons(lessons);
       setSavedHomework(homework);
 
-      // Load from Firestore
       if (auth.currentUser) {
         try {
           const userDoc = await getDoc(doc(db, "users", currentUser));
@@ -376,7 +377,7 @@ export default function ClassGenerator() {
       });
 
       setClassPlan(res.data.class_plan);
-      const newRemainingCalls = res.data.remaining_calls.generate || 0;
+      const newRemainingCalls = res.data.remaining_calls?.generate || 0;
       setRemainingCalls(newRemainingCalls);
       localStorage.setItem(`remainingCalls_${currentUser}`, newRemainingCalls.toString());
       localStorage.setItem(`lastCallDate_${currentUser}`, new Date().toDateString());
@@ -448,15 +449,25 @@ export default function ClassGenerator() {
       console.error("Class generation error:", err);
       const cachedCalls = parseInt(localStorage.getItem(`remainingCalls_${currentUser}`) || "5", 10);
       setRemainingCalls(cachedCalls);
-      setError(
-        err.response?.status === 429
-          ? "You've reached your daily lesson limit (5). Try again tomorrow!"
-          : err.response?.status === 401
-          ? "Please log in to generate lessons."
-          : err.code === "ECONNABORTED"
-          ? "Request timed out. Using cached credits: " + cachedCalls
-          : err.response?.data?.detail || "Error generating class. Check ad blockers or network settings."
-      );
+      let errorMessage = "Failed to generate class. Please try again.";
+      if (err.response) {
+        if (err.response.status === 429) {
+          errorMessage = "You've reached your daily lesson limit (5). Try again tomorrow!";
+        } else if (err.response.status === 401) {
+          errorMessage = "Please log in to generate lessons.";
+        } else if (err.response.status === 404) {
+          errorMessage = "Lesson generation endpoint not found. Contact support.";
+        } else if (err.response.status === 0) {
+          errorMessage = "CORS error: Backend not allowing requests. Contact support or check ad blockers.";
+        } else {
+          errorMessage = err.response.data?.detail || "Error generating class. Check ad blockers or network settings.";
+        }
+      } else if (err.code === "ECONNABORTED") {
+        errorMessage = "Request timed out. Using cached credits: " + cachedCalls;
+      } else if (err.message.includes("Network Error")) {
+        errorMessage = "Network error: Check your internet connection or ad blockers.";
+      }
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -491,7 +502,7 @@ export default function ClassGenerator() {
       );
 
       setFeedback(res.data.feedback);
-      const newRemainingCalls = res.data.remaining_calls.generate || 0;
+      const newRemainingCalls = res.data.remaining_calls?.generate || 0;
       setRemainingCalls(newRemainingCalls);
       localStorage.setItem(`remainingCalls_${currentUser}`, newRemainingCalls.toString());
       localStorage.setItem(`lastCallDate_${currentUser}`, new Date().toDateString());
@@ -535,8 +546,14 @@ export default function ClassGenerator() {
           ? "You've reached your daily lesson limit (5). Try again tomorrow!"
           : err.response?.status === 401
           ? "Please log in to submit answers."
+          : err.response?.status === 404
+          ? "Answer submission endpoint not found. Contact support."
+          : err.response?.status === 0
+          ? "CORS error: Backend not allowing requests. Contact support or check ad blockers."
           : err.code === "ECONNABORTED"
           ? "Request timed out. Using cached credits: " + cachedCalls
+          : err.message.includes("Network Error")
+          ? "Network error: Check your internet connection or ad blockers."
           : err.response?.data?.detail || "Failed to submit answer. Check ad blockers or network settings."
       );
     } finally {

@@ -92,7 +92,7 @@ export default function ClassGenerator() {
 
         const res = await axios.get(`${API_URL}/remaining-calls`, {
           headers: { Authorization: `Bearer ${token}` },
-          timeout: 10000,
+          timeout: 60000,
         });
         
         const serverCalls = res.data.remaining_calls?.generate || 0;
@@ -373,7 +373,7 @@ export default function ClassGenerator() {
 
       const res = await axios.post(`${API_URL}/generate-class`, payload, {
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-        timeout: 30000,
+        timeout: 60000,
       });
 
       setClassPlan(res.data.class_plan);
@@ -497,7 +497,7 @@ export default function ClassGenerator() {
         },
         {
           headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-          timeout: 30000,
+          timeout: 60000,
         }
       );
 

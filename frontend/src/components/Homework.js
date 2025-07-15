@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "../styles.css";
 
 export default function Homework() {
   const [homeworkList, setHomeworkList] = useState([]);
@@ -10,11 +11,7 @@ export default function Homework() {
     if (!user) return;
     try {
       const saved = localStorage.getItem(`homework_${user}`);
-      if (saved) {
-        setHomeworkList(JSON.parse(saved));
-      } else {
-        setHomeworkList([]);
-      }
+      setHomeworkList(saved ? JSON.parse(saved) : []);
     } catch (err) {
       console.error("Error loading homework:", err);
       setHomeworkList([]);
@@ -25,7 +22,6 @@ export default function Homework() {
     const jsonStr = JSON.stringify(data, null, 2);
     const blob = new Blob([jsonStr], { type: "application/json" });
     const href = URL.createObjectURL(blob);
-
     const link = document.createElement("a");
     link.href = href;
     link.download = filename;
@@ -45,111 +41,65 @@ export default function Homework() {
 
   if (!user) {
     return (
-      <div style={{ padding: "20px" }}>
-        <h2>Please log in to view your homework.</h2>
+      <div className="landing-page">
+        <div className="landing-content section-border">
+          <h2>Please log in to view your homework.</h2>
+        </div>
       </div>
     );
   }
 
   return (
-    <div style={{ padding: "20px", fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" }}>
-      <div style={{ marginBottom: "20px", display: "flex", justifyContent: "space-between" }}>
-        <button
-          onClick={() => navigate("/app")}
-          style={{
-            padding: "10px 16px",
-            backgroundColor: "#007bff",
-            color: "white",
-            border: "none",
-            borderRadius: "6px",
-            cursor: "pointer",
-            fontSize: "16px",
-          }}
-        >
-          ⬅️ Back to Arcade
-        </button>
-
-        {homeworkList.length > 0 && (
-          <button
-            onClick={handleDownloadAll}
-            style={{
-              padding: "10px 16px",
-              backgroundColor: "#28a745",
-              color: "white",
-              border: "none",
-              borderRadius: "6px",
-              cursor: "pointer",
-              fontSize: "16px",
-            }}
-          >
-            📥 Download All
+    <div className="landing-page">
+      <div className="landing-content section-border">
+        <div className="homework-header">
+          <button className="button-primary" onClick={() => navigate("/app")}>
+            ⬅️ Back to Arcade
           </button>
+          {homeworkList.length > 0 && (
+            <button className="button-secondary" onClick={handleDownloadAll}>
+              📥 Download All
+            </button>
+          )}
+        </div>
+
+        <h2 className="neon-glow">📚 {user}'s Saved Homework</h2>
+
+        {homeworkList.length === 0 ? (
+          <p>No homework saved yet. Complete and save some worksheets!</p>
+        ) : (
+          homeworkList
+            .slice()
+            .reverse()
+            .map((hw, index) => (
+              <div key={index} className="homework-card">
+                <button className="button-glow small" onClick={() => handleDownloadOne(hw, index)}>
+                  💾 Download This
+                </button>
+                <div className="homework-meta">Saved on: {hw.timestamp || "Unknown date"}</div>
+                <div className="homework-notes">
+                  <strong>Notes:</strong> <br />
+                  {hw.notes || "(No notes)"}
+                </div>
+                <div className="homework-exercises">
+                  <strong>Exercises:</strong>
+                  {hw.exercises && Object.keys(hw.exercises).length > 0 ? (
+                    <ul>
+                      {Object.entries(hw.exercises).map(([exIndex, answer]) => (
+                        <li key={exIndex}>
+                          <strong>Exercise {parseInt(exIndex, 10) + 1}:</strong>{" "}
+                          {Array.isArray(answer) ? answer.join(", ") : answer}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>(No exercise answers saved)</p>
+                  )}
+                </div>
+              </div>
+            ))
         )}
       </div>
-
-      <h2>📚 {user}'s Saved Homework</h2>
-
-      {homeworkList.length === 0 ? (
-        <p>No homework saved yet. Complete and save some worksheets!</p>
-      ) : (
-        homeworkList
-          .slice()
-          .reverse()
-          .map((hw, index) => (
-            <div
-              key={index}
-              style={{
-                marginBottom: "20px",
-                padding: "15px",
-                border: "1px solid #ccc",
-                borderRadius: "8px",
-                backgroundColor: "#f9f9f9",
-                position: "relative",
-              }}
-            >
-              <button
-                onClick={() => handleDownloadOne(hw, index)}
-                style={{
-                  position: "absolute",
-                  top: "10px",
-                  right: "10px",
-                  backgroundColor: "#f90",
-                  color: "white",
-                  border: "none",
-                  padding: "6px 12px",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  fontSize: "14px",
-                }}
-              >
-                💾 Download This
-              </button>
-
-              <div style={{ marginBottom: "8px", fontWeight: "600" }}>
-                Saved on: {hw.timestamp || "Unknown date"}
-              </div>
-              <div style={{ whiteSpace: "pre-wrap", marginBottom: "10px" }}>
-                <strong>Notes:</strong> <br />
-                {hw.notes || "(No notes)"}
-              </div>
-              <div>
-                <strong>Exercises:</strong>
-                {hw.exercises && Object.keys(hw.exercises).length > 0 ? (
-                  <ul>
-                    {Object.entries(hw.exercises).map(([exIndex, answer]) => (
-                      <li key={exIndex} style={{ marginBottom: "6px" }}>
-                        <strong>Exercise {parseInt(exIndex, 10) + 1}:</strong>{" "}
-                        {Array.isArray(answer) ? answer.join(", ") : answer}
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p>(No exercise answers saved)</p>
-                )}
-              </div>
-            </div>
-          ))
-      )}
     </div>
   );
 }

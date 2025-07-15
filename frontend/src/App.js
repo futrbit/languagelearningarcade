@@ -19,6 +19,7 @@ import Progress from "./components/Progress";
 import SchoolMap from "./components/SchoolMap";
 import SetupPage from "./components/SetupPage";
 import About from "./components/About";
+import SignupPage from "./components/SignupPage";
 
 import WordChainGame from "./components/WordChainGame";
 import WordChainGameExpanded from "./components/WordChainGameExpanded";
@@ -333,6 +334,11 @@ export default function App() {
         <Route path="/homework" element={user ? <Homework /> : <Navigate to="/login" />} />
         <Route path="/lessons" element={user ? <Lessons /> : <Navigate to="/login" />} />
         <Route path="/progress" element={user ? <Progress /> : <Navigate to="/login" />} />
+        <Route path="/login" element={<Login onLogin={setUser} />} />
+        <Route path="/signup" element={<Login onLogin={setUser} />} /> {/* Or replace later */}
+        <Route path="/about" element={<About />} />
+        <Route path="/school" element={<SchoolMap />} />
+
       </Routes>
     </BrowserRouter>
   );

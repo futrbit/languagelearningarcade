@@ -713,13 +713,7 @@ export default function ClassGenerator() {
     <div>
       <header className="header">
         
-        <nav>
-          <a href="/">Home</a>
-          <a href="/about">About</a>
-          <a href="/progress">Progress</a>
-          <a href="/homework">Homework</a>
-          <a href="/lessons">Lessons</a>
-        </nav>
+        
       </header>
       <div className="app-container section-border">
         <h2>🎛 Generate Class</h2>

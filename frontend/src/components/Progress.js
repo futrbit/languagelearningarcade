@@ -1,47 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
+import { doc, getDoc } from "firebase/firestore";
 import "../styles.css";
 
 export default function Progress() {
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState(localStorage.getItem("currentUser") || null);
   const [userData, setUserData] = useState({ displayName: "User" });
+  const [course, setCourse] = useState(null);
   const [lessons, setLessons] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        setCurrentUser(user.uid);
-        localStorage.setItem("currentUser", user.uid);
-        setUserData({ displayName: user.displayName || "User" });
-      } else {
-        setCurrentUser(null);
-        localStorage.removeItem("currentUser");
-        setError("Please log in to view your progress.");
-        setLoading(false);
-        navigate("/login");
-      }
-    });
-    return () => unsubscribe();
-  }, [navigate]);
+  const validSkills = ["Speaking", "Grammar", "Vocabulary", "Writing", "Reading"];
 
-  useEffect(() => {
-    if (!currentUser) return;
-
-    try {
-      const storedLessons = JSON.parse(localStorage.getItem("lessons") || "[]");
-      setLessons(storedLessons);
-      setLoading(false);
-    } catch (err) {
-      console.error("Error loading lessons:", err);
-      setError("Failed to load lesson history.");
-      setLoading(false);
-    }
-  }, [currentUser]);
-
+  // Speaking modules configuration
   const speakingModules = {
     business: [
       { lesson: 1, topic: "Storytelling in Business" },
@@ -66,48 +40,139 @@ export default function Progress() {
     ],
   };
 
+  // Auth state listener
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setCurrentUser(user.uid);
+        localStorage.setItem("currentUser", user.uid);
+        setUserData({ displayName: user.displayName || "User" });
+      } else {
+        setCurrentUser(null);
+        localStorage.removeItem("currentUser");
+        setError("Please log in to view your progress.");
+        setLoading(false);
+        navigate("/login");
+      }
+    });
+    return () => unsubscribe();
+  }, [navigate]);
+
+  // Load course and lessons
+  useEffect(() => {
+    if (!currentUser) return;
+
+    const loadProgress = async (retries = 3) => {
+      setLoading(true);
+      try {
+        // Load from localStorage
+        const storedCourse = JSON.parse(localStorage.getItem(`course_${currentUser}`) || "{}");
+        const storedLessons = JSON.parse(localStorage.getItem(`lessons_${currentUser}`) || "[]");
+        setCourse(storedCourse);
+        setLessons(storedLessons);
+        console.log("Loaded course from localStorage:", storedCourse);
+        console.log("Loaded lessons from localStorage:", storedLessons);
+
+        // Sync with Firestore
+        if (auth.currentUser) {
+          let attempt = 0;
+          while (attempt < retries) {
+            try {
+              const userDoc = await getDoc(doc(db, "users", currentUser));
+              if (userDoc.exists()) {
+                const data = userDoc.data();
+                if (data.course) {
+                  localStorage.setItem(`course_${currentUser}`, JSON.stringify(data.course));
+                  setCourse(data.course);
+                }
+                if (data.lessons) {
+                  localStorage.setItem(`lessons_${currentUser}`, JSON.stringify(data.lessons));
+                  setLessons(data.lessons);
+                }
+                console.log("Loaded Firestore data:", data);
+                break;
+              } else {
+                console.warn("No user document found in Firestore");
+                setError("No progress data found in server. Using local data.");
+                break;
+              }
+            } catch (error) {
+              attempt++;
+              console.warn(`Firestore read attempt ${attempt} failed:`, error);
+              if (attempt === retries) {
+                setError("Failed to load progress from server. Using local data. Try disabling ad blockers for firestore.googleapis.com.");
+                break;
+              }
+              await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1s before retry
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Error loading progress:", err);
+        setError("Failed to load progress. Try disabling ad blockers for firestore.googleapis.com.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProgress();
+  }, [currentUser]);
+
+  // Initialize course if not present
+  const initializeCourse = () => {
+    let courseData = course || JSON.parse(localStorage.getItem(`course_${currentUser}`) || "{}");
+    if (!courseData.skills || !Array.isArray(courseData.skills)) {
+      courseData = {
+        level: lessons[0]?.studentLevel || "A1",
+        reason: lessons[0]?.reason || "personal growth",
+        age: parseInt(JSON.parse(localStorage.getItem("users") || "{}")[currentUser]?.age, 10) || 18,
+        skills: validSkills.map((skill) => ({
+          skill,
+          completed: 0,
+          required: 10,
+          lessons: [],
+        })),
+      };
+      localStorage.setItem(`course_${currentUser}`, JSON.stringify(courseData));
+      setCourse(courseData);
+      console.log("Initialized course for", currentUser, ":", courseData);
+    }
+    return courseData;
+  };
+
+  // Get module reason
   const getModuleReason = () => {
-    const reason = lessons[0]?.reason || "personal growth";
+    const reason = course?.reason || lessons[0]?.reason || "personal growth";
     if (reason.toLowerCase().includes("business")) return "business";
     if (reason.toLowerCase().includes("travel")) return "travel";
     return "personal";
   };
 
-  const getSkillProgress = () => {
-    const skillCounts = {};
-    lessons.forEach((lesson) => {
-      if (!lesson.completed) return;
-      const skill = lesson.skillFocus || "Unknown";
-      if (!skillCounts[skill]) skillCounts[skill] = 1;
-      else skillCounts[skill]++;
-    });
-    return skillCounts;
-  };
-
+  // Get completed speaking modules
   const getSpeakingModules = () => {
-    return lessons
-      .filter((l) => l.skillFocus === "Speaking" && l.module_lesson && l.completed)
+    const speakingSkill = course?.skills?.find((s) => s.skill === "Speaking");
+    return speakingSkill?.lessons
+      ?.filter((l) => l.module_lesson && l.completed)
       .map((l) => l.module_lesson)
       .filter((value, index, self) => self.indexOf(value) === index)
-      .sort((a, b) => a - b);
+      .sort((a, b) => a - b) || [];
   };
 
-  // Progress bar logic
-  const totalLessons = 10; // Adjust based on your app's total lessons
-  const completedLessons = lessons.filter((l) => l.completed).length;
+  // Progress calculations
+  const courseData = course || initializeCourse();
+  const totalLessons = courseData.skills?.reduce((sum, skill) => sum + (skill.required || 10), 0) || 50;
+  const completedLessons = courseData.skills?.reduce((sum, skill) => sum + (skill.completed || 0), 0) || 0;
   const progressPercentage = Math.min((completedLessons / totalLessons) * 100, 100);
-  const level = Math.floor(completedLessons / 2) + 1;
-  const badges = lessons.map((l) => l.badge).filter(Boolean);
-  const skillSummary = getSkillProgress();
+  const level = Math.floor(completedLessons / 10) + 1;
+  const badges = JSON.parse(localStorage.getItem(`badges_${currentUser}`) || "[]");
+  const skillProgress = courseData.skills?.map((skill) => ({
+    skill: skill.skill,
+    percentage: Math.min(((skill.completed || 0) / (skill.required || 10)) * 100, 100),
+    completed: skill.completed || 0,
+    required: skill.required || 10,
+  })) || [];
   const speakingReason = getModuleReason();
   const completedSpeakingModules = getSpeakingModules();
-
-  // Skill-specific progress
-  const maxLessonsPerSkill = 5; // Adjust based on max lessons per skill (e.g., Writing, Speaking)
-  const skillProgress = Object.entries(skillSummary).map(([skill, count]) => ({
-    skill,
-    percentage: Math.min((count / maxLessonsPerSkill) * 100, 100),
-  }));
 
   return (
     <div>
@@ -140,7 +205,7 @@ export default function Progress() {
         ) : (
           <>
             <p>
-              Welcome, {userData.displayName || "User"}! Lessons completed: {completedLessons}
+              Welcome, {userData.displayName || "User"}! Total lessons completed: {completedLessons}
             </p>
 
             {/* Main Progress Bar */}
@@ -158,9 +223,9 @@ export default function Progress() {
             <h3>Skill Progress</h3>
             {skillProgress.length > 0 ? (
               <div className="skill-progress-container">
-                {skillProgress.map(({ skill, percentage }) => (
+                {skillProgress.map(({ skill, percentage, completed, required }) => (
                   <div key={skill} className="skill-progress">
-                    <h4>{skill}</h4>
+                    <h4>{skill}: {completed}/{required}</h4>
                     <div className="skill-progress-bar">
                       <div
                         className="skill-progress-fill"
@@ -173,7 +238,7 @@ export default function Progress() {
                 ))}
               </div>
             ) : (
-              <p>No skill data found yet.</p>
+              <p>No skill data found yet. Complete a lesson to track progress!</p>
             )}
 
             {/* Badges */}

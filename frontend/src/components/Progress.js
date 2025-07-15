@@ -15,7 +15,6 @@ export default function Progress() {
 
   const validSkills = ["Speaking", "Grammar", "Vocabulary", "Writing", "Reading"];
 
-  // Speaking modules configuration
   const speakingModules = {
     business: [
       { lesson: 1, topic: "Storytelling in Business" },
@@ -40,7 +39,6 @@ export default function Progress() {
     ],
   };
 
-  // Auth state listener
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
@@ -58,58 +56,34 @@ export default function Progress() {
     return () => unsubscribe();
   }, [navigate]);
 
-  // Load course and lessons
   useEffect(() => {
     if (!currentUser) return;
 
-    const loadProgress = async (retries = 3) => {
+    const loadProgress = async () => {
       setLoading(true);
       try {
-        // Load from localStorage
         const storedCourse = JSON.parse(localStorage.getItem(`course_${currentUser}`) || "{}");
         const storedLessons = JSON.parse(localStorage.getItem(`lessons_${currentUser}`) || "[]");
         setCourse(storedCourse);
         setLessons(storedLessons);
-        console.log("Loaded course from localStorage:", storedCourse);
-        console.log("Loaded lessons from localStorage:", storedLessons);
 
-        // Sync with Firestore
-        if (auth.currentUser) {
-          let attempt = 0;
-          while (attempt < retries) {
-            try {
-              const userDoc = await getDoc(doc(db, "users", currentUser));
-              if (userDoc.exists()) {
-                const data = userDoc.data();
-                if (data.course) {
-                  localStorage.setItem(`course_${currentUser}`, JSON.stringify(data.course));
-                  setCourse(data.course);
-                }
-                if (data.lessons) {
-                  localStorage.setItem(`lessons_${currentUser}`, JSON.stringify(data.lessons));
-                  setLessons(data.lessons);
-                }
-                console.log("Loaded Firestore data:", data);
-                break;
-              } else {
-                console.warn("No user document found in Firestore");
-                setError("No progress data found in server. Using local data.");
-                break;
-              }
-            } catch (error) {
-              attempt++;
-              console.warn(`Firestore read attempt ${attempt} failed:`, error);
-              if (attempt === retries) {
-                setError("Failed to load progress from server. Using local data. Try disabling ad blockers for firestore.googleapis.com.");
-                break;
-              }
-              await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1s before retry
-            }
+        const userDoc = await getDoc(doc(db, "users", currentUser));
+        if (userDoc.exists()) {
+          const data = userDoc.data();
+          if (data.course) {
+            localStorage.setItem(`course_${currentUser}`, JSON.stringify(data.course));
+            setCourse(data.course);
           }
+          if (data.lessons) {
+            localStorage.setItem(`lessons_${currentUser}`, JSON.stringify(data.lessons));
+            setLessons(data.lessons);
+          }
+        } else {
+          setError("No progress data found.");
         }
       } catch (err) {
         console.error("Error loading progress:", err);
-        setError("Failed to load progress. Try disabling ad blockers for firestore.googleapis.com.");
+        setError("Failed to load progress. Try again later.");
       } finally {
         setLoading(false);
       }
@@ -118,109 +92,61 @@ export default function Progress() {
     loadProgress();
   }, [currentUser]);
 
-  // Initialize course if not present
-  const initializeCourse = () => {
-    let courseData = course || JSON.parse(localStorage.getItem(`course_${currentUser}`) || "{}");
-    if (!courseData.skills || !Array.isArray(courseData.skills)) {
-      courseData = {
-        level: lessons[0]?.studentLevel || "A1",
-        reason: lessons[0]?.reason || "personal growth",
-        age: parseInt(JSON.parse(localStorage.getItem("users") || "{}")[currentUser]?.age, 10) || 18,
-        skills: validSkills.map((skill) => ({
-          skill,
-          completed: 0,
-          required: 10,
-          lessons: [],
-        })),
-      };
-      localStorage.setItem(`course_${currentUser}`, JSON.stringify(courseData));
-      setCourse(courseData);
-      console.log("Initialized course for", currentUser, ":", courseData);
-    }
-    return courseData;
-  };
-
-  // Get module reason
-  const getModuleReason = () => {
-    const reason = course?.reason || lessons[0]?.reason || "personal growth";
-    if (reason.toLowerCase().includes("business")) return "business";
-    if (reason.toLowerCase().includes("travel")) return "travel";
-    return "personal";
-  };
-
-  // Get completed speaking modules
-  const getSpeakingModules = () => {
-    const speakingSkill = course?.skills?.find((s) => s.skill === "Speaking");
-    return speakingSkill?.lessons
-      ?.filter((l) => l.module_lesson && l.completed)
-      .map((l) => l.module_lesson)
-      .filter((value, index, self) => self.indexOf(value) === index)
-      .sort((a, b) => a - b) || [];
-  };
-
-  // Progress calculations
-  const courseData = course || initializeCourse();
+  const courseData = course || {};
   const totalLessons = courseData.skills?.reduce((sum, skill) => sum + (skill.required || 10), 0) || 50;
   const completedLessons = courseData.skills?.reduce((sum, skill) => sum + (skill.completed || 0), 0) || 0;
   const progressPercentage = Math.min((completedLessons / totalLessons) * 100, 100);
   const level = Math.floor(completedLessons / 10) + 1;
   const badges = JSON.parse(localStorage.getItem(`badges_${currentUser}`) || "[]");
+
   const skillProgress = courseData.skills?.map((skill) => ({
     skill: skill.skill,
     percentage: Math.min(((skill.completed || 0) / (skill.required || 10)) * 100, 100),
     completed: skill.completed || 0,
     required: skill.required || 10,
   })) || [];
-  const speakingReason = getModuleReason();
-  const completedSpeakingModules = getSpeakingModules();
+
+  const speakingReason = (() => {
+    const reason = course?.reason || lessons[0]?.reason || "personal growth";
+    if (reason.toLowerCase().includes("business")) return "business";
+    if (reason.toLowerCase().includes("travel")) return "travel";
+    return "personal";
+  })();
+
+  const completedSpeakingModules = (() => {
+    const speakingSkill = course?.skills?.find((s) => s.skill === "Speaking");
+    return speakingSkill?.lessons
+      ?.filter((l) => l.module_lesson && l.completed)
+      .map((l) => l.module_lesson)
+      .filter((v, i, self) => self.indexOf(v) === i)
+      .sort((a, b) => a - b) || [];
+  })();
 
   return (
-    <div>
-      <header className="header">
-        
-        <nav>
-          <a href="/">Home</a>
-          <a href="/about">About</a>
-          <a href="/progress">Progress</a>
-          <a href="/homework">Homework</a>
-          <a href="/lessons">Lessons</a>
-          {currentUser ? (
-            <button className="button-primary" onClick={() => auth.signOut().then(() => navigate("/login"))}>
-              Logout
-            </button>
-          ) : (
-            <button className="button-primary" onClick={() => navigate("/login")}>
-              Login
-            </button>
-          )}
-        </nav>
-      </header>
-
-      <div className="app-container section-border">
-        <h2>🎮 Your Language Adventure Progress 🚀</h2>
+    <div className="landing-page">
+      <div className="landing-content section-border" style={{ marginBottom: "100px" }}>
+        <h1>📊 Your Progress</h1>
         {loading ? (
-          <p>Loading progress...</p>
+          <p>Loading...</p>
         ) : error ? (
           <p className="error-text">{error}</p>
         ) : (
           <>
             <p>
-              Welcome, {userData.displayName || "User"}! Total lessons completed: {completedLessons}
+              Welcome, <strong>{userData.displayName}</strong>! Lessons completed: {completedLessons}/{totalLessons}
             </p>
 
-            {/* Main Progress Bar */}
             <div className="progress-bar-container">
-              <h3>Overall Progress: Level {level}</h3>
+              <h3>Level {level}</h3>
               <div className="progress-bar">
-                <div className="progress-fill" style={{ width: `${progressPercentage}%` }}>
-                  <span className="progress-text">{`${Math.round(progressPercentage)}%`}</span>
+                <div className="progress-fill neon-glow" style={{ width: `${progressPercentage}%` }}>
+                  <span className="progress-text">{Math.round(progressPercentage)}%</span>
                 </div>
               </div>
-              <p>Keep going to reach Level {level + 1}! 🏅</p>
+              <p>Keep going to reach Level {level + 1} 🏆</p>
             </div>
 
-            {/* Skill-Specific Progress Bars */}
-            <h3>Skill Progress</h3>
+            <h3 style={{ marginTop: "40px" }}>Skill Progress</h3>
             {skillProgress.length > 0 ? (
               <div className="skill-progress-container">
                 {skillProgress.map(({ skill, percentage, completed, required }) => (
@@ -231,37 +157,33 @@ export default function Progress() {
                         className="skill-progress-fill"
                         style={{ width: `${percentage}%` }}
                       >
-                        <span className="skill-progress-text">{`${Math.round(percentage)}%`}</span>
+                        <span className="skill-progress-text">{Math.round(percentage)}%</span>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <p>No skill data found yet. Complete a lesson to track progress!</p>
+              <p>No skill data found yet.</p>
             )}
 
-            {/* Badges */}
             {badges.length > 0 && (
-              <div className="badges">
+              <div className="badges" style={{ marginTop: "40px" }}>
                 <h3>Your Badges</h3>
                 <ul className="markdown-list">
                   {badges.map((badge, index) => (
-                    <li key={index}>🏆 {badge}</li>
+                    <li key={index}>🏅 {badge}</li>
                   ))}
                 </ul>
               </div>
             )}
 
-            {/* Speaking Modules */}
             {completedSpeakingModules.length > 0 && (
               <>
-                <h3>Speaking Modules Completed ({speakingReason})</h3>
+                <h3 style={{ marginTop: "40px" }}>Speaking Modules Completed ({speakingReason})</h3>
                 <ul className="markdown-list">
-                  {completedSpeakingModules.map((moduleNumber) => (
-                    <li key={moduleNumber}>
-                      Module {moduleNumber}: {speakingModules[speakingReason][moduleNumber - 1]?.topic || "Unknown Topic"}
-                    </li>
+                  {completedSpeakingModules.map((num) => (
+                    <li key={num}>🎤 Module {num}: {speakingModules[speakingReason][num - 1]?.topic || "Topic Unknown"}</li>
                   ))}
                 </ul>
               </>

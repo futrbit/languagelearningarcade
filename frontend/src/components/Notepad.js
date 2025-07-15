@@ -19,8 +19,6 @@ const Notepad = ({
   vocabulary,
   exercises,
   skillFocus,
-  savedLessons,
-  savedHomework,
   classPlan, // Added prop
 }) => {
   const [notes, setNotes] = useState("");

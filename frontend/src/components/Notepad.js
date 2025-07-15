@@ -19,7 +19,7 @@ const Notepad = ({
   vocabulary,
   exercises,
   skillFocus,
-  classPlan, // Added prop
+  classPlan,
 }) => {
   const [notes, setNotes] = useState("");
   const [exerciseAnswers, setExerciseAnswers] = useState({});
@@ -39,7 +39,7 @@ const Notepad = ({
       notes,
       date: new Date().toLocaleString(),
       exercises: exerciseAnswers,
-      flippedCards: Object.keys(flippedCards).length === vocabulary.length ? true : false,
+      flippedCards: Object.keys(flippedCards).length === vocabulary.length,
       audioPlayed,
     };
     console.log("Saving notes:", notesObj);
@@ -203,48 +203,6 @@ const Notepad = ({
   return (
     <div className="notepad-container section-border">
       <h3>Notepad 📝</h3>
-      {(savedLessons?.length > 0 || savedHomework?.length > 0) ? (
-        <div className="saved-notes-container">
-          <h4>Saved Lessons</h4>
-          {savedLessons.length === 0 ? (
-            <p>No saved lessons found.</p>
-          ) : (
-            savedLessons
-              .slice()
-              .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-              .map((lesson, index) => (
-                <div key={index} className="saved-note">
-                  <p><strong>Date:</strong> {lesson.timestamp}</p>
-                  <p><strong>Level:</strong> {lesson.studentLevel}</p>
-                  <p><strong>Skill:</strong> {lesson.skillFocus}</p>
-                  <p><strong>Class Plan:</strong> {lesson.classPlan.substring(0, 100)}...</p>
-                  {lesson.feedback && <p><strong>Feedback:</strong> {lesson.feedback.substring(0, 100)}...</p>}
-                </div>
-              ))
-          )}
-          <h4>Saved Homework</h4>
-          {savedHomework.length === 0 ? (
-            <p>No saved homework found.</p>
-          ) : (
-            savedHomework
-              .slice()
-              .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-              .map((item, index) => (
-                <div key={index} className="saved-note">
-                  <p><strong>Date:</strong> {item.timestamp}</p>
-                  <p><strong>Level:</strong> {item.studentLevel}</p>
-                  <p><strong>Skill:</strong> {item.skillFocus}</p>
-                  <p><strong>Notes:</strong> {item.notes.substring(0, 100)}...</p>
-                  {item.exercises && Object.keys(item.exercises).length > 0 && (
-                    <p><strong>Exercises:</strong> {JSON.stringify(item.exercises, null, 2).substring(0, 100)}...</p>
-                  )}
-                </div>
-              ))
-          )}
-        </div>
-      ) : (
-        <p className="error-text">No saved lessons or homework found. Try generating or saving a lesson.</p>
-      )}
       {skillFocus === "Vocabulary" && renderFlashcards()}
       {vocabulary.length > 0 && skillFocus !== "Vocabulary" && (
         <div className="vocabulary-container">

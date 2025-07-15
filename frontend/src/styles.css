@@ -1,490 +1,167 @@
-/* Import Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Open+Sans:wght@400;600&display=swap');/* Global Styles */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Montserrat:wght@400;600;700;900&display=swap');
+
+/* Base */
+body {
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  background: linear-gradient(135deg, #2e026d, #5a189a, #7b2cbf);
+  color: #fff;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
 .App {
   text-align: center;
-  font-family: 'Montserrat', sans-serif;
-  padding: 1rem 1rem 100px;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #B0A4E3 0%, #9B8AD6 100%);
-  color: #333;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}/* Header */
-.App-header, .header {
-  background: linear-gradient(to bottom, #B0A4E3, #9B8AD6);
-  min-height: 60vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: white;
+  padding: 2rem 1rem 100px;
+}
+
+/* Header */
+.App-header {
+  background: radial-gradient(circle at center, #ff00c8, #5e60ce);
   padding: 2rem;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-  width: 100%;
-}.App-logo, .header-logo {
-  height: 150px;
-  margin-bottom: 1rem;
-  transition: transform 0.3s ease;
-}.App-logo:hover, .header-logo:hover {
-  transform: scale(1.05);
-}@media (prefers-reduced-motion: no-preference) {
-  .App-logo, .header-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}.App-header nav, .header nav {
-  display: flex;
-  gap: 30px;
-  justify-content: center;
-}.App-link, .header nav a {
-  color: #FFD700;
-  font-weight: 700;
-  text-decoration: none;
-  transition: color 0.3s ease;
-  font-size: 1.1em;
-}.App-link:hover, .header nav a:hover {
-  color: #FF8C00;
-}@media (max-width: 600px) {
-  .App-header, .header {
-    font-size: 1rem;
-    padding: 1rem;
-    min-height: 40vh;
-  }  .App-logo, .header-logo {
-    height: 100px;
-  }
-}/* General Container Styling */
-.container, .app-container {
-  max-width: 1200px;
-  margin: 40px auto;
-  padding: 40px;
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  box-sizing: border-box;
-  overflow-x: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}/* Landing Page */
-.landing-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 40px;
-  padding-bottom: 80px;
-}/* Title and Subtitle */
-.landing-title {
-  font-size: 3em;
-  font-weight: 900;
-  color: #ffffff;
+  color: #fff;
+  text-shadow: 1px 1px 2px #000;
+}
+
+.App-header h1 {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 2rem;
   margin: 0;
-  line-height: 1.2;
-  text-align: center;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-}.landing-subtitle {
-  font-size: 1.4em;
-  font-weight: 400;
-  font-family: 'Open Sans', sans-serif;
-  color: #ffffff;
-  max-width: 800px;
-  margin: 0 auto;
-  text-align: center;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-}/* Hero Section */
-.hero-section {
-  max-width: 800px;
-  width: 100%;
+}
+
+nav {
   display: flex;
   justify-content: center;
-  margin: 30px 0;
-}.hero-image {
-  max-width: 100%;
-  width: 100%;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-  transition: transform 0.3s ease;
-}.hero-image:hover {
-  transform: scale(1.03);
-}/* Features Section */
-.features {
-  margin: 40px 0;
-  max-width: 800px;
-  text-align: left;
-}.features h3 {
-  font-size: 1.8em;
-  font-weight: 700;
-  color: #6A5ACD;
-  text-align: center;
-  margin-bottom: 20px;
-}.features ul {
-  list-style: none;
-  padding: 0;
-  display: grid;
-  gap: 20px;
-}.features li {
-  font-size: 1.2em;
-  font-family: 'Open Sans', sans-serif;
-  color: #333;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}.features li::before {
-  content: "✓";
-  color: #6A5ACD;
+  gap: 30px;
+  margin-top: 1rem;
+}
+
+nav a {
+  color: #FFD700;
   font-weight: bold;
-}/* Teacher Avatars (Landing and Lesson Pages) */
-.avatar-container {
-  margin: 40px 0;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}.avatar-container h3 {
-  font-size: 1.8em;
-  font-weight: 700;
-  color: #6A5ACD;
-  margin-bottom: 20px;
-  text-align: center;
-}.teacher-row, .avatar-container {
-  display: flex !important;
-  flex-direction: row !important;
-  gap: 20px !important;
-  justify-content: center !important;
-  flex-wrap: wrap !important;
-}.teacher-item, .avatar-item {
-  text-align: center;
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-}.teacher-avatar, .avatar-image {
-  width: 50px !important;
-  height: 50px !important;
-  border-radius: 50%;
-  border: 2px solid #6A5ACD;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
-  cursor: pointer;
-}.teacher-avatar:hover, .avatar-image:hover {
-  transform: scale(1.1);
-}.teacher-item p, .avatar-item p {
-  font-family: 'Open Sans', sans-serif;
-  font-weight: 600;
-  color: #333;
-  margin: 5px 0 0;
-  font-size: 1em;
-}.avatar-item.avatar-selected .avatar-image {
-  border: 3px solid #FFD700 !important;
-}/* Ensure avatars stay small and horizontal in lesson page */
-.app-container .avatar-container,
-.lesson-plan-container .avatar-container,
-.app-container .avatar-item,
-.lesson-plan-container .avatar-item,
-.app-container .avatar-image,
-.lesson-plan-container .avatar-image {
-  display: flex !important;
-  flex-direction: row !important;
-  justify-content: center !important;
-  align-items: center !important;
-  width: auto !important;
-}.app-container .avatar-image,
-.lesson-plan-container .avatar-image,
-.app-container .teacher-avatar,
-.lesson-plan-container .teacher-avatar {
-  width: 50px !important;
-  height: 50px !important;
-}/* Buttons */
-.button-primary, .button-fancy {
-  background: #6A5ACD;
-  color: white;
-  border: none;
-  padding: 12px 30px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1.1em;
-  font-weight: 700;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  transition: background 0.3s ease, transform 0.2s ease;
-  margin-top: 20px;
-  margin-bottom: 40px;
-}.button-primary:hover, .button-fancy:hover {
-  background: #5A4ABF;
-  transform: translateY(-3px);
-}.button-primary:disabled, .button-fancy:disabled {
-  background: #999;
-  cursor: not-allowed;
-}.button-selected {
-  background: #FFD700;
-  color: #333;
-}/* Lesson, Worksheet, and Notepad Pages */
-.lesson-plan-container,
-.worksheet-container,
-.notepad-container {
-  max-width: 1200px;
-  margin: 20px auto;
-  padding: 20px;
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-  text-align: left;
-  box-sizing: border-box;
-  overflow-x: hidden;
-  word-break: break-word;
-}.lesson-plan-container h1 {
-  color: #333;
-  text-align: center;
-  max-width: 100%;
-  word-break: break-word;
-  font-size: 3.5em;
-  font-weight: 900;
-}.lesson-plan-container h2 {
-  color: #333;
-  text-align: center;
-  max-width: 100%;
-  word-break: break-word;
-  font-size: 2.5em;
-  font-weight: 700;
-}.lesson-plan-container h3 {
-  color: #333;
-  text-align: center;
-  max-width: 100%;
-  word-break: break-word;
-  font-size: 2em;
-  font-weight: 700;
-}.lesson-plan-container p {
-  color: #333;
-  text-align: left;
-  max-width: 100%;
-  word-break: break-word;
-  font-size: 1.6em;
-  font-weight: 600;
-}.worksheet-container h1,
-.worksheet-container h2,
-.worksheet-container h3,
-.worksheet-container p,
-.notepad-container h1,
-.notepad-container h2,
-.notepad-container h3,
-.notepad-container p {
-  color: #333;
-  text-align: center;
-  max-width: 100%;
-  word-break: break-word;
-}.lesson-plan-container img,
-.worksheet-container img,
-.notepad-container img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  margin: 0 auto;
-  border-radius: 8px;
-}.lesson-plan-container video,
-.worksheet-container video,
-.notepad-container video {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-}.notepad-textarea,
-.worksheet-textarea {
-  width: 100%;
-  max-width: 100%;
-  border: 1px solid #A89FD6;
-  border-radius: 8px;
-  padding: 6px;
-  font-size: 0.9em;
-  max-height: 120px;
-  color: #333;
-  background: #F8F8F8;
-  font-family: 'Open Sans', sans-serif;
-  box-sizing: border-box;
-  resize: vertical;
-  overflow-x: hidden;
-}/* Progress Bars */
-.progress-bar-container {
-  margin: 20px 0;
-  text-align: center;
-}.progress-bar {
-  background: #e0e0e0;
-  border-radius: 10px;
-  height: 30px;
-  overflow: hidden;
-}.progress-fill {
-  background: #6A5ACD;
-  height: 100%;
-  transition: width 0.5s ease-in-out;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  border-radius: 10px;
-}.progress-text {
-  color: white;
-  font-weight: bold;
-  padding-right: 10px;
-}.skill-progress-container {
-  margin: 20px auto;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  max-width: 600px;
-}.skill-progress h4 {
-  color: #6A5ACD;
-  font-weight: 700;
-  margin: 10px 0 5px;
-  font-family: 'Open Sans', sans-serif;
-  font-size: 1.2em;
-}.skill-progress-bar {
-  background: #e0e0e0;
-  border-radius: 8px;
-  height: 20px;
-  overflow: hidden;
-}.skill-progress-fill {
-  background: #6A5ACD;
-  height: 100%;
-  transition: width 0.5s ease-in-out;
-  border-radius: 8px;
-}.skill-progress-text {
-  color: white;
-  font-weight: bold;
-  font-size: 0.9em;
-  padding-right: 8px;
-}/* Badges */
-.badges ul {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-}.badges li {
-  background: #FFD700;
-  padding: 5px 15px;
-  border-radius: 15px;
-  font-weight: bold;
-}.module-badge {
-  background: #FFD700;
-  padding: 8px 20px;
-  border-radius: 15px;
-  font-weight: 900;
-  color: #333;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  animation: badgePulse 1s ease-in-out;
-}@keyframes badgePulse {
-  from { transform: scale(1); }
-  50% { transform: scale(1.1); }
-  to { transform: scale(1); }
-}/* Markdown Content */
-.markdown-content {
-  font-family: 'Open Sans', sans-serif;
-  color: #333;
-  text-align: left;
-  max-width: 100%;
-  word-break: break-word;
-}.markdown-header {
-  color: #6A5ACD;
-  font-weight: 900;
-  margin: 20px 0 10px;
-  font-size: 2.5em;
-}.markdown-paragraph {
-  font-size: 1.6em;
-  margin: 10px 0;
-}.markdown-link {
-  color: #6A5ACD;
   text-decoration: none;
-  font-weight: 600;
-  transition: color 0.3s ease;
-  word-break: break-word;
-}.markdown-link:hover {
-  color: #5A4ABF;
-}.markdown-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 15px 0;
-  color: #333;
-  background: #F8F8F8;
-  border-radius: 8px;
-  overflow: hidden;
-  table-layout: fixed;
-}.markdown-table th,
-.markdown-table td {
-  border: 1px solid #A89FD6;
-  padding: 8px;
-  text-align: left;
-  word-break: break-word;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}/* About Page */
-.about-container h2 {
-  color: #6A5ACD;
-  font-weight: 900;
-  font-size: 2em;
-  margin-bottom: 20px;
-  font-family: 'Open Sans', sans-serif;
-  animation: bounce 2s infinite;
-}.team-avatars {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 20px;
-}.team-avatar img {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  border: 3px solid #6A5ACD;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
-  transition: transform 0.3s ease, border-color 0.3s ease;
-}.team-avatar img:hover {
-  transform: scale(1.1);
-  border-color: #FFD700;
-}.team-avatar p {
-  font-family: 'Open Sans', sans-serif;
-  font-weight: 600;
-  color: #333;
-  margin: 5px 0 0;
-}/* Footer */
-.footer {
-  text-align: center;
+  font-size: 1.1rem;
+}
+
+nav a:hover {
+  color: #00FFEA;
+}
+
+/* Game Grid */
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-top: 40px;
+  padding-bottom: 100px;
+}
+
+.game-card {
+  background: #1b1b3a;
+  border: 3px solid #ffd700;
+  border-radius: 12px;
   padding: 20px;
-  background: #ffffff;
-  color: #555;
+  box-shadow: 0 0 20px #ffd70088;
+  transition: transform 0.3s ease;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.6rem;
+}
+
+.game-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px #fffb00cc;
+}
+
+.game-card h3 {
+  font-size: 1rem;
+  margin-bottom: 15px;
+  color: #00ffe7;
+}
+
+/* Buttons */
+button {
+  font-family: 'Press Start 2P', cursive;
+  background: #ff00c8;
+  color: white;
+  border: 3px solid #00ffe7;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  font-size: 0.7rem;
+  margin: 10px;
+  text-transform: uppercase;
+}
+
+button:hover {
+  background: #00ffe7;
+  color: #000;
+  border-color: #ff00c8;
+  transform: translateY(-2px);
+}
+
+button:disabled {
+  background: #555;
+  color: #ccc;
+  border: 2px dashed #999;
+}
+
+/* Inputs */
+input, textarea {
+  font-family: 'Montserrat', sans-serif;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 2px solid #ffd700;
+  background: #fff;
+  color: #000;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 10px;
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  border-color: #00ffe7;
+}
+
+/* Arcade Neon Border Section */
+.section-border {
+  border: 3px dashed #ffd700;
+  border-radius: 15px;
+  background: #241e4e;
+  padding: 20px;
+  box-shadow: 0 0 15px #ffd70066;
+}
+
+/* Headings */
+h1, h2, h3, h4 {
+  color: #ffd700;
+  text-shadow: 1px 1px 2px #000;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .games-grid {
+    grid-template-columns: 1fr;
+  }
+
+  button {
+    width: 100%;
+    font-size: 0.8rem;
+  }
+}
+
+/* Footer */
+.footer {
   position: fixed;
   bottom: 0;
   width: 100%;
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-  font-family: 'Open Sans', sans-serif;
-  z-index: 1000;
-}.footer p {
-  margin: 0;
-  font-size: 1em;
-}/* Class Generator Specific Styles */
-.reason-buttons {
-  margin: 20px 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}.reason-buttons div {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  justify-content: center;
-}.section-border {
-  border: 1px solid #A89FD6;
-  border-radius: 8px;
-  padding: 15px;
-}.error-text {
-  color: #ff4444;
-  font-weight: 600;
-  margin: 10px 0;
-}.limit-text {
-  font-size: 1.1em;
-  color: #333;
-  margin: 10px 0;
+  background: #111;
+  color: #ccc;
+  text-align: center;
+  padding: 10px;
+  font-size: 0.8rem;
+  z-index: 999;
+  border-top: 2px solid #ffd700;
 }

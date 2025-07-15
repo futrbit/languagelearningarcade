@@ -100,13 +100,13 @@ export default function About() {
               <li>🚀 Playful design with a vibrant, arcade-inspired look</li>
             </ul>
             <h3>Meet the Team</h3>
-            <div className="team-avatars">
+            <div className="team-avatars-horizontal">
               <div className="team-avatar">
-                <img src="/team-member1.png" alt="Sophia" className="avatar-image" />
+                <img src="/team-member1.png" alt="Sophia" className="avatar-image-small" />
                 <p>Sophia</p>
               </div>
               <div className="team-avatar">
-                <img src="/team-member2.png" alt="Alex" className="avatar-image" />
+                <img src="/team-member2.png" alt="Alex" className="avatar-image-small" />
                 <p>Alex</p>
               </div>
             </div>
@@ -117,7 +117,7 @@ export default function About() {
               </div>
               <p>Track your progress like this!</p>
             </div>
-            <button className="button-fancy" onClick={() => navigate("/app")}>
+            <button className="button-yellow" onClick={() => navigate("/app")}>
               Start Learning Now! 🚀
             </button>
           </div>

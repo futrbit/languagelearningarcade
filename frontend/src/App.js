@@ -17,12 +17,12 @@ import Homework from "./components/Homework";
 import Lessons from "./components/Lessons";
 import Progress from "./components/Progress";
 import SchoolMap from "./components/SchoolMap";
-import WordChainGame from "./components/WordChainGame";
-import QuizGame from "./components/QuizGame";
 import SetupPage from "./components/SetupPage";
 import About from "./components/About";
 
-// 🧠 All new games
+import WordChainGame from "./components/WordChainGame";
+import WordChainGameExpanded from "./components/WordChainGameExpanded";
+import QuizGame from "./components/QuizGame";
 import GuessTheWord from "./components/GuessTheWord";
 import MemoryMatch from "./components/MemoryMatch";
 import FastGrammarRace from "./components/FastGrammarRace";
@@ -31,11 +31,10 @@ import MillionaireGame from "./components/MillionaireGame";
 import BlanketyBlank from "./components/BlanketyBlank";
 import Blockbusters from "./components/Blockbusters";
 import BlindDate from "./components/BlindDate";
-import WordChainGameExpanded from "./components/WordChainGameExpanded";
-import CreativeWriting from "./components/CreativeWriting";
+import CreativeWritingGame from "./components/CreativeWritingGame";
 import VocabularyCards from "./components/VocabularyCards";
-import WordSearchGame from "./components/WordSearchGame";
-import CrosswordGame from "./components/CrosswordGame";
+import WordSearch from "./components/WordSearch";
+import Crossword from "./components/Crossword";
 
 function MainApp({ user, setUser }) {
   const navigate = useNavigate();
@@ -50,7 +49,7 @@ function MainApp({ user, setUser }) {
       }
       return {};
     } catch (err) {
-      console.error("Error parsing course data in MainApp:", err);
+      console.error("Error parsing course data:", err);
       return {};
     }
   });
@@ -60,13 +59,12 @@ function MainApp({ user, setUser }) {
       try {
         const storedCourse = localStorage.getItem(`course_${user}`);
         if (storedCourse && storedCourse !== "undefined") {
-          const courseData = JSON.parse(storedCourse);
-          setCourse(courseData && Array.isArray(courseData.skills) ? courseData : {});
+          setCourse(JSON.parse(storedCourse));
         } else {
           setCourse({});
         }
       } catch (err) {
-        console.error("Error updating course data in MainApp:", err);
+        console.error("Error updating course data:", err);
         setCourse({});
       }
     };
@@ -75,6 +73,7 @@ function MainApp({ user, setUser }) {
   }, [user]);
 
   const vocab = ["cat", "tiger", "rabbit", "tarantula", "ant", "tortoise", "elephant", "tapir"];
+  const wordChainExpandedWords = ["apple", "elephant", "tiger", "rocket", "table"];
   const quizQuestions = [
     {
       question: "What is the capital of England?",
@@ -116,20 +115,20 @@ function MainApp({ user, setUser }) {
   };
 
   const renderContent = () => {
-    if (!user) return <p>Please log in to access the arcade.</p>;
+    if (!user) return <p>Please log in to access the app.</p>;
 
     if (mode === "course" && selectedRoom && !canAccessRoom(selectedRoom)) {
       const incompleteSkill = course.skills?.find(s => (s.completed || 0) < (s.required || 0));
       return (
         <p style={{ fontSize: "18px" }}>
-          🔒 This room is locked in Course Mode.{" "}
+          🔒 Room locked.{" "}
           {speakingCompleted < 5
             ? `Complete ${5 - speakingCompleted} more ${moduleReason} Speaking lessons.`
             : selectedRoom === "arcade"
             ? "Complete 2 Vocabulary lessons to unlock the Game Room."
             : selectedRoom === "library"
             ? "Complete 2 Grammar lessons to unlock the Library."
-            : `Complete ${(incompleteSkill?.required || 0) - (incompleteSkill?.completed || 0)} more lesson(s) in ${incompleteSkill?.skill || "any skill"}.`}
+            : `Complete ${(incompleteSkill?.required || 0) - (incompleteSkill?.completed || 0)} more in ${incompleteSkill?.skill}.`}
         </p>
       );
     }
@@ -139,8 +138,9 @@ function MainApp({ user, setUser }) {
         return <ClassGenerator course={course} />;
       case "arcade":
         return (
-          <div className="games-grid">
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
             <WordChainGame words={vocab} />
+            <WordChainGameExpanded words={wordChainExpandedWords} />
             <QuizGame questions={quizQuestions} />
             <GuessTheWord />
             <MemoryMatch />
@@ -150,11 +150,10 @@ function MainApp({ user, setUser }) {
             <BlanketyBlank />
             <Blockbusters />
             <BlindDate />
-            <WordChainGameExpanded />
-            <CreativeWriting />
+            <CreativeWritingGame />
             <VocabularyCards />
-            <WordSearchGame />
-            <CrosswordGame />
+            <WordSearch />
+            <Crossword />
           </div>
         );
       case "library":
@@ -171,16 +170,6 @@ function MainApp({ user, setUser }) {
           <div style={{ maxWidth: "400px", padding: "20px", fontSize: "18px" }}>
             <h2>Welcome to the Language Learning Arcade!</h2>
             <p>Click a room to start your quest.</p>
-            {mode === "course" && (
-              <p>
-                In Course Mode, complete your Speaking module lessons to unlock other rooms.
-              </p>
-            )}
-            {course.reason && (
-              <p>
-                Your learning reason: <strong>{course.reason}</strong>
-              </p>
-            )}
           </div>
         );
     }
@@ -243,8 +232,7 @@ export default function App() {
           }
         } catch (error) {
           console.error("Error checking user profile:", error);
-          setError("Failed to load user profile. Please try logging in again.");
-          setNeedsSetup(true);
+          setError("Failed to load user profile.");
         }
       } else {
         setUser(null);
@@ -268,17 +256,80 @@ export default function App() {
           path="/app"
           element={
             user ? (
-              needsSetup ? (
-                <Navigate to="/setup" />
-              ) : (
-                <MainApp user={user} setUser={setUser} />
-              )
+              needsSetup ? <Navigate to="/setup" /> : <MainApp user={user} setUser={setUser} />
             ) : (
               <Navigate to="/login" />
             )
           }
         />
-        <Route path="/setup" element={<SetupPage onSave={() => setNeedsSetup(false)} />} />
+        <Route
+          path="/setup"
+          element={
+            user ? (
+              <SetupPage
+                onSave={async (formData) => {
+                  try {
+                    const userId = auth.currentUser?.uid;
+                    if (!userId) throw new Error("No user");
+
+                    const missing = [];
+                    if (!formData.studentLevel) missing.push("Student Level");
+                    if (!formData.age || isNaN(formData.age)) missing.push("Age");
+                    if (!formData.reason) missing.push("Reason");
+
+                    if (missing.length > 0) {
+                      throw new Error(`Missing or invalid fields: ${missing.join(", ")}`);
+                    }
+
+                    const userProfileRef = doc(db, "users", userId);
+                    await setDoc(
+                      userProfileRef,
+                      {
+                        studentLevel: formData.studentLevel,
+                        age: parseInt(formData.age, 10),
+                        why: formData.reason,
+                        displayName: auth.currentUser?.displayName || "User",
+                        setupComplete: true,
+                      },
+                      { merge: true }
+                    );
+
+                    const courseData = {
+                      level: formData.studentLevel,
+                      reason: formData.reason,
+                      age: parseInt(formData.age, 10),
+                      skills: ["Speaking", "Listening", "Grammar", "Vocabulary", "Reading", "Writing"].map(skill => ({
+                        skill,
+                        required: 4,
+                        completed: 0,
+                        lessons: [],
+                      })),
+                    };
+
+                    localStorage.setItem(`course_${userId}`, JSON.stringify(courseData));
+                    localStorage.setItem(`badges_${userId}`, JSON.stringify([]));
+
+                    const users = JSON.parse(localStorage.getItem("users") || "{}");
+                    users[userId] = {
+                      studentLevel: formData.studentLevel,
+                      age: parseInt(formData.age, 10),
+                      why: formData.reason,
+                      displayName: auth.currentUser?.displayName || "User",
+                    };
+                    localStorage.setItem("users", JSON.stringify(users));
+
+                    setNeedsSetup(false);
+                  } catch (error) {
+                    console.error("Error saving setup data:", error.message);
+                    alert(`Setup failed: ${error.message}`);
+                  }
+                }}
+              />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
         <Route path="/homework" element={user ? <Homework /> : <Navigate to="/login" />} />
         <Route path="/lessons" element={user ? <Lessons /> : <Navigate to="/login" />} />
         <Route path="/progress" element={user ? <Progress /> : <Navigate to="/login" />} />

@@ -21,11 +21,12 @@ const Notepad = ({
   skillFocus,
   savedLessons,
   savedHomework,
+  classPlan, // Added prop
 }) => {
   const [notes, setNotes] = useState("");
   const [exerciseAnswers, setExerciseAnswers] = useState({});
-  const [flippedCards, setFlippedCards] = useState({}); // Track flipped flashcards
-  const [audioPlayed, setAudioPlayed] = useState(false); // Track if audio prompt was played
+  const [flippedCards, setFlippedCards] = useState({});
+  const [audioPlayed, setAudioPlayed] = useState(false);
 
   const handleSubmit = () => {
     if (!notes.trim()) {
@@ -40,8 +41,8 @@ const Notepad = ({
       notes,
       date: new Date().toLocaleString(),
       exercises: exerciseAnswers,
-      flippedCards: Object.keys(flippedCards).length === vocabulary.length ? true : false, // Track if all cards flipped
-      audioPlayed, // Track if audio was played
+      flippedCards: Object.keys(flippedCards).length === vocabulary.length ? true : false,
+      audioPlayed,
     };
     console.log("Saving notes:", notesObj);
     onSave(notesObj);
@@ -55,27 +56,22 @@ const Notepad = ({
     setExerciseAnswers((prev) => ({ ...prev, [index]: value }));
   };
 
-  // Flashcard flip handler
   const handleCardFlip = (index) => {
     setFlippedCards((prev) => ({
       ...prev,
       [index]: !prev[index],
     }));
-    // Check if all cards are flipped
     if (Object.keys(flippedCards).length + 1 === vocabulary.length) {
       console.log("All vocabulary cards flipped!");
-      // Trigger progress update in parent (ClassGenerator.js)
       onSubmitAnswer({ action: "flashcards_completed", skillFocus });
     }
   };
 
-  // Audio playback handler
   const handlePlayPrompt = () => {
     if (!exercises.length && !classPlan) {
       alert("No sentence available for playback.");
       return;
     }
-    // Extract first sentence from exercises or classPlan
     const sentenceMatch = exercises[0]?.match(/^(.*?[.!?])\s/) || classPlan?.match(/^(.*?[.!?])\s/);
     const sentence = sentenceMatch ? sentenceMatch[1] : "Please practice speaking this sentence.";
     const utterance = new SpeechSynthesisUtterance(sentence);
@@ -83,7 +79,6 @@ const Notepad = ({
     window.speechSynthesis.speak(utterance);
     setAudioPlayed(true);
     console.log("Played audio prompt:", sentence);
-    // Trigger progress update in parent
     onSubmitAnswer({ action: "audio_played", skillFocus });
   };
 

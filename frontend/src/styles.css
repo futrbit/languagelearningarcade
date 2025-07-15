@@ -1,20 +1,19 @@
-/* Import Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Montserrat:wght@400;600;700;900&family=Open+Sans:wght@400;600&display=swap');
 
-/* Global Styles */
+/* =============== Global App =============== */
 .App {
   text-align: center;
   font-family: 'Montserrat', sans-serif;
   padding: 1rem 1rem 100px;
   min-height: 100vh;
-  background: linear-gradient(135deg, #1e0f3f 0%, #4b0082 100%);
+  background: linear-gradient(135deg, #1e0f3f, #4b0082);
   color: #fff;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* Logo */
+/* =============== Logo =============== */
 .App-logo, .header-logo {
   height: 75px;
   margin-bottom: 1rem;
@@ -24,22 +23,7 @@
   transform: scale(1.05);
 }
 
-/* Animated Logo Spin */
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo, .header-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-/* Header + Nav */
+/* =============== Header + Navigation =============== */
 .App-header, .header {
   background: linear-gradient(to bottom, #6a0dad, #301934);
   min-height: 40vh;
@@ -47,9 +31,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: white;
   padding: 2rem;
   width: 100%;
+  text-align: center;
+  color: white;
 }
 .App-header nav, .header nav {
   display: flex;
@@ -67,7 +52,22 @@
   color: #FF8C00;
 }
 
-/* Page Container */
+/* =============== Section Headers =============== */
+.features h3,
+.avatar-container h3,
+.about-container h2,
+.landing-title,
+.school-title,
+.generator-title {
+  font-size: 2.8rem;
+  font-family: 'Press Start 2P', cursive;
+  color: #FFD700;
+  text-shadow: 2px 2px 5px #000;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+/* =============== Container Wrappers =============== */
 .container, .app-container {
   max-width: 1200px;
   margin: 40px auto;
@@ -75,26 +75,19 @@
   background: #1c1030;
   border-radius: 12px;
   box-shadow: 0 4px 25px rgba(255, 255, 255, 0.1);
-  text-align: center;
   box-sizing: border-box;
+  text-align: center;
   overflow-x: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+}
+.section-border {
+  border: 2px solid #FFD700;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 40px;
+  background: #2d1650;
 }
 
-/* Section Headings */
-.features h3,
-.avatar-container h3,
-.about-container h2 {
-  font-size: 2.5rem;
-  font-family: 'Press Start 2P', cursive;
-  color: #FFD700;
-  text-shadow: 2px 2px 5px #000;
-  margin-bottom: 30px;
-}
-
-/* Game Grid Layout - STACKED */
+/* =============== Games Grid =============== */
 .games-grid {
   display: flex;
   flex-direction: column;
@@ -109,24 +102,92 @@
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
   border: 2px solid #FFD700;
 }
+.game-card h3 {
+  font-size: 2rem;
+  color: #00ffe7;
+  font-family: 'Press Start 2P', cursive;
+  margin-bottom: 20px;
+}
 
-/* Avatar Section */
+/* =============== School Page =============== */
+.school-section {
+  background: #1e0f3f;
+  border-radius: 16px;
+  padding: 40px;
+  color: #fff;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+}
+.school-section h2 {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 2rem;
+  color: #FFD700;
+  text-shadow: 1px 1px 2px #000;
+}
+.school-section ul {
+  list-style-type: square;
+  padding-left: 20px;
+}
+.school-section li {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #eee;
+}
+
+/* =============== Lesson Plan / Worksheet / Notepad =============== */
+.lesson-plan-container,
+.worksheet-container,
+.notepad-container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #1e0f3f;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.1);
+  text-align: left;
+  word-break: break-word;
+  color: #fff;
+}
+.lesson-plan-container h1,
+.worksheet-container h1,
+.notepad-container h1 {
+  font-size: 2.5rem;
+  font-family: 'Press Start 2P', cursive;
+  color: #FFD700;
+  text-align: center;
+}
+.lesson-plan-container h2,
+.worksheet-container h2,
+.notepad-container h2 {
+  font-size: 2rem;
+  color: #00ffe7;
+  text-align: center;
+}
+.lesson-plan-container p,
+.worksheet-container p,
+.notepad-container p {
+  font-size: 1.2em;
+  line-height: 1.8;
+}
+
+/* =============== Avatars =============== */
 .avatar-container {
+  display: flex;
   flex-direction: row;
-  flex-wrap: nowrap;
   justify-content: center;
   gap: 30px;
+  flex-wrap: nowrap;
   overflow-x: auto;
-  padding-bottom: 10px;
+  padding: 10px 0;
 }
 .avatar-item {
+  text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-.avatar-image, .teacher-avatar {
-  width: 80px !important;
-  height: 80px !important;
+.avatar-image {
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
   border: 3px solid #00ffe7;
   box-shadow: 0 0 10px #00ffe788;
@@ -136,64 +197,49 @@
   transform: scale(1.1);
 }
 .avatar-item p {
-  font-size: 1rem;
-  font-weight: 600;
   color: #fff;
-  margin-top: 8px;
+  margin-top: 5px;
+  font-size: 1em;
 }
 .avatar-item.avatar-selected .avatar-image {
   border-color: #FFD700 !important;
   box-shadow: 0 0 15px #FFD700aa;
 }
 
-/* Buttons */
+/* =============== Buttons =============== */
 .button-primary, .button-fancy {
   background: #FFD700;
   color: #000;
-  border: none;
   padding: 15px 40px;
   font-size: 1.2em;
-  border-radius: 12px;
-  font-weight: 900;
   font-family: 'Press Start 2P', cursive;
-  text-transform: uppercase;
+  border: none;
+  border-radius: 12px;
   cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
+  margin-top: 20px;
   box-shadow: 0 5px 20px #FFD70088;
+  transition: all 0.3s ease;
 }
 .button-primary:hover, .button-fancy:hover {
   background: #FF8C00;
   color: #fff;
-  transform: translateY(-4px);
+  transform: translateY(-3px);
 }
 
-/* Game Titles */
-.game-card h3 {
-  font-size: 2rem;
-  color: #00ffe7;
-  font-family: 'Press Start 2P', cursive;
-  margin-bottom: 20px;
-  text-shadow: 1px 1px 2px #000;
-}
-
-/* Timers, Texts, Inputs in Games */
-.game-card input {
-  padding: 12px;
-  font-size: 1.2em;
+/* =============== Inputs =============== */
+input, textarea {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1em;
+  padding: 10px;
   border-radius: 8px;
-  border: 1px solid #FFD700;
-  width: 100%;
-  margin-bottom: 10px;
+  border: 2px solid #FFD700;
   background: #1e0f3f;
   color: #fff;
-}
-.game-card p {
-  font-size: 1.1em;
-  color: #eee;
-  margin-top: 10px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-/* Footer */
+/* =============== Footer =============== */
 .footer {
   text-align: center;
   padding: 20px;
@@ -202,11 +248,9 @@
   position: fixed;
   bottom: 0;
   width: 100%;
-  font-family: 'Open Sans', sans-serif;
   z-index: 1000;
 }
 .footer p {
   margin: 0;
   font-size: 0.9em;
 }
-

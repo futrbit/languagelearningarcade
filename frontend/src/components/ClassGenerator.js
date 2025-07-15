@@ -17,7 +17,7 @@ export default function ClassGenerator() {
   const isTravel = userData.why?.toLowerCase().includes("travel");
   const [studentLevel, setStudentLevel] = useState(userData.studentLevel || "A1");
   const [skillFocus, setSkillFocus] = useState(
-    courseData.skills?.find((s) => s.completed < s.required && validSkills.includes(s.skill))?.skill || "Speaking"
+    courseData.skills?.find((skillItem) => skillItem.completed < skillItem.required && validSkills.includes(skillItem.skill))?.skill || "Speaking"
   );
   const [teacher, setTeacher] = useState("Emma");
   const [loading, setLoading] = useState(false);
@@ -183,7 +183,7 @@ export default function ClassGenerator() {
   const getNextModuleLesson = () => {
     if (skillFocus !== "Speaking") return 0;
     const course = JSON.parse(localStorage.getItem(`course_${currentUser}`) || "{}");
-    const speakingSkill = course.skills?.find((s) => s.skill === "Speaking");
+    const speakingSkill = course.skills?.find((skillItem) => skillItem.skill === "Speaking");
     const completedModuleLessons = speakingSkill?.lessons?.filter((l) => l.module_lesson && l.completed).length || 0;
     const nextLesson = completedModuleLessons < 5 ? completedModuleLessons + 1 : 0;
     console.log("getNextModuleLesson:", nextLesson);
@@ -471,7 +471,7 @@ export default function ClassGenerator() {
         setSavedLessons(lessons);
 
         const course = initializeCourse();
-        const skill = course.skills.find((s) => s.skill === skillFocus);
+        const skill = course.skills.find((skillItem) => skillItem.skill === skillFocus);
         if (skill) {
           skill.completed = (skill.completed || 0) + 1;
           if (skillFocus === "Speaking" && lastLesson.module_lesson > 0) {
@@ -523,7 +523,7 @@ export default function ClassGenerator() {
       }
 
       const course = initializeCourse();
-      const skill = course.skills?.find((s) => s.skill === skillFocus);
+      const skill = course.skills?.find((skillItem) => skillItem.skill === skillFocus);
       const key = `homework_${currentUser}`;
       const saved = JSON.parse(localStorage.getItem(key) || "[]").slice(-50);
       const moduleLesson = skillFocus === "Speaking" ? getNextModuleLesson() : 0;
@@ -644,9 +644,15 @@ export default function ClassGenerator() {
   };
 
   const suggestedSkill = useMemo(() => {
-    if (!courseData.skills) return { skill: "Any", lessonsLeft: 0 };
-    const skill = courseData.skills.find((s) => s.completed < s.required && validSkills.includes(s.skill));
-    return skill ? { skill: skill.skill, lessonsLeft: skill.required - s.completed } : { skill: "Any", lessonsLeft: 0 };
+    if (!courseData.skills || !Array.isArray(courseData.skills)) {
+      return { skill: "Any", lessonsLeft: 0 };
+    }
+    const incompleteSkill = courseData.skills.find(
+      (skillItem) => skillItem.completed < skillItem.required && validSkills.includes(skillItem.skill)
+    );
+    return incompleteSkill
+      ? { skill: incompleteSkill.skill, lessonsLeft: incompleteSkill.required - incompleteSkill.completed }
+      : { skill: "Any", lessonsLeft: 0 };
   }, [courseData.skills, validSkills]);
 
   return (

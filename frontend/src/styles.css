@@ -78,11 +78,11 @@ nav a:hover {
   color: #00ffe7;
 }
 
-/* Buttons */
+/* Buttons - Now Yellow Arcade Style */
 button {
   font-family: 'Press Start 2P', cursive;
-  background: #ff00c8;
-  color: white;
+  background: #FFD700;
+  color: black;
   border: 3px solid #00ffe7;
   padding: 12px 20px;
   border-radius: 8px;
@@ -94,7 +94,7 @@ button {
 }
 
 button:hover {
-  background: #00ffe7;
+  background: #fffb00;
   color: #000;
   border-color: #ff00c8;
   transform: translateY(-2px);
@@ -150,6 +150,42 @@ h1, h2, h3, h4 {
     width: 100%;
     font-size: 0.8rem;
   }
+}
+
+/* Avatars Horizontal & Optimized Size */
+.avatar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  gap: 30px;
+  padding: 20px;
+}
+
+.avatar-item {
+  text-align: center;
+  flex: 0 0 auto;
+}
+
+.avatar-image {
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  border: 3px solid #FFD700;
+  box-shadow: 0 0 10px #FFD70088;
+  transition: transform 0.3s ease;
+}
+
+.avatar-image:hover {
+  transform: scale(1.1);
+}
+
+.avatar-item p {
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #fff;
+  margin-top: 5px;
 }
 
 /* Footer */

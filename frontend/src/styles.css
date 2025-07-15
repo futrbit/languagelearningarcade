@@ -1,256 +1,95 @@
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Montserrat:wght@400;600;700;900&family=Open+Sans:wght@400;600&display=swap');
-
-/* =============== Global App =============== */
-.App {
-  text-align: center;
-  font-family: 'Montserrat', sans-serif;
-  padding: 1rem 1rem 100px;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #1e0f3f, #4b0082);
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* =============== Logo =============== */
-.App-logo, .header-logo {
-  height: 75px;
-  margin-bottom: 1rem;
-  transition: transform 0.3s ease;
-}
-.App-logo:hover, .header-logo:hover {
-  transform: scale(1.05);
-}
-
-/* =============== Header + Navigation =============== */
+/* ========== Header Reduced Height ========== */
 .App-header, .header {
-  background: linear-gradient(to bottom, #6a0dad, #301934);
-  min-height: 40vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  width: 100%;
-  text-align: center;
-  color: white;
-}
-.App-header nav, .header nav {
-  display: flex;
-  gap: 30px;
-  justify-content: center;
-}
-.App-link, .header nav a {
-  color: #FFD700;
-  font-weight: 700;
-  text-decoration: none;
-  transition: color 0.3s ease;
-  font-size: 1.2em;
-}
-.App-link:hover, .header nav a:hover {
-  color: #FF8C00;
+  min-height: 25vh;
+  padding: 1rem;
 }
 
-/* =============== Section Headers =============== */
-.features h3,
-.avatar-container h3,
-.about-container h2,
-.landing-title,
-.school-title,
-.generator-title {
-  font-size: 2.8rem;
-  font-family: 'Press Start 2P', cursive;
-  color: #FFD700;
-  text-shadow: 2px 2px 5px #000;
-  margin-bottom: 30px;
-  text-align: center;
-}
-
-/* =============== Container Wrappers =============== */
-.container, .app-container {
-  max-width: 1200px;
-  margin: 40px auto;
-  padding: 40px;
-  background: #1c1030;
-  border-radius: 12px;
-  box-shadow: 0 4px 25px rgba(255, 255, 255, 0.1);
-  box-sizing: border-box;
-  text-align: center;
-  overflow-x: hidden;
-}
-.section-border {
-  border: 2px solid #FFD700;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 40px;
-  background: #2d1650;
-}
-
-/* =============== Games Grid =============== */
-.games-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 50px;
-  width: 100%;
-  margin-top: 30px;
-}
-.game-card {
-  background: #2d1650;
-  border-radius: 12px;
-  padding: 30px;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
-  border: 2px solid #FFD700;
-}
-.game-card h3 {
-  font-size: 2rem;
-  color: #00ffe7;
-  font-family: 'Press Start 2P', cursive;
-  margin-bottom: 20px;
-}
-
-/* =============== School Page =============== */
-.school-section {
-  background: #1e0f3f;
-  border-radius: 16px;
-  padding: 40px;
-  color: #fff;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-}
-.school-section h2 {
-  font-family: 'Press Start 2P', cursive;
-  font-size: 2rem;
-  color: #FFD700;
-  text-shadow: 1px 1px 2px #000;
-}
-.school-section ul {
-  list-style-type: square;
-  padding-left: 20px;
-}
-.school-section li {
-  font-size: 1.1rem;
-  line-height: 1.6;
-  color: #eee;
-}
-
-/* =============== Lesson Plan / Worksheet / Notepad =============== */
-.lesson-plan-container,
-.worksheet-container,
-.notepad-container {
-  max-width: 1200px;
-  margin: 20px auto;
-  padding: 20px;
-  background: #1e0f3f;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.1);
-  text-align: left;
-  word-break: break-word;
-  color: #fff;
-}
-.lesson-plan-container h1,
-.worksheet-container h1,
-.notepad-container h1 {
-  font-size: 2.5rem;
-  font-family: 'Press Start 2P', cursive;
-  color: #FFD700;
-  text-align: center;
-}
-.lesson-plan-container h2,
-.worksheet-container h2,
-.notepad-container h2 {
-  font-size: 2rem;
-  color: #00ffe7;
-  text-align: center;
-}
-.lesson-plan-container p,
-.worksheet-container p,
-.notepad-container p {
-  font-size: 1.2em;
-  line-height: 1.8;
-}
-
-/* =============== Avatars =============== */
+/* ========== Avatars Horizontal & Compact on Landing ========== */
 .avatar-container {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  gap: 30px;
+  gap: 15px;
   flex-wrap: nowrap;
   overflow-x: auto;
   padding: 10px 0;
 }
-.avatar-item {
+.avatar-image {
+  width: 60px;
+  height: 60px;
+}
+
+/* ========== White Text on Blue Backgrounds ========== */
+.container,
+.app-container,
+.section-border {
+  color: white;
+}
+
+/* ========== Landing Page Text Sizing ========== */
+.landing-title,
+.landing-subtitle {
+  font-size: 2.5rem;
   text-align: center;
+  color: white;
+}
+
+/* ========== Dotted School Map Box ========== */
+.school-section {
+  border: 3px dotted #FFD700;
+  background: #1e0f3f;
+  padding: 30px;
+  border-radius: 10px;
+}
+
+/* ========== Vertical Game Layout + Colorful Backgrounds ========== */
+.games-grid {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  gap: 40px;
+  width: 100%;
 }
-.avatar-image {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  border: 3px solid #00ffe7;
-  box-shadow: 0 0 10px #00ffe788;
-  transition: transform 0.3s ease;
-}
-.avatar-image:hover {
-  transform: scale(1.1);
-}
-.avatar-item p {
-  color: #fff;
-  margin-top: 5px;
-  font-size: 1em;
-}
-.avatar-item.avatar-selected .avatar-image {
-  border-color: #FFD700 !important;
-  box-shadow: 0 0 15px #FFD700aa;
-}
-
-/* =============== Buttons =============== */
-.button-primary, .button-fancy {
-  background: #FFD700;
-  color: #000;
-  padding: 15px 40px;
-  font-size: 1.2em;
-  font-family: 'Press Start 2P', cursive;
-  border: none;
+.game-card {
+  padding: 30px;
   border-radius: 12px;
-  cursor: pointer;
-  margin-top: 20px;
-  box-shadow: 0 5px 20px #FFD70088;
-  transition: all 0.3s ease;
-}
-.button-primary:hover, .button-fancy:hover {
-  background: #FF8C00;
-  color: #fff;
-  transform: translateY(-3px);
-}
-
-/* =============== Inputs =============== */
-input, textarea {
-  font-family: 'Open Sans', sans-serif;
-  font-size: 1em;
-  padding: 10px;
-  border-radius: 8px;
   border: 2px solid #FFD700;
-  background: #1e0f3f;
-  color: #fff;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
   width: 100%;
-  box-sizing: border-box;
+}
+.game-card:nth-child(1) {
+  background: #1E90FF; /* Blue */
+}
+.game-card:nth-child(2) {
+  background: #32CD32; /* Lime Green */
+}
+.game-card:nth-child(3) {
+  background: #FF69B4; /* Hot Pink */
+}
+.game-card:nth-child(4) {
+  background: #FFA500; /* Orange */
+}
+.game-card:nth-child(5) {
+  background: #8A2BE2; /* Blue Violet */
+}
+.game-card:nth-child(6) {
+  background: #00CED1; /* Dark Turquoise */
+}
+.game-card:nth-child(7) {
+  background: #FF4500; /* Orange Red */
+}
+.game-card:nth-child(8) {
+  background: #2E8B57; /* Sea Green */
+}
+.game-card:nth-child(9) {
+  background: #DC143C; /* Crimson */
+}
+.game-card:nth-child(10) {
+  background: #20B2AA; /* Light Sea Green */
 }
 
-/* =============== Footer =============== */
-.footer {
-  text-align: center;
-  padding: 20px;
-  background: #1e0f3f;
-  color: #aaa;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  z-index: 1000;
-}
-.footer p {
-  margin: 0;
-  font-size: 0.9em;
+/* ========== Game Titles Arcade Font ========== */
+.game-card h3 {
+  font-size: 2rem;
+  font-family: 'Press Start 2P', cursive;
+  color: white;
 }

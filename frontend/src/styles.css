@@ -47,39 +47,9 @@ nav a:hover {
   color: #00FFEA;
 }
 
-/* Game Grid */
-.games-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 30px;
-  margin-top: 40px;
-  padding-bottom: 100px;
-}
-
-.game-card {
-  background: #1b1b3a;
-  border: 3px solid #ffd700;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 0 20px #ffd70088;
-  transition: transform 0.3s ease;
-  font-family: 'Press Start 2P', cursive;
-  font-size: 0.6rem;
-}
-
-.game-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 25px #fffb00cc;
-}
-
-.game-card h3 {
-  font-size: 1rem;
-  margin-bottom: 15px;
-  color: #00ffe7;
-}
-
-/* Buttons - Now Yellow Arcade Style */
-button {
+/* Buttons - Neon Arcade Style */
+button,
+.button-primary {
   font-family: 'Press Start 2P', cursive;
   background: #FFD700;
   color: black;
@@ -93,7 +63,8 @@ button {
   text-transform: uppercase;
 }
 
-button:hover {
+button:hover,
+.button-primary:hover {
   background: #fffb00;
   color: #000;
   border-color: #ff00c8;
@@ -125,13 +96,15 @@ input:focus, textarea:focus {
   border-color: #00ffe7;
 }
 
-/* Arcade Neon Border Section */
+/* Neon Section Border */
 .section-border {
   border: 3px dashed #ffd700;
   border-radius: 15px;
   background: #241e4e;
   padding: 20px;
   box-shadow: 0 0 15px #ffd70066;
+  margin: 20px auto;
+  max-width: 900px;
 }
 
 /* Headings */
@@ -140,19 +113,116 @@ h1, h2, h3, h4 {
   text-shadow: 1px 1px 2px #000;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .games-grid {
-    grid-template-columns: 1fr;
-  }
-
-  button {
-    width: 100%;
-    font-size: 0.8rem;
-  }
+.neon-glow {
+  color: #00ffe7;
+  text-shadow: 0 0 10px #00ffe7, 0 0 20px #00ffe7;
 }
 
-/* Avatars Horizontal & Optimized Size */
+/* Landing Page Wrapper */
+.landing-page {
+  padding: 40px 20px;
+  min-height: 100vh;
+}
+
+.landing-content {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Progress Bars */
+.progress-bar-container {
+  margin: 20px 0;
+}
+
+.progress-bar {
+  width: 100%;
+  background-color: #333;
+  border: 2px solid #ffd700;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.progress-fill {
+  height: 30px;
+  background: linear-gradient(to right, #00ffe7, #ffd700);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: black;
+  font-size: 0.9rem;
+  transition: width 0.5s ease-in-out;
+}
+
+.skill-progress-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.skill-progress {
+  margin-bottom: 10px;
+}
+
+.skill-progress-bar {
+  background-color: #111;
+  border: 2px solid #00ffe7;
+  border-radius: 8px;
+  height: 20px;
+  overflow: hidden;
+}
+
+.skill-progress-fill {
+  height: 100%;
+  background: linear-gradient(to right, #00ffe7, #ffd700);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: #000;
+  transition: width 0.5s;
+}
+
+/* Lesson + Homework Card */
+.lesson-card {
+  background-color: #1c1c1c;
+  border: 2px solid #00ffe7;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 20px;
+  color: #fff;
+  box-shadow: 0 0 10px rgba(0, 255, 231, 0.2);
+}
+
+.highlight-box {
+  background-color: #1e2f1e;
+  padding: 10px;
+  border-radius: 6px;
+  white-space: pre-wrap;
+  color: #caffca;
+}
+
+.gray-box {
+  background-color: #2a2a2a;
+  padding: 10px;
+  border-radius: 6px;
+  white-space: pre-wrap;
+  color: #e0e0e0;
+}
+
+/* Markdown-style list */
+.markdown-list {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.markdown-list li::before {
+  content: "⭐ ";
+}
+
+/* Avatars */
 .avatar-container {
   display: flex;
   justify-content: center;
@@ -200,4 +270,24 @@ h1, h2, h3, h4 {
   font-size: 0.8rem;
   z-index: 999;
   border-top: 2px solid #ffd700;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .games-grid {
+    grid-template-columns: 1fr;
+  }
+
+  button {
+    width: 100%;
+    font-size: 0.8rem;
+  }
+
+  .lesson-card {
+    padding: 10px;
+  }
+
+  .footer {
+    font-size: 0.7rem;
+  }
 }

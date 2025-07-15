@@ -203,6 +203,25 @@ const ClassGenerator = () => {
       setSkillFocus(skill);
       setSelectedReason(reason);
 
+      // Parse vocabulary
+      const vocabMatch = res.data.class_plan.match(/## Vocabulary\n([\s\S]*?)(?=\n##|$)/);
+      const vocabItems = vocabMatch
+        ? vocabMatch[1].match(/- ([^:]+): (.+?) \(([^)]+)\)/g)?.map((item) => {
+            const [, word, meaning, example] = item.match(/- ([^:]+): (.+?) \(([^)]+)\)/);
+            return { word, meaning, example };
+          }) || []
+        : [];
+      setVocabulary(vocabItems);
+      console.log("Parsed vocabulary:", vocabItems); // Debug log
+
+      // Parse exercises
+      const exerciseMatch = res.data.class_plan.match(/## Exercises\n([\s\S]*?)(?=\n##|$)/);
+      const exerciseItems = exerciseMatch
+        ? exerciseMatch[1].match(/- ([^\n]+)/g)?.map((item) => item.replace(/- /, "")) || []
+        : [];
+      setExercises(exerciseItems);
+
+      // Parse drag-and-drop
       const dragMatch = res.data.class_plan.match(/## Quick Check\n([\s\S]*?)(?=\n##|$)/);
       if (dragMatch) {
         const quickCheckText = dragMatch[1];
@@ -217,21 +236,6 @@ const ClassGenerator = () => {
         console.warn("No Quick Check section found in classPlan:", res.data.class_plan);
         setDragItems(["Placeholder 1", "Placeholder 2", "Placeholder 3", "Placeholder 4"]);
       }
-
-      const vocabMatch = res.data.class_plan.match(/## Vocabulary\n([\s\S]*?)(?=\n##|$)/);
-      const vocabItems = vocabMatch
-        ? vocabMatch[1].match(/- ([^:]+): (.+?) \(([^)]+)\)/g)?.map((item) => {
-            const [, word, meaning, example] = item.match(/- ([^:]+): (.+?) \(([^)]+)\)/);
-            return { word, meaning, example };
-          }) || []
-        : [];
-      setVocabulary(vocabItems);
-
-      const exerciseMatch = res.data.class_plan.match(/## Exercises\n([\s\S]*?)(?=\n##|$)/);
-      const exerciseItems = exerciseMatch
-        ? exerciseMatch[1].match(/- ([^\n]+)/g)?.map((item) => item.replace(/- /, "")) || []
-        : [];
-      setExercises(exerciseItems);
 
       const newLesson = {
         classPlan: res.data.class_plan,

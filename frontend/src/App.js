@@ -1,3 +1,4 @@
+// src/App.js
 import React, { useState, useEffect } from "react";
 import {
   BrowserRouter,
@@ -19,17 +20,24 @@ import Progress from "./components/Progress";
 import SchoolMap from "./components/SchoolMap";
 import WordChainGame from "./components/WordChainGame";
 import QuizGame from "./components/QuizGame";
+import SetupPage from "./components/SetupPage";
+import About from "./components/About";
+
+// New games
 import GuessTheWord from "./components/GuessTheWord";
 import MemoryMatch from "./components/MemoryMatch";
 import FastGrammarRace from "./components/FastGrammarRace";
 import DialogueFillIn from "./components/DialogueFillIn";
-import GamesRoom from "./components/GamesRoom";
-import SetupPage from "./components/SetupPage";
-import About from "./components/About";
+import MillionaireGame from "./components/MillionaireGame";
+import BlanketyBlank from "./components/BlanketyBlank";
+import Blockbusters from "./components/Blockbusters";
+import BlindDate from "./components/BlindDate";
+import WordChainGameExpanded from "./components/WordChainGameExpanded";
 
 function MainApp({ user, setUser }) {
   const navigate = useNavigate();
   const [selectedRoom, setSelectedRoom] = useState(null);
+  const [selectedGame, setSelectedGame] = useState("WordChainGame");
   const [mode, setMode] = useState("arcade");
 
   const [course, setCourse] = useState(() => {
@@ -40,7 +48,7 @@ function MainApp({ user, setUser }) {
       }
       return {};
     } catch (err) {
-      console.error("Error parsing course data:", err);
+      console.error("Error parsing course data in MainApp:", err);
       return {};
     }
   });
@@ -56,7 +64,7 @@ function MainApp({ user, setUser }) {
           setCourse({});
         }
       } catch (err) {
-        console.error("Error syncing course from storage:", err);
+        console.error("Error updating course data in MainApp:", err);
         setCourse({});
       }
     };
@@ -64,6 +72,23 @@ function MainApp({ user, setUser }) {
     return () => window.removeEventListener("storage", handleStorageChange);
   }, [user]);
 
+  const vocab = ["cat", "tiger", "rabbit", "tarantula", "ant", "tortoise", "elephant", "tapir"];
+  const quizQuestions = [
+    {
+      question: "What is the capital of England?",
+      options: ["London", "Paris", "New York", "Berlin"],
+      correctAnswer: "London",
+    },
+    {
+      question: "Choose the correct past tense: I ___ to the store yesterday.",
+      options: ["go", "went", "gone", "going"],
+      correctAnswer: "went",
+    },
+  ];
+
+  const isBusiness = course.reason?.toLowerCase().includes("business");
+  const isTravel = course.reason?.toLowerCase().includes("travel");
+  const moduleReason = isBusiness ? "business" : isTravel ? "travel" : "personal";
   const speakingCompleted = course.skills?.find(s => s.skill === "Speaking")?.lessons?.filter(l => l.module_lesson && l.completed).length || 0;
 
   const canAccessRoom = (room) => {
@@ -83,13 +108,43 @@ function MainApp({ user, setUser }) {
       localStorage.clear();
       navigate("/login");
     } catch (error) {
-      console.error("Logout failed:", error);
-      alert("Logout failed. Please try again.");
+      console.error("Error logging out:", error);
+      alert("Failed to log out. Please try again.");
     }
   };
 
+  const renderArcade = () => {
+    const gameMap = {
+      WordChainGame: <WordChainGame words={vocab} />,
+      QuizGame: <QuizGame questions={quizQuestions} />,
+      GuessTheWord: <GuessTheWord />,
+      MemoryMatch: <MemoryMatch />,
+      FastGrammarRace: <FastGrammarRace />,
+      DialogueFillIn: <DialogueFillIn />,
+      MillionaireGame: <MillionaireGame />,
+      BlanketyBlank: <BlanketyBlank />,
+      Blockbusters: <Blockbusters />,
+      BlindDate: <BlindDate />,
+      WordChainGameExpanded: <WordChainGameExpanded />,
+    };
+
+    return (
+      <div>
+        <h3>Game Room 🎮</h3>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", marginBottom: "15px" }}>
+          {Object.keys(gameMap).map((key) => (
+            <button key={key} onClick={() => setSelectedGame(key)}>
+              {key}
+            </button>
+          ))}
+        </div>
+        <div>{gameMap[selectedGame]}</div>
+      </div>
+    );
+  };
+
   const renderContent = () => {
-    if (!user) return <p>Please log in to access the app.</p>;
+    if (!user) return <p>Please log in to access the arcade.</p>;
 
     if (mode === "course" && selectedRoom && !canAccessRoom(selectedRoom)) {
       const incompleteSkill = course.skills?.find(s => (s.completed || 0) < (s.required || 0));
@@ -97,7 +152,7 @@ function MainApp({ user, setUser }) {
         <p style={{ fontSize: "18px" }}>
           🔒 This room is locked in Course Mode.{" "}
           {speakingCompleted < 5
-            ? `Complete ${5 - speakingCompleted} more Speaking lessons.`
+            ? `Complete ${5 - speakingCompleted} more ${moduleReason} Speaking lessons.`
             : selectedRoom === "arcade"
             ? "Complete 2 Vocabulary lessons to unlock the Game Room."
             : selectedRoom === "library"
@@ -111,33 +166,26 @@ function MainApp({ user, setUser }) {
       case "classroom1":
         return <ClassGenerator course={course} />;
       case "arcade":
-        return <GamesRoom />;
+        return renderArcade();
       case "library":
-        return (
-          <div style={{ padding: "20px" }}>
-            <h3>Library 📚</h3>
-            <p>Coming soon: Reading and writing activities.</p>
-          </div>
-        );
+        return <QuizGame questions={quizQuestions} />;
       case "media":
         return (
-          <div style={{ padding: "20px" }}>
-            <h3>Media Room 🎧</h3>
-            <p>Watch, listen, and learn! Coming soon.</p>
+          <div style={{ maxWidth: "400px", padding: "20px" }}>
+            <h3>Media Room</h3>
+            <p>Video & Song lessons coming soon!</p>
           </div>
         );
       default:
         return (
-          <div style={{ padding: "20px", fontSize: "18px" }}>
+          <div style={{ maxWidth: "400px", padding: "20px", fontSize: "18px" }}>
             <h2>Welcome to the Language Learning Arcade!</h2>
-            <p>Select a room to start your journey.</p>
+            <p>Click a room to start your quest.</p>
             {mode === "course" && (
-              <p>In Course Mode, you must complete speaking lessons to unlock new areas.</p>
+              <p>In Course Mode, complete your Speaking module lessons to unlock other rooms.</p>
             )}
             {course.reason && (
-              <p>
-                Your goal: <strong>{course.reason}</strong>
-              </p>
+              <p>Your learning reason: <strong>{course.reason}</strong></p>
             )}
           </div>
         );
@@ -146,7 +194,7 @@ function MainApp({ user, setUser }) {
 
   return (
     <div style={{ padding: "20px", fontFamily: "'Segoe UI', sans-serif" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
+      <div style={{ marginBottom: 10, display: "flex", justifyContent: "space-between" }}>
         <div>Logged in as: <strong>{user}</strong></div>
         <div>
           <button onClick={() => navigate("/homework")}>📚 Homework</button>
@@ -156,7 +204,7 @@ function MainApp({ user, setUser }) {
         </div>
       </div>
 
-      <div style={{ marginBottom: 20 }}>
+      <div style={{ marginBottom: "20px" }}>
         <strong>🧭 Mode:</strong>
         <button onClick={() => setMode("arcade")}>🎮 Arcade</button>
         <button onClick={() => setMode("course")}>📘 Course</button>
@@ -193,7 +241,7 @@ export default function App() {
             users[userId] = {
               studentLevel: userData.studentLevel || "A1",
               age: userData.age || 18,
-              why: userData.why || "personal",
+              why: userData.why || "personal growth",
               displayName: userData.displayName || "User",
             };
             localStorage.setItem("users", JSON.stringify(users));
@@ -201,8 +249,8 @@ export default function App() {
             setNeedsSetup(true);
           }
         } catch (error) {
-          console.error("Error checking profile:", error);
-          setError("Failed to load user profile.");
+          console.error("Error checking user profile:", error);
+          setError("Failed to load user profile. Please try logging in again.");
           setNeedsSetup(true);
         }
       } else {
@@ -227,66 +275,20 @@ export default function App() {
           path="/app"
           element={
             user ? (
-              needsSetup ? <Navigate to="/setup" /> : <MainApp user={user} setUser={setUser} />
+              needsSetup ? (
+                <Navigate to="/setup" />
+              ) : (
+                <MainApp user={user} setUser={setUser} />
+              )
             ) : (
               <Navigate to="/login" />
             )
           }
         />
-        <Route
-          path="/setup"
-          element={
-            user ? (
-              <SetupPage
-                onSave={async (formData) => {
-                  try {
-                    const userId = auth.currentUser?.uid;
-                    if (!userId) throw new Error("No user found");
-
-                    if (!formData.studentLevel || !formData.age || !formData.reason) {
-                      throw new Error("All fields are required.");
-                    }
-
-                    await setDoc(
-                      doc(db, "users", userId),
-                      {
-                        studentLevel: formData.studentLevel,
-                        age: parseInt(formData.age, 10),
-                        why: formData.reason,
-                        displayName: auth.currentUser?.displayName || "User",
-                        setupComplete: true,
-                      },
-                      { merge: true }
-                    );
-
-                    const courseData = {
-                      level: formData.studentLevel,
-                      reason: formData.reason,
-                      age: parseInt(formData.age, 10),
-                      skills: ["Speaking", "Listening", "Grammar", "Vocabulary", "Reading", "Writing"].map(skill => ({
-                        skill,
-                        required: 4,
-                        completed: 0,
-                        lessons: [],
-                      })),
-                    };
-                    localStorage.setItem(`course_${userId}`, JSON.stringify(courseData));
-                    setNeedsSetup(false);
-                  } catch (error) {
-                    console.error("Setup save error:", error.message);
-                    alert("Error saving setup: " + error.message);
-                  }
-                }}
-              />
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
-        />
+        <Route path="/setup" element={user ? <SetupPage onSave={() => {}} /> : <Navigate to="/login" />} />
         <Route path="/homework" element={user ? <Homework /> : <Navigate to="/login" />} />
         <Route path="/lessons" element={user ? <Lessons /> : <Navigate to="/login" />} />
         <Route path="/progress" element={user ? <Progress /> : <Navigate to="/login" />} />
-        <Route path="/games" element={user ? <GamesRoom /> : <Navigate to="/login" />} />
       </Routes>
     </BrowserRouter>
   );

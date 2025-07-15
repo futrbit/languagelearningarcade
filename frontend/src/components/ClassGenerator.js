@@ -853,8 +853,8 @@ export default function ClassGenerator() {
                 vocabulary={vocabulary}
                 exercises={exercises}
                 skillFocus={skillFocus}
-                savedLessons={savedLessons}
-                savedHomework={savedHomework}
+                
+                
               />
             </div>
           </div>

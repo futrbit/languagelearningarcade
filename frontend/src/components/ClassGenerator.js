@@ -92,7 +92,7 @@ export default function ClassGenerator() {
 
         const res = await axios.get(`${API_URL}/remaining-calls`, {
           headers: { Authorization: `Bearer ${token}` },
-          timeout: 10000,
+          timeout: 30000,
         });
         
         const serverCalls = res.data.remaining_calls?.generate || 0;
@@ -710,170 +710,80 @@ export default function ClassGenerator() {
   }, [courseData.skills, validSkills]);
 
   return (
-    <div>
-      <header className="header">
-        <img src="/logo.png" alt="Language Learning Arcade Logo" className="header-logo" />
-        <nav>
-          <a href="/">Home</a>
-          <a href="/about">About</a>
-          <a href="/progress">Progress</a>
-          <a href="/homework">Homework</a>
-          <a href="/lessons">Lessons</a>
-        </nav>
-      </header>
-      <div className="app-container section-border">
-        <h2>🎛 Generate Class</h2>
-        <p className="limit-text">
-          {remainingCalls === null ? "Loading lessons left..." : `Lessons left today: ${remainingCalls}/5`}
-        </p>
-        {remainingCalls === 0 && (
-          <button
-            className="button-primary"
-            onClick={() => window.location.href = "https://x.ai/grok"}
-            style={{ width: "100%", marginBottom: 15 }}
-          >
-            Go Premium for Unlimited Lessons!
+  <div>
+    <header className="header">
+      <img src="/logo.png" alt="Language Learning Arcade Logo" className="header-logo" />
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/progress">Progress</a>
+        <a href="/homework">Homework</a>
+        <a href="/lessons">Lessons</a>
+        {currentUser ? (
+          <button className="button-primary" onClick={() => auth.signOut().then(() => navigate("/login"))}>
+            Logout
+          </button>
+        ) : (
+          <button className="button-primary" onClick={() => navigate("/login")}>
+            Login
           </button>
         )}
-        <div className="reason-buttons">
-          <label>Filter by Reason:</label>
-          <div>
-            {["travel", "business", "personal growth"].map((reason) => (
-              <button
-                key={reason}
-                className={`button-primary ${selectedReason.toLowerCase() === reason ? "button-selected" : ""}`}
-                onClick={() => handleReasonClick(reason)}
-              >
-                {reason.charAt(0).toUpperCase() + reason.slice(1)}
-              </button>
-            ))}
+      </nav>
+    </header>
+
+    <div className="app-container section-border">
+      <h2>Language Learning Arcade</h2>
+      {error && <p className="error-text">{error}</p>}
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <>
+          <div className="class-plan-container">
+            <h3>Your Lesson Plan</h3>
+            {classPlan ? (
+              <Markdown rehypePlugins={[rehypeSanitize]}>{classPlan}</Markdown>
+            ) : (
+              <p>No lesson plan available. Try generating a new lesson.</p>
+            )}
           </div>
-        </div>
-        <p>Level: {userData.studentLevel || "Not set"}, Age: {userData.age || "Not set"}, Reason: {userData.why || "Not set"}</p>
-        <p>
-          Suggested skill: {suggestedSkill.skill} ({suggestedSkill.lessonsLeft} lessons left)
-        </p>
-        {skillFocus === "Speaking" && getNextModuleLesson() > 0 && (
-          <p>
-            Speaking Module Lesson {getNextModuleLesson()}: {speakingModules[getModuleReason()][getNextModuleLesson() - 1]?.topic || "Unknown"}
-          </p>
-        )}
-
-        <label htmlFor="levelSelect">Student Level:</label>
-        <select
-          id="levelSelect"
-          value={studentLevel}
-          onChange={(e) => setStudentLevel(e.target.value)}
-          style={{ marginTop: 5, padding: 5, width: "100%" }}
-        >
-          {["A1", "A2", "B1", "B2", "C1", "C2"].map((lvl) => (
-            <option key={lvl} value={lvl}>
-              {lvl}
-            </option>
-          ))}
-        </select>
-
-        <label htmlFor="skillSelect" style={{ display: "block", marginTop: 15 }}>
-          Skill Focus:
-        </label>
-        <select
-          id="skillSelect"
-          value={skillFocus}
-          onChange={(e) => setSkillFocus(e.target.value)}
-          style={{ marginTop: 5, padding: 5, width: "100%" }}
-        >
-          {validSkills.map((skill) => (
-            <option key={skill} value={skill}>
-              {skill}
-            </option>
-          ))}
-        </select>
-
-        <label htmlFor="teacherSelect" style={{ display: "block", marginTop: 15 }}>
-          Choose Your Teacher:
-        </label>
-        <select
-          id="teacherSelect"
-          value={teacher}
-          onChange={(e) => setTeacher(e.target.value)}
-          style={{ marginTop: 5, padding: 5, width: "100%" }}
-        >
-          {teachers.map((t) => (
-            <option key={t.name} value={t.name}>
-              {t.name}
-            </option>
-          ))}
-        </select>
-        <div className="avatar-container">
-          {teachers.map((t) => (
-            <div
-              key={t.name}
-              className={`avatar-item ${teacher === t.name ? "avatar-selected" : ""}`}
-              onClick={() => setTeacher(t.name)}
-            >
-              <img src={t.avatar} alt={`Teacher ${t.name}`} className="avatar-image" />
-              <p>
-                <strong>{t.name}</strong>
-              </p>
+          <Notepad
+            onSave={saveNotes}
+            onSubmitAnswer={submitAnswer}
+            dragItems={dragItems}
+            starting={starting}
+            keeping={keeping}
+            dragFeedback={dragFeedback}
+            handleDragStart={handleDragStart}
+            handleDrop={handleDrop}
+            handleDragOver={handleDragOver}
+            handleRemove={handleRemove}
+            checkDragDropAnswers={checkDragDropAnswers}
+            resetDragDrop={resetDragDrop}
+            vocabulary={vocabulary}
+            exercises={exercises}
+            skillFocus={skillFocus}
+            savedLessons={savedLessons}
+            savedHomework={savedHomework}
+            classPlan={classPlan} // Added prop
+          />
+          {feedback && (
+            <div className="feedback-container">
+              <h3>Feedback</h3>
+              <p>{feedback}</p>
             </div>
-          ))}
-        </div>
-
-        <button
-          className="button-fancy"
-          onClick={generateClass}
-          disabled={loading || remainingCalls === 0 || !auth.currentUser}
-          style={{ width: "100%", marginTop: 20, cursor: (loading || remainingCalls === 0 || !auth.currentUser) ? "not-allowed" : "pointer" }}
-        >
-          {loading ? "Generating..." : remainingCalls === 0 ? "Daily Limit Reached" : !auth.currentUser ? "Please Log In" : "Generate Class"}
-        </button>
-
-        {error && <p className="error-text">{error}</p>}
-
-        {classPlan ? (
-          <div style={{ display: "flex", gap: "20px", marginTop: 25 }}>
-            <div className="section-border lesson-plan-container" style={{ flex: 1, overflowY: "auto" }}>
-              <h3>Generated Class Plan</h3>
-              {renderMarkdown(classPlan)}
-            </div>
-            <div style={{ flex: 1 }}>
-              <Notepad
-                onSave={onSave}
-                onSubmitAnswer={submitAnswer}
-                dragItems={dragItems}
-                starting={starting}
-                keeping={keeping}
-                dragFeedback={dragFeedback}
-                handleDragStart={handleDragStart}
-                handleDrop={handleDrop}
-                handleDragOver={handleDragOver}
-                handleRemove={handleRemove}
-                checkDragDropAnswers={checkDragDropAnswers}
-                resetDragDrop={resetDragDrop}
-                vocabulary={vocabulary}
-                exercises={exercises}
-                skillFocus={skillFocus}
-                savedLessons={savedLessons}
-                savedHomework={savedHomework}
-              />
-            </div>
+          )}
+          <div className="credits-container">
+            <p>Remaining credits today: {remainingCalls}</p>
+            <button onClick={generateClass} disabled={remainingCalls <= 0 || loading} className="button-primary">
+              Generate New Lesson
+            </button>
           </div>
-        ) : error ? (
-          <p className="error-text">{error}</p>
-        ) : (
-          <p>No class plan generated yet.</p>
-        )}
-
-        {feedback && (
-          <div className="section-border lesson-plan-container" style={{ marginTop: 15 }}>
-            <h3>📝 Feedback</h3>
-            {renderMarkdown(feedback)}
-          </div>
-        )}
-      </div>
-      <footer className="footer">
-        <p>© 2025 Language Learning Arcade. All rights reserved.</p>
-      </footer>
+        </>
+      )}
     </div>
-  );
-}
+
+    <footer className="footer">
+      <p>© 2025 Language Learning Arcade. All rights reserved.</p>
+    </footer>
+  </div>
+);

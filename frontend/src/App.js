@@ -1,4 +1,3 @@
-// src/App.js
 import React, { useState, useEffect } from "react";
 import {
   BrowserRouter,
@@ -23,7 +22,7 @@ import QuizGame from "./components/QuizGame";
 import SetupPage from "./components/SetupPage";
 import About from "./components/About";
 
-// New games
+// 🧠 All new games
 import GuessTheWord from "./components/GuessTheWord";
 import MemoryMatch from "./components/MemoryMatch";
 import FastGrammarRace from "./components/FastGrammarRace";
@@ -33,11 +32,14 @@ import BlanketyBlank from "./components/BlanketyBlank";
 import Blockbusters from "./components/Blockbusters";
 import BlindDate from "./components/BlindDate";
 import WordChainGameExpanded from "./components/WordChainGameExpanded";
+import CreativeWriting from "./components/CreativeWriting";
+import VocabularyCards from "./components/VocabularyCards";
+import WordSearchGame from "./components/WordSearchGame";
+import CrosswordGame from "./components/CrosswordGame";
 
 function MainApp({ user, setUser }) {
   const navigate = useNavigate();
   const [selectedRoom, setSelectedRoom] = useState(null);
-  const [selectedGame, setSelectedGame] = useState("WordChainGame");
   const [mode, setMode] = useState("arcade");
 
   const [course, setCourse] = useState(() => {
@@ -113,36 +115,6 @@ function MainApp({ user, setUser }) {
     }
   };
 
-  const renderArcade = () => {
-    const gameMap = {
-      WordChainGame: <WordChainGame words={vocab} />,
-      QuizGame: <QuizGame questions={quizQuestions} />,
-      GuessTheWord: <GuessTheWord />,
-      MemoryMatch: <MemoryMatch />,
-      FastGrammarRace: <FastGrammarRace />,
-      DialogueFillIn: <DialogueFillIn />,
-      MillionaireGame: <MillionaireGame />,
-      BlanketyBlank: <BlanketyBlank />,
-      Blockbusters: <Blockbusters />,
-      BlindDate: <BlindDate />,
-      WordChainGameExpanded: <WordChainGameExpanded />,
-    };
-
-    return (
-      <div>
-        <h3>Game Room 🎮</h3>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", marginBottom: "15px" }}>
-          {Object.keys(gameMap).map((key) => (
-            <button key={key} onClick={() => setSelectedGame(key)}>
-              {key}
-            </button>
-          ))}
-        </div>
-        <div>{gameMap[selectedGame]}</div>
-      </div>
-    );
-  };
-
   const renderContent = () => {
     if (!user) return <p>Please log in to access the arcade.</p>;
 
@@ -157,7 +129,7 @@ function MainApp({ user, setUser }) {
             ? "Complete 2 Vocabulary lessons to unlock the Game Room."
             : selectedRoom === "library"
             ? "Complete 2 Grammar lessons to unlock the Library."
-            : `Complete ${(incompleteSkill?.required || 0) - (incompleteSkill?.completed || 0)} lesson(s) in ${incompleteSkill?.skill || "any skill"}.`}
+            : `Complete ${(incompleteSkill?.required || 0) - (incompleteSkill?.completed || 0)} more lesson(s) in ${incompleteSkill?.skill || "any skill"}.`}
         </p>
       );
     }
@@ -166,7 +138,25 @@ function MainApp({ user, setUser }) {
       case "classroom1":
         return <ClassGenerator course={course} />;
       case "arcade":
-        return renderArcade();
+        return (
+          <div className="games-grid">
+            <WordChainGame words={vocab} />
+            <QuizGame questions={quizQuestions} />
+            <GuessTheWord />
+            <MemoryMatch />
+            <FastGrammarRace />
+            <DialogueFillIn />
+            <MillionaireGame />
+            <BlanketyBlank />
+            <Blockbusters />
+            <BlindDate />
+            <WordChainGameExpanded />
+            <CreativeWriting />
+            <VocabularyCards />
+            <WordSearchGame />
+            <CrosswordGame />
+          </div>
+        );
       case "library":
         return <QuizGame questions={quizQuestions} />;
       case "media":
@@ -182,10 +172,14 @@ function MainApp({ user, setUser }) {
             <h2>Welcome to the Language Learning Arcade!</h2>
             <p>Click a room to start your quest.</p>
             {mode === "course" && (
-              <p>In Course Mode, complete your Speaking module lessons to unlock other rooms.</p>
+              <p>
+                In Course Mode, complete your Speaking module lessons to unlock other rooms.
+              </p>
             )}
             {course.reason && (
-              <p>Your learning reason: <strong>{course.reason}</strong></p>
+              <p>
+                Your learning reason: <strong>{course.reason}</strong>
+              </p>
             )}
           </div>
         );
@@ -236,7 +230,6 @@ export default function App() {
           if (userDoc.exists()) {
             const userData = userDoc.data();
             setNeedsSetup(!userData?.setupComplete);
-
             const users = JSON.parse(localStorage.getItem("users") || "{}");
             users[userId] = {
               studentLevel: userData.studentLevel || "A1",
@@ -285,7 +278,7 @@ export default function App() {
             )
           }
         />
-        <Route path="/setup" element={user ? <SetupPage onSave={() => {}} /> : <Navigate to="/login" />} />
+        <Route path="/setup" element={<SetupPage onSave={() => setNeedsSetup(false)} />} />
         <Route path="/homework" element={user ? <Homework /> : <Navigate to="/login" />} />
         <Route path="/lessons" element={user ? <Lessons /> : <Navigate to="/login" />} />
         <Route path="/progress" element={user ? <Progress /> : <Navigate to="/login" />} />

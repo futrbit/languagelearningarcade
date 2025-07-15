@@ -1,167 +1,212 @@
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Montserrat:wght@400;600;700;900&display=swap');
+/* Import Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Montserrat:wght@400;600;700;900&family=Open+Sans:wght@400;600&display=swap');
 
-/* Base */
-body {
-  margin: 0;
-  font-family: 'Montserrat', sans-serif;
-  background: linear-gradient(135deg, #2e026d, #5a189a, #7b2cbf);
-  color: #fff;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
+/* Global Styles */
 .App {
   text-align: center;
-  padding: 2rem 1rem 100px;
-}
-
-/* Header */
-.App-header {
-  background: radial-gradient(circle at center, #ff00c8, #5e60ce);
-  padding: 2rem;
+  font-family: 'Montserrat', sans-serif;
+  padding: 1rem 1rem 100px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1e0f3f 0%, #4b0082 100%);
   color: #fff;
-  text-shadow: 1px 1px 2px #000;
-}
-
-.App-header h1 {
-  font-family: 'Press Start 2P', cursive;
-  font-size: 2rem;
-  margin: 0;
-}
-
-nav {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Logo */
+.App-logo, .header-logo {
+  height: 75px;
+  margin-bottom: 1rem;
+  transition: transform 0.3s ease;
+}
+.App-logo:hover, .header-logo:hover {
+  transform: scale(1.05);
+}
+
+/* Animated Logo Spin */
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo, .header-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+/* Header + Nav */
+.App-header, .header {
+  background: linear-gradient(to bottom, #6a0dad, #301934);
+  min-height: 40vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  padding: 2rem;
+  width: 100%;
+}
+.App-header nav, .header nav {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+}
+.App-link, .header nav a {
+  color: #FFD700;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-size: 1.2em;
+}
+.App-link:hover, .header nav a:hover {
+  color: #FF8C00;
+}
+
+/* Page Container */
+.container, .app-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 40px;
+  background: #1c1030;
+  border-radius: 12px;
+  box-shadow: 0 4px 25px rgba(255, 255, 255, 0.1);
+  text-align: center;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Section Headings */
+.features h3,
+.avatar-container h3,
+.about-container h2 {
+  font-size: 2.5rem;
+  font-family: 'Press Start 2P', cursive;
+  color: #FFD700;
+  text-shadow: 2px 2px 5px #000;
+  margin-bottom: 30px;
+}
+
+/* Game Grid Layout - STACKED */
+.games-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  width: 100%;
+  margin-top: 30px;
+}
+.game-card {
+  background: #2d1650;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+  border: 2px solid #FFD700;
+}
+
+/* Avatar Section */
+.avatar-container {
+  flex-direction: row;
+  flex-wrap: nowrap;
   justify-content: center;
   gap: 30px;
-  margin-top: 1rem;
+  overflow-x: auto;
+  padding-bottom: 10px;
 }
-
-nav a {
-  color: #FFD700;
-  font-weight: bold;
-  text-decoration: none;
-  font-size: 1.1rem;
+.avatar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-
-nav a:hover {
-  color: #00FFEA;
-}
-
-/* Game Grid */
-.games-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 30px;
-  margin-top: 40px;
-  padding-bottom: 100px;
-}
-
-.game-card {
-  background: #1b1b3a;
-  border: 3px solid #ffd700;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 0 20px #ffd70088;
+.avatar-image, .teacher-avatar {
+  width: 80px !important;
+  height: 80px !important;
+  border-radius: 50%;
+  border: 3px solid #00ffe7;
+  box-shadow: 0 0 10px #00ffe788;
   transition: transform 0.3s ease;
-  font-family: 'Press Start 2P', cursive;
-  font-size: 0.6rem;
 }
-
-.game-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 25px #fffb00cc;
+.avatar-image:hover {
+  transform: scale(1.1);
 }
-
-.game-card h3 {
+.avatar-item p {
   font-size: 1rem;
-  margin-bottom: 15px;
-  color: #00ffe7;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 8px;
+}
+.avatar-item.avatar-selected .avatar-image {
+  border-color: #FFD700 !important;
+  box-shadow: 0 0 15px #FFD700aa;
 }
 
 /* Buttons */
-button {
+.button-primary, .button-fancy {
+  background: #FFD700;
+  color: #000;
+  border: none;
+  padding: 15px 40px;
+  font-size: 1.2em;
+  border-radius: 12px;
+  font-weight: 900;
   font-family: 'Press Start 2P', cursive;
-  background: #ff00c8;
-  color: white;
-  border: 3px solid #00ffe7;
-  padding: 12px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.3s ease;
-  font-size: 0.7rem;
-  margin: 10px;
   text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 5px 20px #FFD70088;
+}
+.button-primary:hover, .button-fancy:hover {
+  background: #FF8C00;
+  color: #fff;
+  transform: translateY(-4px);
 }
 
-button:hover {
-  background: #00ffe7;
-  color: #000;
-  border-color: #ff00c8;
-  transform: translateY(-2px);
-}
-
-button:disabled {
-  background: #555;
-  color: #ccc;
-  border: 2px dashed #999;
-}
-
-/* Inputs */
-input, textarea {
-  font-family: 'Montserrat', sans-serif;
-  padding: 10px;
-  font-size: 1rem;
-  border-radius: 6px;
-  border: 2px solid #ffd700;
-  background: #fff;
-  color: #000;
-  width: 100%;
-  box-sizing: border-box;
-  margin-top: 10px;
-}
-
-input:focus, textarea:focus {
-  outline: none;
-  border-color: #00ffe7;
-}
-
-/* Arcade Neon Border Section */
-.section-border {
-  border: 3px dashed #ffd700;
-  border-radius: 15px;
-  background: #241e4e;
-  padding: 20px;
-  box-shadow: 0 0 15px #ffd70066;
-}
-
-/* Headings */
-h1, h2, h3, h4 {
-  color: #ffd700;
+/* Game Titles */
+.game-card h3 {
+  font-size: 2rem;
+  color: #00ffe7;
+  font-family: 'Press Start 2P', cursive;
+  margin-bottom: 20px;
   text-shadow: 1px 1px 2px #000;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .games-grid {
-    grid-template-columns: 1fr;
-  }
-
-  button {
-    width: 100%;
-    font-size: 0.8rem;
-  }
+/* Timers, Texts, Inputs in Games */
+.game-card input {
+  padding: 12px;
+  font-size: 1.2em;
+  border-radius: 8px;
+  border: 1px solid #FFD700;
+  width: 100%;
+  margin-bottom: 10px;
+  background: #1e0f3f;
+  color: #fff;
+}
+.game-card p {
+  font-size: 1.1em;
+  color: #eee;
+  margin-top: 10px;
 }
 
 /* Footer */
 .footer {
+  text-align: center;
+  padding: 20px;
+  background: #1e0f3f;
+  color: #aaa;
   position: fixed;
   bottom: 0;
   width: 100%;
-  background: #111;
-  color: #ccc;
-  text-align: center;
-  padding: 10px;
-  font-size: 0.8rem;
-  z-index: 999;
-  border-top: 2px solid #ffd700;
+  font-family: 'Open Sans', sans-serif;
+  z-index: 1000;
 }
+.footer p {
+  margin: 0;
+  font-size: 0.9em;
+}
+

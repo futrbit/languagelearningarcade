@@ -1,9 +1,7 @@
 import React, { useState, useMemo } from "react";
 import Markdown from "react-markdown";
 import rehypeSanitize from "rehype-sanitize";
-import "../styles.css";
-
-const Notepad = ({
+import "../styles.css";const Notepad = ({
   onSave,
   onSubmitAnswer,
   dragItems,
@@ -21,68 +19,29 @@ const Notepad = ({
   skillFocus,
   savedLessons,
   savedHomework,
-  classPlan, // Added prop
 }) => {
   const [notes, setNotes] = useState("");
-  const [exerciseAnswers, setExerciseAnswers] = useState({});
-  const [flippedCards, setFlippedCards] = useState({});
-  const [audioPlayed, setAudioPlayed] = useState(false);
-
-  const handleSubmit = () => {
+  const [exerciseAnswers, setExerciseAnswers] = useState({});  const handleRecord = () => {
+    alert("Recording feature not implemented yet.");
+  };  const handleSubmit = () => {
     if (!notes.trim()) {
       alert("Please enter some notes before submitting.");
       return;
     }
     onSubmitAnswer(notes);
-  };
-
-  const handleSave = () => {
+  };  const handleSave = () => {
     const notesObj = {
       notes,
       date: new Date().toLocaleString(),
       exercises: exerciseAnswers,
-      flippedCards: Object.keys(flippedCards).length === vocabulary.length ? true : false,
-      audioPlayed,
     };
     console.log("Saving notes:", notesObj);
     onSave(notesObj);
     setNotes("");
     setExerciseAnswers({});
-    setFlippedCards({});
-    setAudioPlayed(false);
-  };
-
-  const handleExerciseChange = (index, value) => {
+  };  const handleExerciseChange = (index, value) => {
     setExerciseAnswers((prev) => ({ ...prev, [index]: value }));
-  };
-
-  const handleCardFlip = (index) => {
-    setFlippedCards((prev) => ({
-      ...prev,
-      [index]: !prev[index],
-    }));
-    if (Object.keys(flippedCards).length + 1 === vocabulary.length) {
-      console.log("All vocabulary cards flipped!");
-      onSubmitAnswer({ action: "flashcards_completed", skillFocus });
-    }
-  };
-
-  const handlePlayPrompt = () => {
-    if (!exercises.length && !classPlan) {
-      alert("No sentence available for playback.");
-      return;
-    }
-    const sentenceMatch = exercises[0]?.match(/^(.*?[.!?])\s/) || classPlan?.match(/^(.*?[.!?])\s/);
-    const sentence = sentenceMatch ? sentenceMatch[1] : "Please practice speaking this sentence.";
-    const utterance = new SpeechSynthesisUtterance(sentence);
-    utterance.lang = "en-US";
-    window.speechSynthesis.speak(utterance);
-    setAudioPlayed(true);
-    console.log("Played audio prompt:", sentence);
-    onSubmitAnswer({ action: "audio_played", skillFocus });
-  };
-
-  const renderDragDrop = () => (
+  };  const renderDragDrop = () => (
     <div className="drag-drop-container">
       <h3>Drag & Drop Activity</h3>
       {dragItems.length === 0 ? (
@@ -144,45 +103,14 @@ const Notepad = ({
             </button>
           </div>
           {dragFeedback && (
-            <p className={`drag-feedback ${dragFeedback.includes("correct") ? "success" : "error"}`}>
+            <p className={drag-feedback ${dragFeedback.includes("correct") ? "success" : "error"}}>
               {dragFeedback}
             </p>
           )}
         </>
       )}
     </div>
-  );
-
-  const renderFlashcards = () => (
-    <div className="flashcards-container">
-      <h3>Vocabulary Flashcards</h3>
-      {vocabulary.length === 0 ? (
-        <p className="error-text">No vocabulary items available.</p>
-      ) : (
-        <div className="flashcards">
-          {vocabulary.map((item, index) => (
-            <div
-              key={index}
-              className={`flashcard ${flippedCards[index] ? "flipped" : ""}`}
-              onClick={() => handleCardFlip(index)}
-            >
-              <div className="flashcard-inner">
-                <div className="flashcard-front">
-                  <p>{item.word}</p>
-                </div>
-                <div className="flashcard-back">
-                  <p><strong>Meaning:</strong> {item.meaning}</p>
-                  <p><strong>Example:</strong> {item.example}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-
-  const renderExercises = useMemo(() => {
+  );  const renderExercises = useMemo(() => {
     if (!exercises.length) return null;
     return (
       <div className="exercises-container">
@@ -200,11 +128,9 @@ const Notepad = ({
         ))}
       </div>
     );
-  }, [exercises, exerciseAnswers]);
-
-  return (
+  }, [exercises, exerciseAnswers]);  return (
     <div className="notepad-container section-border">
-      <h3>Notepad 📝</h3>
+      <h3>Notepad </h3>
       {(savedLessons?.length > 0 || savedHomework?.length > 0) ? (
         <div className="saved-notes-container">
           <h4>Saved Lessons</h4>
@@ -247,8 +173,7 @@ const Notepad = ({
       ) : (
         <p className="error-text">No saved lessons or homework found. Try generating or saving a lesson.</p>
       )}
-      {skillFocus === "Vocabulary" && renderFlashcards()}
-      {vocabulary.length > 0 && skillFocus !== "Vocabulary" && (
+      {vocabulary.length > 0 && (
         <div className="vocabulary-container">
           <h3>Vocabulary</h3>
           <table className="markdown-table">
@@ -274,16 +199,9 @@ const Notepad = ({
       {renderDragDrop()}
       {renderExercises}
       {skillFocus === "Speaking" && (
-        <div style={{ marginTop: 10 }}>
-          <button onClick={handlePlayPrompt} className="button-primary">
-            Play Prompt 🎙️
-          </button>
-          {audioPlayed && (
-            <button onClick={handlePlayPrompt} className="button-primary" style={{ marginLeft: 10 }}>
-              Play Again
-            </button>
-          )}
-        </div>
+        <button onClick={handleRecord} className="button-primary" style={{ marginTop: 10 }}>
+          Record Response 
+        </button>
       )}
       <textarea
         value={notes}
@@ -301,6 +219,6 @@ const Notepad = ({
       </div>
     </div>
   );
-};
+};export default Notepad;
 
-export default Notepad;
+

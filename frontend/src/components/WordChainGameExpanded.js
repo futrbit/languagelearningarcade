@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 
-export default function WordChainGameExpanded({ words }) {
-  const [usedWords, setUsedWords] = useState([words[0]]);
+export default function WordChainGameExpanded({ words = ["apple", "elephant", "tiger", "rabbit", "tapir"] }) {
+  const startingWord = words[0] || "apple"; // fallback
+  const [usedWords, setUsedWords] = useState([startingWord]);
   const [input, setInput] = useState("");
-  const [message, setMessage] = useState("Start with a word beginning with: " + words[0].slice(-1));
+  const [message, setMessage] = useState("Start with a word beginning with: " + startingWord.slice(-1).toUpperCase());
   const [timeLeft, setTimeLeft] = useState(15); // 15 seconds timer
 
   const lastWord = usedWords[usedWords.length - 1];
@@ -11,15 +12,15 @@ export default function WordChainGameExpanded({ words }) {
 
   useEffect(() => {
     if (timeLeft <= 0) {
-      setMessage("Time's up! Try again.");
+      setMessage("⏰ Time's up! Try again.");
       setInput("");
       setTimeLeft(15);
       return;
     }
     if (input) {
-      setTimeLeft(15);
+      setTimeLeft(15); // reset on new input
     }
-    const timerId = setInterval(() => setTimeLeft(t => t - 1), 1000);
+    const timerId = setInterval(() => setTimeLeft((t) => t - 1), 1000);
     return () => clearInterval(timerId);
   }, [timeLeft, input]);
 
@@ -28,33 +29,33 @@ export default function WordChainGameExpanded({ words }) {
     const newWord = input.trim().toLowerCase();
 
     if (!newWord) {
-      setMessage("Please enter a word.");
+      setMessage("❗ Please enter a word.");
       return;
     }
     if (usedWords.includes(newWord)) {
-      setMessage("You already used that word!");
+      setMessage("🚫 You already used that word!");
       return;
     }
     if (newWord[0] !== expectedLetter) {
-      setMessage(`Word must start with '${expectedLetter.toUpperCase()}'`);
+      setMessage(`❌ Word must start with '${expectedLetter.toUpperCase()}'`);
       return;
     }
     if (!words.includes(newWord)) {
-      setMessage("Word not in vocabulary list.");
+      setMessage("🤔 Word not in vocabulary list.");
       return;
     }
 
     setUsedWords([...usedWords, newWord]);
     setInput("");
-    setMessage("Great! Next word should start with: " + newWord.slice(-1).toUpperCase());
+    setMessage("✅ Great! Next word should start with: " + newWord.slice(-1).toUpperCase());
     setTimeLeft(15);
   };
 
   return (
     <div style={{ maxWidth: 400, padding: 10, border: "2px solid #007bff", borderRadius: 8 }}>
-      <h3>Word Chain Game</h3>
-      <p>Current chain: {usedWords.join(" → ")}</p>
-      <p>Time left: {timeLeft}s</p>
+      <h3>🔗 Word Chain Game Expanded</h3>
+      <p><strong>Chain:</strong> {usedWords.join(" → ")}</p>
+      <p>⏳ Time left: {timeLeft}s</p>
       <form onSubmit={handleSubmit}>
         <input
           type="text"

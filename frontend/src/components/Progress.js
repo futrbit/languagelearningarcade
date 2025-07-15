@@ -177,7 +177,7 @@ export default function Progress() {
   return (
     <div>
       <header className="header">
-        <img src="/logo.png" alt="Language Learning Arcade Logo" className="header-logo" />
+        
         <nav>
           <a href="/">Home</a>
           <a href="/about">About</a>

@@ -125,6 +125,11 @@ export default function Progress() {
   return (
     <div className="landing-page">
       <div className="landing-content section-border" style={{ marginBottom: "100px" }}>
+        {/* ✅ BACK TO ARCADE BUTTON */}
+        <div style={{ display: "flex", justifyContent: "flex-start", marginBottom: "20px" }}>
+          <button onClick={() => navigate("/app")}>⬅️ Back to Arcade</button>
+        </div>
+
         <h1>📊 Your Progress</h1>
         {loading ? (
           <p>Loading...</p>

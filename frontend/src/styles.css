@@ -25,36 +25,39 @@ body {
 
 .school-map-buttons button {
   background: linear-gradient(145deg, #f7b2ff, #c5d9ff);
-  border: 3px solid #a155d6; /* deeper purple */
-  border-radius: 20px;
+  border: 4px solid #7a37b8; /* thicker, darker purple */
+  border-radius: 24px;
   color: #3a0055;
   font-size: 1rem;
-  font-weight: 700;
-  padding: 1.2rem 2.2rem;
+  font-weight: 800;
+  padding: 1.5rem 3rem;
   cursor: pointer;
   font-family: 'Press Start 2P', monospace;
-  letter-spacing: 1.5px;
+  letter-spacing: 2px;
   text-transform: uppercase;
   box-shadow:
-    0 4px #9c47d6,          /* main shadow */
-    inset 0 4px 10px #e5b9ff; /* subtle glow inside */
+    0 6px #7a37b8,               /* solid shadow below */
+    inset 0 6px 14px #e2a1ff;    /* strong inset glow */
   transition: transform 0.15s ease, box-shadow 0.3s ease;
   user-select: none;
   position: relative;
   overflow: hidden;
+  text-shadow: 0 0 10px #c18aff;
 }
 
 .school-map-buttons button::before {
   content: "";
   position: absolute;
-  top: -40%;
-  left: -45%;
-  width: 180%;
-  height: 180%;
-  background: radial-gradient(circle at center, rgba(255,255,255,0.25), transparent 70%);
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.3), transparent 70%);
   transform: rotate(25deg);
   transition: transform 0.6s ease;
   pointer-events: none;
+  filter: drop-shadow(0 0 3px #ffa6ff);
+  mix-blend-mode: screen;
 }
 
 .school-map-buttons button:hover::before {
@@ -62,17 +65,16 @@ body {
 }
 
 .school-map-buttons button:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
   box-shadow:
-    0 6px #7a35b4,
-    inset 0 6px 14px #f2c3ff,
-    0 0 15px #d284ff;
+    0 8px #5b238f,
+    inset 0 8px 18px #fbb8ff,
+    0 0 25px #e579ff;
 }
 
-/* Pressed effect */
 .school-map-buttons button:active {
   transform: translateY(1px);
-  box-shadow: inset 0 3px 5px #7a35b4;
+  box-shadow: inset 0 4px 6px #5b238f;
 }
 
 /* Main content container */
@@ -168,7 +170,7 @@ body {
   flex-direction: row;
   justify-content: center;
   align-items: flex-start;
-  gap: 1.2rem;
+  gap: 1rem;
   flex-wrap: wrap;
   margin-top: 2rem;
 }
@@ -180,31 +182,31 @@ body {
 }
 
 .avatar {
-  width: 45px;
-  height: 45px;
-  border-radius: 6px;
-  border: 3px solid #9b59b6; /* purple border */
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  border: 2px solid #9b59b6;
   background-color: #000;
-  padding: 3px;
+  padding: 2px;
   image-rendering: pixelated;
   box-shadow:
-    0 0 6px #9b59b6,
-    inset 0 0 5px #bb86fc;
+    0 0 5px #9b59b6,
+    inset 0 0 4px #bb86fc;
   transition: transform 0.2s, box-shadow 0.3s;
   cursor: pointer;
 }
 
 .avatar:hover {
-  transform: scale(1.15);
+  transform: scale(1.2);
   box-shadow:
-    0 0 15px #ff00cc,
-    inset 0 0 10px #9b59b6;
+    0 0 12px #ff00cc,
+    inset 0 0 7px #9b59b6;
 }
 
 .avatar-name {
   font-family: 'Press Start 2P', monospace;
-  font-size: 0.45rem;
-  margin-top: 0.3rem;
+  font-size: 0.35rem;
+  margin-top: 0.25rem;
   text-align: center;
   color: #3a0055;
 }
@@ -226,11 +228,12 @@ body {
   }
 
   .avatar {
-    width: 38px;
-    height: 38px;
+    width: 18px;
+    height: 18px;
   }
 
   .avatar-name {
-    font-size: 0.4rem;
+    font-size: 0.3rem;
   }
 }
+

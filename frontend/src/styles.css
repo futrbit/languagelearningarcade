@@ -1,9 +1,9 @@
-/* Import Orbitron font */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap');
+/* Import Press Start 2P font */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 body {
   margin: 0;
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Press Start 2P', monospace;
   background: linear-gradient(to bottom right, #fdf6fd, #e7f3ff);
   color: #222;
 }
@@ -24,25 +24,58 @@ body {
 }
 
 .school-map-buttons button {
-  background: linear-gradient(145deg, #ff4c98, #9e75ff);
-  border: 3px solid #222;
-  border-radius: 18px;
-  color: #fff;
-  font-size: 0.9rem;
-  padding: 1.2rem 2rem;
+  background: linear-gradient(145deg, #f7b2ff, #c5d9ff);
+  border: 3px solid #a155d6; /* deeper purple */
+  border-radius: 20px;
+  color: #3a0055;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 1.2rem 2.2rem;
   cursor: pointer;
-  font-family: 'Orbitron', sans-serif;
-  letter-spacing: 1px;
+  font-family: 'Press Start 2P', monospace;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
-  transition: transform 0.2s, box-shadow 0.3s;
-  box-shadow: 0 0 12px #ff4c98;
+  box-shadow:
+    0 4px #9c47d6,          /* main shadow */
+    inset 0 4px 10px #e5b9ff; /* subtle glow inside */
+  transition: transform 0.15s ease, box-shadow 0.3s ease;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.school-map-buttons button::before {
+  content: "";
+  position: absolute;
+  top: -40%;
+  left: -45%;
+  width: 180%;
+  height: 180%;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.25), transparent 70%);
+  transform: rotate(25deg);
+  transition: transform 0.6s ease;
+  pointer-events: none;
+}
+
+.school-map-buttons button:hover::before {
+  transform: rotate(25deg) translateX(100%);
 }
 
 .school-map-buttons button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 20px #ff4c98, 0 0 10px #9e75ff;
+  transform: translateY(-3px);
+  box-shadow:
+    0 6px #7a35b4,
+    inset 0 6px 14px #f2c3ff,
+    0 0 15px #d284ff;
 }
 
+/* Pressed effect */
+.school-map-buttons button:active {
+  transform: translateY(1px);
+  box-shadow: inset 0 3px 5px #7a35b4;
+}
+
+/* Main content container */
 .main-content {
   width: 100%;
   max-width: 1000px;
@@ -129,13 +162,13 @@ body {
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-/* Arcade-Style Avatars */
+/* Arcade-style avatars */
 .avatar-container {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: flex-start;
-  gap: 2rem;
+  gap: 1.2rem;
   flex-wrap: wrap;
   margin-top: 2rem;
 }
@@ -147,28 +180,33 @@ body {
 }
 
 .avatar {
-  width: 72px;
-  height: 72px;
+  width: 45px;
+  height: 45px;
   border-radius: 6px;
-  border: 3px solid #00f0ff;
+  border: 3px solid #9b59b6; /* purple border */
   background-color: #000;
-  padding: 4px;
+  padding: 3px;
   image-rendering: pixelated;
-  box-shadow: 0 0 12px #00f0ff;
+  box-shadow:
+    0 0 6px #9b59b6,
+    inset 0 0 5px #bb86fc;
   transition: transform 0.2s, box-shadow 0.3s;
+  cursor: pointer;
 }
 
 .avatar:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 20px #ff00cc, 0 0 10px #00f0ff;
+  transform: scale(1.15);
+  box-shadow:
+    0 0 15px #ff00cc,
+    inset 0 0 10px #9b59b6;
 }
 
 .avatar-name {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 0.65rem;
-  margin-top: 0.5rem;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.45rem;
+  margin-top: 0.3rem;
   text-align: center;
-  color: #222;
+  color: #3a0055;
 }
 
 /* Responsive */
@@ -188,15 +226,11 @@ body {
   }
 
   .avatar {
-    width: 60px;
-    height: 60px;
+    width: 38px;
+    height: 38px;
   }
 
   .avatar-name {
-    font-size: 0.55rem;
+    font-size: 0.4rem;
   }
 }
-
-  .main-content {
-    padding: 1rem 0.5rem;
-  }

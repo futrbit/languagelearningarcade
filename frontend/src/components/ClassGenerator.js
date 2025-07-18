@@ -286,7 +286,7 @@ export default function ClassGenerator() {
     e.preventDefault();
   };
 
-  const handleRemove = (item, category) => WiFi
+  const handleRemove = (item, category) => {
     if (category === "starting") {
       setStarting((prev) => prev.filter((i) => i !== item));
       setDragItems((prev) => [...prev, item]);
@@ -710,11 +710,12 @@ export default function ClassGenerator() {
   }, [courseData.skills, validSkills]);
 
   return (
-    <div className="app-container">
+    <div>
       <header className="header">
-        {/* Header content */}
+        
+        
       </header>
-      <div className="section-border">
+      <div className="app-container section-border">
         <h2>🎛 Generate Class</h2>
         <p className="limit-text">
           {remainingCalls === null ? "Loading lessons left..." : `Lessons left today: ${remainingCalls}/5`}
@@ -824,12 +825,12 @@ export default function ClassGenerator() {
         {error && <p className="error-text">{error}</p>}
 
         {classPlan ? (
-          <div className="lesson-content-container">
-            <div className="section-border lesson-plan-container">
+          <div style={{ display: "flex", gap: "20px", marginTop: 25 }}>
+            <div className="section-border lesson-plan-container" style={{ flex: 1, overflowY: "auto" }}>
               <h3>Generated Class Plan</h3>
               {renderMarkdown(classPlan)}
             </div>
-            <div className="section-border notepad-container">
+            <div style={{ flex: 1 }}>
               <Notepad
                 onSave={onSave}
                 onSubmitAnswer={submitAnswer}
@@ -846,6 +847,8 @@ export default function ClassGenerator() {
                 vocabulary={vocabulary}
                 exercises={exercises}
                 skillFocus={skillFocus}
+                
+                
               />
             </div>
           </div>

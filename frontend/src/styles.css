@@ -91,15 +91,43 @@ nav a:hover {
   color: #FF8C00;
 }
 
+/* App Layout (Two Columns) */
+.app-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  max-width: 1200px;
+  margin: 20px auto;
+  gap: 20px;
+}
+
+.sidebar {
+  width: 200px; /* Smaller left column */
+  background: #fdfcfe;
+  border: 2px solid #d0f0fd;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(208, 240, 253, 0.2);
+  box-sizing: border-box;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 900px;
+}
+
 /* School Map */
 .school-map-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 1rem;
-  max-width: 100%;
+  width: 100%;
   box-sizing: border-box;
-  margin: 20px auto;
+  margin: 20px 0;
 }
 
 .school-map-title {
@@ -113,11 +141,11 @@ nav a:hover {
 
 .room-buttons {
   display: flex;
-  justify-content: center;
+  flex-direction: column; /* Stack buttons vertically */
+  align-items: center;
   gap: 15px;
-  flex-wrap: wrap;
   width: 100%;
-  max-width: 900px;
+  max-width: 300px; /* Constrain button width for consistency */
 }
 
 .room-button {
@@ -131,7 +159,8 @@ nav a:hover {
   font-size: 1rem;
   font-weight: 600;
   transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
-  white-space: nowrap;
+  width: 100%;
+  text-align: center;
 }
 
 .room-button:hover {
@@ -145,37 +174,20 @@ nav a:hover {
   outline-offset: 2px;
 }
 
-/* Class Generator */
-.app-container {
+/* Lesson Generator */
+.lesson-generator {
+  width: 100%;
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 16px;
+  background: #fdfcfe;
+  border: 2px solid #d0f0fd;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(208, 240, 253, 0.2);
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.lesson-content-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 100%;
-  max-width: 900px;
-  margin-top: 25px;
-}
-
-.lesson-plan-container {
-  width: 100%;
-  max-width: 900px;
-  box-sizing: border-box;
-  overflow-y: auto;
-  min-height: 200px;
-}
-
-.notepad-container {
-  width: 100%;
-  max-width: 900px;
-  box-sizing: border-box;
 }
 
 /* Buttons - Pastel Style */
@@ -204,26 +216,6 @@ button:disabled {
   background: #ddd;
   color: #aaa;
   border: 2px dashed #ccc;
-}
-
-.button-fancy {
-  background: linear-gradient(to right, #FFD700, #FF8C00);
-  color: #333;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 10px;
-  font-weight: 700;
-  transition: transform 0.3s ease;
-}
-
-.button-fancy:hover {
-  transform: scale(1.05);
-}
-
-.button-selected {
-  background: #9B8AD6;
-  color: white;
-  border-color: #FFD700;
 }
 
 /* Inputs */
@@ -267,123 +259,6 @@ h1, h2, h3, h4 {
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-/* Progress Bars */
-.progress-bar-container {
-  margin: 20px 0;
-}
-
-.progress-bar {
-  width: 100%;
-  background-color: #eee;
-  border: 2px solid #B0A4E3;
-  border-radius: 10px;
-  overflow: hidden;
-  margin-top: 10px;
-}
-
-.progress-fill {
-  height: 30px;
-  background: linear-gradient(to right, #a8e6cf, #ffd3b6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  color: #333;
-  font-size: 0.9rem;
-  transition: width 0.5s ease-in-out;
-}
-
-.skill-progress-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.skill-progress {
-  margin-bottom: 10px;
-}
-
-.skill-progress-bar {
-  background-color: #f0f0f0;
-  border: 2px solid #B0A4E3;
-  border-radius: 8px;
-  height: 20px;
-  overflow: hidden;
-}
-
-.skill-progress-fill {
-  height: 100%;
-  background: linear-gradient(to right, #d0f0fd, #9B8AD6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  font-weight: bold;
-  color: #333;
-  transition: width 0.5s;
-}
-
-/* Lesson + Homework Card */
-.lesson-card {
-  background-color: #fdfcfe;
-  border: 2px solid #d0f0fd;
-  border-radius: 10px;
-  padding: 16px;
-  margin-bottom: 20px;
-  color: #333;
-  box-shadow: 0 0 10px rgba(208, 240, 253, 0.2);
-  width: 100%;
-  max-width: 900px;
-  box-sizing: border-box;
-  clear: both;
-}
-
-/* Markdown-style list */
-.markdown-list {
-  list-style-type: none;
-  padding-left: 0;
-}
-
-.markdown-list li::before {
-  content: "🌟 ";
-}
-
-/* Avatars */
-.avatar-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow-x: auto;
-  flex-wrap: nowrap;
-  gap: 30px;
-  padding: 20px;
-}
-
-.avatar-item {
-  text-align: center;
-  flex: 0 0 auto;
-}
-
-.avatar-image {
-  width: 65px;
-  height: 65px;
-  border-radius: 50%;
-  border: 3px solid #FF8C00;
-  box-shadow: 0 0 10px rgba(255, 140, 0, 0.5);
-  transition: transform 0.3s ease;
-}
-
-.avatar-image:hover {
-  transform: scale(1.1);
-}
-
-.avatar-item p {
-  font-size: 0.8rem;
-  font-weight: bold;
-  color: #555;
-  margin-top: 5px;
-}
-
 /* Footer */
 .footer {
   position: fixed;
@@ -400,33 +275,37 @@ h1, h2, h3, h4 {
 
 /* Responsive */
 @media (max-width: 768px) {
-  .games-grid {
-    grid-template-columns: 1fr;
+  .app-container {
+    flex-direction: column; /* Stack sidebar and main content vertically on mobile */
   }
 
-  button {
+  .sidebar {
     width: 100%;
-    font-size: 0.9rem;
+    max-width: 300px;
+    margin: 0 auto;
   }
 
-  .lesson-card,
-  .lesson-plan-container,
-  .notepad-container {
+  .main-content {
+    width: 100%;
+    max-width: 900px;
+  }
+
+  .room-buttons {
+    max-width: 300px; /* Keep buttons constrained */
+  }
+
+  .room-button {
+    font-size: 0.9rem;
+    padding: 8px 12px;
+  }
+
+  .section-border,
+  .lesson-generator {
     padding: 10px;
   }
 
   .footer {
     font-size: 0.75rem;
-  }
-
-  .room-buttons {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .room-button {
-    width: 100%;
-    max-width: 300px;
   }
 }
 
@@ -440,16 +319,11 @@ h1, h2, h3, h4 {
     height: 100px;
   }
 
-  .footer {
-    font-size: 0.7rem;
-  }
-
   .school-map-title {
     font-size: 1.2rem;
   }
 
-  .room-button {
-    font-size: 0.9rem;
-    padding: 8px 12px;
+  .footer {
+    font-size: 0.7rem;
   }
 }

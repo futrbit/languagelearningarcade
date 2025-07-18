@@ -1,102 +1,67 @@
-/* Arcade-style buttons inside the App */
-.school-map-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 2rem;
+.App {
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  padding: 1rem;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #B0A4E3 0%, #9B8AD6 100%);
+  color: #333;
 }
 
-.school-map-buttons button {
-  background: linear-gradient(145deg, #f7b2ff, #c5d9ff);
-  border: 3px solid #8551a3;
-  border-radius: 16px;
-  color: #3a0055;
-  font-size: 0.85rem;
-  font-weight: 700;
-  padding: 1rem 2rem;
-  cursor: pointer;
-  font-family: 'Press Start 2P', monospace; /* arcade font on buttons */
-  letter-spacing: 1px;
-  text-transform: none;
-  box-shadow: 0 4px 8px rgba(133, 81, 163, 0.6);
-  transition: transform 0.2s ease, box-shadow 0.3s ease;
-  user-select: none;
-}
-
-.school-map-buttons button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 15px rgba(133, 81, 163, 0.9);
-}
-
-.school-map-buttons button:active {
-  transform: translateY(1px);
-  box-shadow: inset 0 3px 6px rgba(133, 81, 163, 0.8);
-}
-
-/* Avatar container inside the App */
-.avatar-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 2rem;
-}
-
-.avatar-wrapper {
+.App-header {
+  background: linear-gradient(to bottom, #B0A4E3, #9B8AD6);
+  min-height: 60vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  color: white;
+  padding: 2rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-.avatar {
-  width: 22px;
-  height: 22px;
-  border-radius: 4px;
-  border: 2px solid #9b59b6;
-  background-color: #000;
-  padding: 2px;
-  image-rendering: pixelated;
-  box-shadow:
-    0 0 5px #9b59b6,
-    inset 0 0 4px #bb86fc;
-  transition: transform 0.2s ease, box-shadow 0.3s ease;
-  cursor: pointer;
+.App-logo {
+  height: 150px;
+  margin-bottom: 1rem;
+  transition: transform 0.3s ease;
 }
 
-.avatar:hover {
-  transform: scale(1.15);
-  box-shadow:
-    0 0 12px #bb86fc,
-    inset 0 0 7px #9b59b6;
+.App-logo:hover {
+  transform: scale(1.05);
 }
 
-.avatar-name {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 0.4rem;
-  margin-top: 0.25rem;
-  text-align: center;
-  color: #4b2a6a;
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
 }
 
-/* Responsive tweaks */
-@media screen and (max-width: 768px) {
-  .school-map-buttons {
-    flex-direction: column;
-    align-items: center;
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.App-link {
+  color: #FFD700;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.App-link:hover {
+  color: #FF8C00;
+}
+
+@media (max-width: 600px) {
+  .App-header {
+    font-size: 1rem;
+    padding: 1rem;
   }
 
-  .school-map-buttons button {
-    width: 100%;
-    text-align: center;
-  }
-
-  .avatar {
-    width: 18px;
-    height: 18px;
-  }
-
-  .avatar-name {
-    font-size: 0.3rem;
+  .App-logo {
+    height: 100px;
   }
 }

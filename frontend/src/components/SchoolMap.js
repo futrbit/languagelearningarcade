@@ -10,13 +10,18 @@ const rooms = [
 ];
 
 const SchoolMap = ({ onSelectRoom }) => (
-  <div className="section-border">
-    <h3>School Map</h3>
+  <div className="school-map-container">
+    <h3 className="school-map-title">🏫 School Map</h3>
     <svg
       width="300"
       height="220"
-      className="section-border"
-      style={{ background: "var(--background-color)" }}
+      style={{
+        background: "#fdfaf6",
+        display: "block",
+        margin: "0 auto",
+        border: "2px solid #ddd",
+        borderRadius: "8px",
+      }}
       aria-label="Interactive school map"
     >
       {rooms.map(({ id, name, x, y, width, height }) => (
@@ -36,24 +41,39 @@ const SchoolMap = ({ onSelectRoom }) => (
             y={y}
             width={width}
             height={height}
-            fill="#fff"
-            stroke="var(--primary-color)"
+            fill="#ffffff"
+            stroke="#7a9e9f"
             strokeWidth={2}
+            rx={6}
+            ry={6}
           />
           <text
             x={x + width / 2}
             y={y + height / 2}
             textAnchor="middle"
             alignmentBaseline="middle"
-            fontSize="14"
+            fontSize="13"
             pointerEvents="none"
-            fill="var(--text-color)"
+            fill="#4b4b4b"
           >
             {name}
           </text>
         </g>
       ))}
     </svg>
+
+    {/* Button List */}
+    <div className="room-buttons">
+      {rooms.map(({ id, name }) => (
+        <button
+          key={id}
+          className="room-button"
+          onClick={() => onSelectRoom(id)}
+        >
+          🚪 Go to {name}
+        </button>
+      ))}
+    </div>
   </div>
 );
 

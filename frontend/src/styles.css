@@ -1,141 +1,195 @@
 body {
-  margin: 0;
-  font-family: 'Press Start 2P', sans-serif;
-  background: linear-gradient(to bottom right, #fdf6fd, #e7f3ff);
-  color: #222;
+    margin: 0;
+    /* Using 'Press Start 2P' for specific elements for better readability.
+       System fonts provide a clean, readable fallback for body text. */
+    font-family: 'Press Start 2P', system-ui, -apple-system, BlinkMacMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    line-height: 1.6; /* Improved readability, especially for text-heavy areas */
+    background: linear-gradient(to bottom right, #fdf6fd, #e7f3ff);
+    color: #222;
 }
 
 .app-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
 }
 
 .school-map-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.2rem; /* Slightly more generous gap between buttons */
+    margin-bottom: 3rem; /* More separation from main content */
 }
 
 .school-map-buttons button {
-  background: linear-gradient(145deg, #f7b2ff, #c5d9ff);
-  border: 2px solid #555;
-  border-radius: 15px;
-  color: #1a1a1a;
-  font-size: 0.9rem;
-  padding: 1rem 1.5rem;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.3s;
-  box-shadow: 0 6px #aaa;
+    background: linear-gradient(145deg, #f7b2ff, #c5d9ff);
+    border: 2px solid #555;
+    border-radius: 15px;
+    color: #1a1a1a;
+    font-family: 'Press Start 2P', sans-serif; /* Ensure pixel font for buttons */
+    font-size: 0.95rem; /* Slightly larger, more legible font */
+    padding: 1.1rem 1.8rem; /* More padding for a better touch target */
+    cursor: pointer;
+    transition: transform 0.2s ease-out, box-shadow 0.3s ease-out, background 0.3s ease; /* Refined transitions for smoother effects */
+    box-shadow: 0 6px #888; /* Softer, slightly more diffused bottom shadow */
+    letter-spacing: 0.05em; /* A tiny bit of letter spacing for pixel font clarity */
+    text-transform: uppercase; /* Looks more 'pro' for buttons */
 }
 
 .school-map-buttons button:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 15px rgba(0,0,0,0.2);
+    transform: translateY(-5px); /* More pronounced lift on hover */
+    box-shadow: 0 12px 20px rgba(0,0,0,0.25); /* Stronger, softer shadow on hover */
+    background: linear-gradient(145deg, #f9c2ff, #d5e9ff); /* Slightly brighter background on hover */
+}
+
+.school-map-buttons button:active {
+    transform: translateY(-2px); /* Button moves down slightly when pressed */
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2); /* Smaller shadow to simulate a "pressed" state */
+    background: linear-gradient(145deg, #e0a0f0, #b0c9f0); /* Darken background slightly on active */
 }
 
 .main-content {
-  width: 100%;
-  max-width: 1000px;
-  padding: 1rem;
-  background-color: rgba(255,255,255,0.9);
-  border-radius: 20px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 900px; /* Slightly narrower max-width for better content containment */
+    padding: 2rem; /* More generous internal padding */
+    background-color: rgba(255,255,255,0.95); /* Slightly less transparent background */
+    border-radius: 25px; /* Slightly more rounded corners */
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15); /* Stronger, more diffused shadow for elevation */
+    border: 1px solid rgba(0,0,0,0.05); /* Very subtle light border for definition */
 }
 
 /* Lesson Generator */
 .lesson-box {
-  background-color: #fff8f0;
-  border: 2px dashed #ffba94;
-  padding: 1rem;
-  border-radius: 12px;
-  margin-top: 1rem;
+    background-color: #fffaf5; /* Slightly lighter, cleaner background */
+    border: 2px solid #ffaa77; /* Solid border for a cleaner look, maintaining the color */
+    padding: 1.5rem; /* More padding for content */
+    border-radius: 15px; /* Consistent rounding */
+    margin-top: 1.5rem; /* More space above the box */
+    box-shadow: inset 0 0 8px rgba(255,170,119,0.1); /* Subtle inner shadow for depth */
 }
 
 /* Course / Homework Page */
 .course-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* More vertical separation between cards */
 }
 
 .lesson-card {
-  background: #f0f7ff;
-  border-left: 6px solid #8aaae5;
-  padding: 1rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    background: #f8faff; /* Slightly brighter, cleaner background */
+    border-left: 8px solid #8aaae5; /* Thicker accent border for more emphasis */
+    padding: 1.2rem; /* More padding */
+    border-radius: 15px; /* Consistent rounding */
+    box-shadow: 0 6px 12px rgba(0,0,0,0.08); /* More noticeable but soft shadow */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth transitions for hover */
+}
+
+.lesson-card:hover {
+    transform: translateY(-3px); /* Subtle lift on hover */
+    box-shadow: 0 8px 16px rgba(0,0,0,0.12); /* Slightly stronger shadow on hover */
 }
 
 .lesson-card h3 {
-  margin-top: 0;
-  font-size: 1.1rem;
+    margin-top: 0;
+    margin-bottom: 0.5rem; /* Add a small margin below heading for better flow */
+    font-family: 'Press Start 2P', sans-serif; /* Apply pixel font to headings */
+    font-size: 1.2rem; /* Slightly larger heading */
+    color: #333; /* Darker heading for better contrast */
 }
 
 /* Progress Page */
 .progress-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  padding: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem; /* More spacing between progress bars */
+    padding: 1.5rem 0;
 }
 
 .progress-bar-container {
-  margin-bottom: 1rem;
+    margin-bottom: 0.5rem; /* Adjusted for better spacing with the gap above */
 }
 
 .progress-label {
-  font-size: 0.9rem;
-  margin-bottom: 0.3rem;
+    font-size: 1rem; /* Slightly larger label */
+    margin-bottom: 0.5rem; /* More space below the label */
+    font-weight: bold; /* Make labels stand out */
+    color: #444;
+    font-family: 'Press Start 2P', sans-serif; /* Apply pixel font to labels */
 }
 
 .progress-bar {
-  height: 20px;
-  background-color: #ddd;
-  border-radius: 10px;
-  overflow: hidden;
+    height: 25px; /* Taller bar for better visibility */
+    background-color: #eee; /* Lighter background for the empty part */
+    border-radius: 12px; /* Slightly more rounded ends */
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); /* Subtle inner shadow for depth */
 }
 
 .progress-bar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #c1fba4, #a4f1db);
-  transition: width 0.5s ease;
+    height: 100%;
+    background: linear-gradient(90deg, #99e2b4, #78c0a8); /* Slightly richer green-blue gradient */
+    transition: width 0.6s ease-in-out; /* Slower, smoother transition for progress updates */
+    border-radius: 12px 0 0 12px; /* Ensure rounded corners on the fill side */
 }
 
 /* Badges */
 .badge-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: center;
-  margin-top: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem; /* More space between badges */
+    justify-content: center;
+    margin-top: 3rem; /* More separation from content above */
 }
 
 .badge {
-  background: linear-gradient(145deg, #ffe7e7, #fff0c1);
-  border: 2px solid #ffaaa7;
-  border-radius: 12px;
-  padding: 1rem;
-  font-size: 0.8rem;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    background: linear-gradient(145deg, #fff0e0, #fff7d0); /* Softer, slightly richer gradient for badges */
+    border: 2px solid #ffc8a7; /* Consistent border color with the palette */
+    border-radius: 15px; /* Consistent rounding */
+    padding: 1.2rem; /* More padding */
+    font-family: 'Press Start 2P', sans-serif; /* Apply pixel font to badges */
+    font-size: 0.9rem; /* Slightly larger font */
+    box-shadow: 0 6px 15px rgba(0,0,0,0.12); /* Stronger but soft shadow */
+    text-align: center;
+    min-width: 120px; /* Ensure a minimum width for consistent badge size */
+    display: flex; /* Use flexbox for internal content alignment */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.badge:hover {
+    transform: translateY(-4px) rotate(2deg); /* A little more playful lift and rotation on hover */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.18);
 }
 
 /* Responsive */
 @media screen and (max-width: 768px) {
-  .school-map-buttons {
-    flex-direction: column;
-    align-items: center;
-  }
+    .school-map-buttons {
+        flex-direction: column;
+        align-items: stretch; /* Buttons now stretch to fill the width */
+        gap: 1rem; /* Adjust gap for vertical stacking */
+    }
 
-  .school-map-buttons button {
-    width: 100%;
-    text-align: center;
-  }
+    .school-map-buttons button {
+        width: auto; /* Remove fixed width to allow stretching */
+        text-align: center;
+        padding: 1rem 1rem; /* Slightly less padding on smaller screens */
+        font-size: 0.85rem;
+    }
 
-  .main-content {
-    padding: 1rem 0.5rem;
-  }
+    .main-content {
+        padding: 1.5rem 1rem; /* Adjust padding for mobile devices */
+        border-radius: 20px; /* Slightly less rounded on mobile, if preferred */
+    }
+
+    .lesson-card, .lesson-box, .badge {
+        padding: 1rem; /* Reduce padding for smaller screens to save space */
+    }
+
+    .progress-bar {
+        height: 20px; /* Reduce height of progress bars for mobile */
+    }
 }

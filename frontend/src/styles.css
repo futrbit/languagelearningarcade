@@ -4,7 +4,7 @@
 body {
   margin: 0;
   font-family: 'Montserrat', sans-serif;
-  background: linear-gradient(135deg, #dac4f7, #cdb4db, #b5d0ff);
+  background: linear-gradient(135deg, #A4E3B0, #8AD69B, #7BBF7B);
   color: #333;
   min-height: 100vh;
   overflow-x: hidden;
@@ -17,9 +17,9 @@ body {
 
 /* Header */
 .App-header {
-  background: radial-gradient(circle at center, #ffc9de, #cdb4db);
+  background: radial-gradient(circle at center, #a4ffc4, #5eae7c);
   padding: 2rem;
-  color: #4b2a4d;
+  color: #1f3d23;
   text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
 }
 
@@ -29,7 +29,6 @@ body {
   margin: 0;
 }
 
-/* Nav */
 nav {
   display: flex;
   justify-content: center;
@@ -38,24 +37,24 @@ nav {
 }
 
 nav a {
-  color: #ffc75f;
+  color: #b0ff7a;
   font-weight: bold;
   text-decoration: none;
   font-size: 1.1rem;
 }
 
 nav a:hover {
-  color: #7bdff2;
+  color: #00ffa0;
 }
 
-/* Buttons - Softer Pastel Arcade */
+/* Buttons - Neon Arcade Style */
 button,
 .button-primary {
   font-family: 'Press Start 2P', cursive;
-  background: #ffeaa7;
-  color: #222;
-  border: 3px solid #a0e7e5;
-  padding: 10px 16px;
+  background: #b0ff7a;
+  color: black;
+  border: 3px solid #00e7a0;
+  padding: 12px 20px;
   border-radius: 8px;
   cursor: pointer;
   transition: 0.3s ease;
@@ -66,16 +65,16 @@ button,
 
 button:hover,
 .button-primary:hover {
-  background: #fff8dc;
+  background: #dbffb5;
   color: #000;
-  border-color: #f4a5ae;
+  border-color: #00c885;
   transform: translateY(-2px);
 }
 
 button:disabled {
-  background: #ccc;
-  color: #999;
-  border: 2px dashed #bbb;
+  background: #555;
+  color: #ccc;
+  border: 2px dashed #999;
 }
 
 /* Inputs */
@@ -84,7 +83,7 @@ input, textarea {
   padding: 10px;
   font-size: 1rem;
   border-radius: 6px;
-  border: 2px solid #ffc75f;
+  border: 2px solid #b0ff7a;
   background: #fff;
   color: #000;
   width: 100%;
@@ -94,32 +93,32 @@ input, textarea {
 
 input:focus, textarea:focus {
   outline: none;
-  border-color: #a0e7e5;
+  border-color: #00e7a0;
 }
 
-/* Pastel Section Border */
+/* Neon Section Border */
 .section-border {
-  border: 3px dashed #ffc75f;
+  border: 3px dashed #b0ff7a;
   border-radius: 15px;
-  background: #f5f3f7;
+  background: #e8f9e8;
   padding: 20px;
-  box-shadow: 0 0 15px #ffc75f55;
+  box-shadow: 0 0 15px #b0ff7a66;
   margin: 20px auto;
   max-width: 900px;
 }
 
 /* Headings */
 h1, h2, h3, h4 {
-  color: #f59ec4;
+  color: #b0ff7a;
   text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
 }
 
 .neon-glow {
-  color: #a0e7e5;
-  text-shadow: 0 0 8px #a0e7e5, 0 0 12px #a0e7e5;
+  color: #00e7a0;
+  text-shadow: 0 0 10px #00e7a0, 0 0 20px #00e7a0;
 }
 
-/* Landing Page */
+/* Landing Page Wrapper */
 .landing-page {
   padding: 40px 20px;
   min-height: 100vh;
@@ -137,8 +136,8 @@ h1, h2, h3, h4 {
 
 .progress-bar {
   width: 100%;
-  background-color: #e0e0e0;
-  border: 2px solid #ffc75f;
+  background-color: #d0e8d0;
+  border: 2px solid #b0ff7a;
   border-radius: 10px;
   overflow: hidden;
   margin-top: 10px;
@@ -146,7 +145,7 @@ h1, h2, h3, h4 {
 
 .progress-fill {
   height: 30px;
-  background: linear-gradient(to right, #a0e7e5, #ffc75f);
+  background: linear-gradient(to right, #00e7a0, #b0ff7a);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -156,9 +155,19 @@ h1, h2, h3, h4 {
   transition: width 0.5s ease-in-out;
 }
 
+.skill-progress-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.skill-progress {
+  margin-bottom: 10px;
+}
+
 .skill-progress-bar {
-  background-color: #f0f0f0;
-  border: 2px solid #a0e7e5;
+  background-color: #ebf5eb;
+  border: 2px solid #00e7a0;
   border-radius: 8px;
   height: 20px;
   overflow: hidden;
@@ -166,7 +175,7 @@ h1, h2, h3, h4 {
 
 .skill-progress-fill {
   height: 100%;
-  background: linear-gradient(to right, #a0e7e5, #ffc75f);
+  background: linear-gradient(to right, #00e7a0, #b0ff7a);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -178,25 +187,25 @@ h1, h2, h3, h4 {
 
 /* Lesson + Homework Card */
 .lesson-card {
-  background-color: #fdfdfd;
-  border: 2px solid #a0e7e5;
+  background-color: #f0f9f0;
+  border: 2px solid #00e7a0;
   border-radius: 10px;
   padding: 16px;
   margin-bottom: 20px;
   color: #222;
-  box-shadow: 0 0 10px rgba(160, 231, 229, 0.2);
+  box-shadow: 0 0 10px rgba(0, 231, 161, 0.2);
 }
 
 .highlight-box {
-  background-color: #f2f7f2;
+  background-color: #e6f3e6;
   padding: 10px;
   border-radius: 6px;
   white-space: pre-wrap;
-  color: #3c3c3c;
+  color: #2a4d2a;
 }
 
 .gray-box {
-  background-color: #eaeaea;
+  background-color: #d9f0d9;
   padding: 10px;
   border-radius: 6px;
   white-space: pre-wrap;
@@ -210,7 +219,7 @@ h1, h2, h3, h4 {
 }
 
 .markdown-list li::before {
-  content: "🌸 ";
+  content: "🌿 ";
 }
 
 /* Avatars */
@@ -230,11 +239,11 @@ h1, h2, h3, h4 {
 }
 
 .avatar-image {
-  width: 40px;
-  height: 40px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
-  border: 3px solid #ffc75f;
-  box-shadow: 0 0 6px #ffc75f88;
+  border: 3px solid #b0ff7a;
+  box-shadow: 0 0 6px #b0ff7a88;
   transition: transform 0.3s ease;
 }
 
@@ -245,7 +254,7 @@ h1, h2, h3, h4 {
 .avatar-item p {
   font-size: 0.7rem;
   font-weight: bold;
-  color: #333;
+  color: #2a4d2a;
   margin-top: 4px;
 }
 
@@ -254,13 +263,13 @@ h1, h2, h3, h4 {
   position: fixed;
   bottom: 0;
   width: 100%;
-  background: #f5f3f7;
+  background: #ebf5eb;
   color: #666;
   text-align: center;
   padding: 10px;
   font-size: 0.8rem;
   z-index: 999;
-  border-top: 2px solid #ffc75f;
+  border-top: 2px solid #b0ff7a;
 }
 
 /* Responsive */

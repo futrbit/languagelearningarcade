@@ -1,21 +1,5 @@
-/* Import Press Start 2P font */
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-
-body {
-  margin: 0;
-  font-family: 'Press Start 2P', monospace;
-  background: linear-gradient(to bottom right, #fdf6fd, #e7f3ff);
-  color: #222;
-}
-
-.app-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 1rem;
-}
-
-.school-map-buttons {
+/* Buttons container */
+.room-buttons {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -23,7 +7,8 @@ body {
   margin-bottom: 2rem;
 }
 
-.school-map-buttons button {
+/* Arcade style buttons */
+.room-button {
   background: linear-gradient(145deg, #f7b2ff, #c5d9ff);
   border: 3px solid #8551a3;
   border-radius: 16px;
@@ -34,109 +19,23 @@ body {
   cursor: pointer;
   font-family: 'Press Start 2P', monospace;
   letter-spacing: 1px;
-  text-transform: none; /* normal text for education */
+  text-transform: none;
   box-shadow: 0 4px 8px rgba(133, 81, 163, 0.6);
   transition: transform 0.2s ease, box-shadow 0.3s ease;
   user-select: none;
 }
 
-.school-map-buttons button:hover {
+.room-button:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 15px rgba(133, 81, 163, 0.9);
 }
 
-.school-map-buttons button:active {
+.room-button:active {
   transform: translateY(1px);
   box-shadow: inset 0 3px 6px rgba(133, 81, 163, 0.8);
 }
 
-.main-content {
-  width: 100%;
-  max-width: 1000px;
-  padding: 1rem;
-  background-color: rgba(255,255,255,0.9);
-  border-radius: 20px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-}
-
-/* Lesson Generator */
-.lesson-box {
-  background-color: #fff8f0;
-  border: 2px dashed #ffba94;
-  padding: 1rem;
-  border-radius: 12px;
-  margin-top: 1rem;
-}
-
-/* Course / Homework Page */
-.course-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-}
-
-.lesson-card {
-  background: #f0f7ff;
-  border-left: 6px solid #8aaae5;
-  padding: 1rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-}
-
-.lesson-card h3 {
-  margin-top: 0;
-  font-size: 1.1rem;
-}
-
-/* Progress Page */
-.progress-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  padding: 1rem 0;
-}
-
-.progress-bar-container {
-  margin-bottom: 1rem;
-}
-
-.progress-label {
-  font-size: 0.9rem;
-  margin-bottom: 0.3rem;
-}
-
-.progress-bar {
-  height: 20px;
-  background-color: #ddd;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.progress-bar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #c1fba4, #a4f1db);
-  transition: width 0.5s ease;
-}
-
-/* Badges */
-.badge-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: center;
-  margin-top: 2rem;
-}
-
-.badge {
-  background: linear-gradient(145deg, #ffe7e7, #fff0c1);
-  border: 2px solid #ffaaa7;
-  border-radius: 12px;
-  padding: 1rem;
-  font-size: 0.8rem;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-/* Avatars */
+/* Avatar container */
 .avatar-container {
   display: flex;
   flex-wrap: wrap;
@@ -145,12 +44,14 @@ body {
   margin-top: 2rem;
 }
 
+/* Avatar wrapper */
 .avatar-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
+/* Avatar image style */
 .avatar {
   width: 22px;
   height: 22px;
@@ -173,6 +74,7 @@ body {
     inset 0 0 7px #9b59b6;
 }
 
+/* Avatar name text */
 .avatar-name {
   font-family: 'Press Start 2P', monospace;
   font-size: 0.4rem;
@@ -183,18 +85,14 @@ body {
 
 /* Responsive */
 @media screen and (max-width: 768px) {
-  .school-map-buttons {
+  .room-buttons {
     flex-direction: column;
     align-items: center;
   }
 
-  .school-map-buttons button {
+  .room-button {
     width: 100%;
     text-align: center;
-  }
-
-  .main-content {
-    padding: 1rem 0.5rem;
   }
 
   .avatar {

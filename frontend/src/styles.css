@@ -1,6 +1,9 @@
+/* Import Orbitron font */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap');
+
 body {
   margin: 0;
-  font-family: 'Press Start 2P', sans-serif;
+  font-family: 'Orbitron', sans-serif;
   background: linear-gradient(to bottom right, #fdf6fd, #e7f3ff);
   color: #222;
 }
@@ -21,20 +24,23 @@ body {
 }
 
 .school-map-buttons button {
-  background: linear-gradient(145deg, #f7b2ff, #c5d9ff);
-  border: 2px solid #555;
-  border-radius: 15px;
-  color: #1a1a1a;
+  background: linear-gradient(145deg, #ff4c98, #9e75ff);
+  border: 3px solid #222;
+  border-radius: 18px;
+  color: #fff;
   font-size: 0.9rem;
-  padding: 1rem 1.5rem;
+  padding: 1.2rem 2rem;
   cursor: pointer;
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 1px;
+  text-transform: uppercase;
   transition: transform 0.2s, box-shadow 0.3s;
-  box-shadow: 0 6px #aaa;
+  box-shadow: 0 0 12px #ff4c98;
 }
 
 .school-map-buttons button:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 15px rgba(0,0,0,0.2);
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #ff4c98, 0 0 10px #9e75ff;
 }
 
 .main-content {
@@ -123,6 +129,48 @@ body {
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
+/* Arcade-Style Avatars */
+.avatar-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.avatar-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 6px;
+  border: 3px solid #00f0ff;
+  background-color: #000;
+  padding: 4px;
+  image-rendering: pixelated;
+  box-shadow: 0 0 12px #00f0ff;
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+
+.avatar:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px #ff00cc, 0 0 10px #00f0ff;
+}
+
+.avatar-name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.65rem;
+  margin-top: 0.5rem;
+  text-align: center;
+  color: #222;
+}
+
 /* Responsive */
 @media screen and (max-width: 768px) {
   .school-map-buttons {
@@ -134,6 +182,20 @@ body {
     width: 100%;
     text-align: center;
   }
+
+  .main-content {
+    padding: 1rem 0.5rem;
+  }
+
+  .avatar {
+    width: 60px;
+    height: 60px;
+  }
+
+  .avatar-name {
+    font-size: 0.55rem;
+  }
+}
 
   .main-content {
     padding: 1rem 0.5rem;

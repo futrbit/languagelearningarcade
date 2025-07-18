@@ -1,345 +1,307 @@
-import React, { useState, useEffect } from "react";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  useNavigate,
-  Navigate,
-} from "react-router-dom";
-import { auth, db } from "./firebase";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Montserrat:wght@400;600;700;900&display=swap');
 
-import Login from "./components/Login";
-import Landing from "./pages/Landing";
-import ClassGenerator from "./components/ClassGenerator";
-import Homework from "./components/Homework";
-import Lessons from "./components/Lessons";
-import Progress from "./components/Progress";
-import SchoolMap from "./components/SchoolMap";
-import SetupPage from "./components/SetupPage";
-import About from "./components/About";
-import SignupPage from "./components/SignupPage";
-
-import WordChainGame from "./components/WordChainGame";
-import WordChainGameExpanded from "./components/WordChainGameExpanded";
-import QuizGame from "./components/QuizGame";
-import GuessTheWord from "./components/GuessTheWord";
-import MemoryMatch from "./components/MemoryMatch";
-import FastGrammarRace from "./components/FastGrammarRace";
-import DialogueFillIn from "./components/DialogueFillIn";
-import MillionaireGame from "./components/MillionaireGame";
-import BlanketyBlank from "./components/BlanketyBlank";
-import Blockbusters from "./components/Blockbusters";
-import BlindDate from "./components/BlindDate";
-import CreativeWritingGame from "./components/CreativeWritingGame";
-import VocabularyCards from "./components/VocabularyCards";
-import WordSearch from "./components/WordSearch";
-import Crossword from "./components/Crossword";
-
-function MainApp({ user, setUser }) {
-  const navigate = useNavigate();
-  const [selectedRoom, setSelectedRoom] = useState(null);
-  const [mode, setMode] = useState("arcade");
-
-  const [course, setCourse] = useState(() => {
-    try {
-      const storedCourse = localStorage.getItem(`course_${user}`);
-      if (storedCourse && storedCourse !== "undefined") {
-        return JSON.parse(storedCourse);
-      }
-      return {};
-    } catch (err) {
-      console.error("Error parsing course data:", err);
-      return {};
-    }
-  });
-
-  useEffect(() => {
-    const handleStorageChange = () => {
-      try {
-        const storedCourse = localStorage.getItem(`course_${user}`);
-        if (storedCourse && storedCourse !== "undefined") {
-          setCourse(JSON.parse(storedCourse));
-        } else {
-          setCourse({});
-        }
-      } catch (err) {
-        console.error("Error updating course data:", err);
-        setCourse({});
-      }
-    };
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
-  }, [user]);
-
-  const vocab = ["cat", "tiger", "rabbit", "tarantula", "ant", "tortoise", "elephant", "tapir"];
-  const wordChainExpandedWords = ["apple", "elephant", "tiger", "rocket", "table"];
-  const quizQuestions = [
-    {
-      question: "What is the capital of England?",
-      options: ["London", "Paris", "New York", "Berlin"],
-      correctAnswer: "London",
-    },
-    {
-      question: "Choose the correct past tense: I ___ to the store yesterday.",
-      options: ["go", "went", "gone", "going"],
-      correctAnswer: "went",
-    },
-  ];
-
-  const isBusiness = course.reason?.toLowerCase().includes("business");
-  const isTravel = course.reason?.toLowerCase().includes("travel");
-  const moduleReason = isBusiness ? "business" : isTravel ? "travel" : "personal";
-  const speakingCompleted = course.skills?.find(s => s.skill === "Speaking")?.lessons?.filter(l => l.module_lesson && l.completed).length || 0;
-
-  const canAccessRoom = (room) => {
-    if (!course.skills) return false;
-    if (mode !== "course") return true;
-    if (room === "classroom1") return true;
-    if (speakingCompleted < 5) return false;
-    if (room === "arcade" && course.skills?.find(s => s.skill === "Vocabulary")?.completed >= 2) return true;
-    if (room === "library" && course.skills?.find(s => s.skill === "Grammar")?.completed >= 2) return true;
-    return course.skills.every(skill => (skill.completed || 0) >= (skill.required || 0));
-  };
-
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      setUser(null);
-      localStorage.clear();
-      navigate("/login");
-    } catch (error) {
-      console.error("Error logging out:", error);
-      alert("Failed to log out. Please try again.");
-    }
-  };
-
-  const renderContent = () => {
-    if (!user) return <p>Please log in to access the app.</p>;
-
-    if (mode === "course" && selectedRoom && !canAccessRoom(selectedRoom)) {
-      const incompleteSkill = course.skills?.find(s => (s.completed || 0) < (s.required || 0));
-      return (
-        <p style={{ fontSize: "18px" }}>
-          🔒 Room locked.{" "}
-          {speakingCompleted < 5
-            ? `Complete ${5 - speakingCompleted} more ${moduleReason} Speaking lessons.`
-            : selectedRoom === "arcade"
-            ? "Complete 2 Vocabulary lessons to unlock the Game Room."
-            : selectedRoom === "library"
-            ? "Complete 2 Grammar lessons to unlock the Library."
-            : `Complete ${(incompleteSkill?.required || 0) - (incompleteSkill?.completed || 0)} more in ${incompleteSkill?.skill}.`}
-        </p>
-      );
-    }
-
-    switch (selectedRoom) {
-      case "classroom1":
-        return <ClassGenerator course={course} />;
-      case "arcade":
-        return (
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
-            <WordChainGame words={vocab} />
-            <WordChainGameExpanded words={wordChainExpandedWords} />
-            <QuizGame questions={quizQuestions} />
-            <GuessTheWord />
-            <MemoryMatch />
-            <FastGrammarRace />
-            <DialogueFillIn />
-            <MillionaireGame />
-            <BlanketyBlank />
-            <Blockbusters />
-            <BlindDate />
-            <CreativeWritingGame />
-            <VocabularyCards />
-            <WordSearch />
-            <Crossword />
-          </div>
-        );
-      case "library":
-        return <QuizGame questions={quizQuestions} />;
-      case "media":
-        return (
-          <div style={{ maxWidth: "400px", padding: "20px" }}>
-            <h3>Media Room</h3>
-            <p>Video & Song lessons coming soon!</p>
-          </div>
-        );
-      default:
-        return (
-          <div style={{ maxWidth: "400px", padding: "20px", fontSize: "18px" }}>
-            <h2>Welcome to the Language Learning Arcade!</h2>
-            <p>Click a room to start your quest.</p>
-          </div>
-        );
-    }
-  };
-
-  return (
-    <div style={{ padding: "20px", fontFamily: "'Segoe UI', sans-serif" }}>
-      <div style={{ marginBottom: 10, display: "flex", justifyContent: "space-between" }}>
-        <div>Logged in as: <strong>{user}</strong></div>
-        <div>
-          <button onClick={() => navigate("/homework")}>📚 Homework</button>
-          <button onClick={() => navigate("/lessons")}>📘 Lessons</button>
-          <button onClick={() => navigate("/progress")}>📊 Progress</button>
-          <button onClick={handleLogout}>Log Out</button>
-        </div>
-      </div>
-
-      <div style={{ marginBottom: "20px" }}>
-        <strong>🧭 Mode:</strong>
-        <button onClick={() => setMode("arcade")}>🎮 Arcade</button>
-        <button onClick={() => setMode("course")}>📘 Course</button>
-      </div>
-
-      <div style={{ display: "flex", gap: "30px" }}>
-        <SchoolMap onSelectRoom={setSelectedRoom} />
-        <div style={{ flexGrow: 1 }}>{renderContent()}</div>
-      </div>
-    </div>
-  );
+/* Base */
+body {
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  background: linear-gradient(135deg, #f5f5fa, #e8eaf6);
+  color: #333;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
-export default function App() {
-  const [user, setUser] = useState(localStorage.getItem("currentUser") || null);
-  const [needsSetup, setNeedsSetup] = useState(false);
-  const [authLoading, setAuthLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (firebaseUser) {
-        const userId = firebaseUser.uid;
-        setUser(userId);
-        localStorage.setItem("currentUser", userId);
-
-        try {
-          const userDoc = await getDoc(doc(db, "users", userId));
-          if (userDoc.exists()) {
-            const userData = userDoc.data();
-            setNeedsSetup(!userData?.setupComplete);
-            const users = JSON.parse(localStorage.getItem("users") || "{}");
-            users[userId] = {
-              studentLevel: userData.studentLevel || "A1",
-              age: userData.age || 18,
-              why: userData.why || "personal growth",
-              displayName: userData.displayName || "User",
-            };
-            localStorage.setItem("users", JSON.stringify(users));
-          } else {
-            setNeedsSetup(true);
-          }
-        } catch (error) {
-          console.error("Error checking user profile:", error);
-          setError("Failed to load user profile.");
-        }
-      } else {
-        setUser(null);
-        setNeedsSetup(false);
-        localStorage.clear();
-      }
-      setAuthLoading(false);
-    });
-    return () => unsubscribe();
-  }, []);
-
-  if (authLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/login" element={<Login onLogin={setUser} />} />
-        <Route
-          path="/app"
-          element={
-            user ? (
-              needsSetup ? <Navigate to="/setup" /> : <MainApp user={user} setUser={setUser} />
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
-        />
-        <Route
-          path="/setup"
-          element={
-            user ? (
-              <SetupPage
-                onSave={async (formData) => {
-                  try {
-                    const userId = auth.currentUser?.uid;
-                    if (!userId) throw new Error("No user");
-
-                    const missing = [];
-                    if (!formData.studentLevel) missing.push("Student Level");
-                    if (!formData.age || isNaN(formData.age)) missing.push("Age");
-                    if (!formData.reason) missing.push("Reason");
-
-                    if (missing.length > 0) {
-                      throw new Error(`Missing or invalid fields: ${missing.join(", ")}`);
-                    }
-
-                    const userProfileRef = doc(db, "users", userId);
-                    await setDoc(
-                      userProfileRef,
-                      {
-                        studentLevel: formData.studentLevel,
-                        age: parseInt(formData.age, 10),
-                        why: formData.reason,
-                        displayName: auth.currentUser?.displayName || "User",
-                        setupComplete: true,
-                      },
-                      { merge: true }
-                    );
-
-                    const courseData = {
-                      level: formData.studentLevel,
-                      reason: formData.reason,
-                      age: parseInt(formData.age, 10),
-                      skills: ["Speaking", "Listening", "Grammar", "Vocabulary", "Reading", "Writing"].map(skill => ({
-                        skill,
-                        required: 4,
-                        completed: 0,
-                        lessons: [],
-                      })),
-                    };
-
-                    localStorage.setItem(`course_${userId}`, JSON.stringify(courseData));
-                    localStorage.setItem(`badges_${userId}`, JSON.stringify([]));
-
-                    const users = JSON.parse(localStorage.getItem("users") || "{}");
-                    users[userId] = {
-                      studentLevel: formData.studentLevel,
-                      age: parseInt(formData.age, 10),
-                      why: formData.reason,
-                      displayName: auth.currentUser?.displayName || "User",
-                    };
-                    localStorage.setItem("users", JSON.stringify(users));
-
-                    setNeedsSetup(false);
-                  } catch (error) {
-                    console.error("Error saving setup data:", error.message);
-                    alert(`Setup failed: ${error.message}`);
-                  }
-                }}
-              />
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
-        />
-        <Route path="/homework" element={user ? <Homework /> : <Navigate to="/login" />} />
-        <Route path="/lessons" element={user ? <Lessons /> : <Navigate to="/login" />} />
-        <Route path="/progress" element={user ? <Progress /> : <Navigate to="/login" />} />
-        <Route path="/login" element={<Login onLogin={setUser} />} />
-        <Route path="/signup" element={<Login onLogin={setUser} />} /> {/* Or replace later */}
-        <Route path="/about" element={<About />} />
-        <Route path="/school" element={<SchoolMap />} />
-
-      </Routes>
-    </BrowserRouter>
-  );
+.App {
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  padding: 1rem;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #B0A4E3 0%, #9B8AD6 100%);
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
+
+/* Header */
+.App-header {
+  background: linear-gradient(to bottom, #B0A4E3, #9B8AD6);
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  padding: 2rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.App-logo {
+  height: 150px;
+  margin-bottom: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.App-logo:hover {
+  transform: scale(1.05);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.App-link {
+  color: #FFD700;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.App-link:hover {
+  color: #FF8C00;
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 1rem;
+}
+
+nav a {
+  color: #FFD700;
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 1.1rem;
+}
+
+nav a:hover {
+  color: #FF8C00;
+}
+
+/* School Map */
+.school-map-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin: 20px auto;
+}
+
+.school-map-title {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 1.5rem;
+  color: #FFD700;
+  margin-bottom: 1rem;
+  text-align: center;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.room-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 900px;
+}
+
+.room-button {
+  font-family: 'Montserrat', sans-serif;
+  background: #ffd3b6;
+  color: #333;
+  border: 2px solid #B0A4E3;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+  white-space: nowrap;
+}
+
+.room-button:hover {
+  background: #ffe0c3;
+  border-color: #9B8AD6;
+  transform: scale(1.03);
+}
+
+.room-button:focus {
+  outline: 2px solid #FFD700;
+  outline-offset: 2px;
+}
+
+/* Lesson Generator */
+.lesson-generator {
+  width: 100%;
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 16px;
+  background: #fdfcfe;
+  border: 2px solid #d0f0fd;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(208, 240, 253, 0.2);
+  box-sizing: border-box;
+  clear: both;
+  position: relative; /* Override absolute positioning */
+  display: block; /* Override inline or flex issues */
+}
+
+/* Buttons - Pastel Style */
+button,
+.button-primary {
+  font-family: 'Montserrat', sans-serif;
+  background: #ffd3b6;
+  color: #333;
+  border: 2px solid #B0A4E3;
+  padding: 12px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  font-size: 0.9rem;
+  margin: 10px;
+}
+
+button:hover,
+.button-primary:hover {
+  background: #ffe0c3;
+  border-color: #9B8AD6;
+  transform: scale(1.03);
+}
+
+button:disabled {
+  background: #ddd;
+  color: #aaa;
+  border: 2px dashed #ccc;
+}
+
+/* Inputs */
+input, textarea {
+  font-family: 'Montserrat', sans-serif;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 2px solid #B0A4E3;
+  background: #fff;
+  color: #000;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 10px;
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  border-color: #FF8C00;
+}
+
+/* Section Border */
+.section-border {
+  border: 2px dotted #B0A4E3;
+  border-radius: 12px;
+  background: #ffffffcc;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(176, 164, 227, 0.5);
+  margin: 20px auto;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Headings */
+h1, h2, h3, h4 {
+  color: #FFD700;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Progress Bars */
+.progress-bar-container {
+  margin: 20px 0;
+}
+
+.progress-bar {
+  width: 100%;
+  background-color: #eee;
+  border: 2px solid #B0A4E3;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.progress-fill {
+  height: 30px;
+  background: linear-gradient(to right, #a8e6cf, #ffd3b6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #333;
+  font-size: 0.9rem;
+  transition: width 0.5s ease-in-out;
+}
+
+.skill-progress-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.skill-progress {
+  margin-bottom: 10px;
+}
+
+.skill-progress-bar {
+  background-color: #f0f0f0;
+  border: 2px solid #B0A4E3;
+  border-radius: 8px;
+  height: 20px;
+  overflow: hidden;
+}
+
+.skill-progress-fill {
+  height: 100%;
+  background: linear-gradient(to right, #d0f0fd, #9B8AD6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: #333;
+  transition: width 0.5s;
+}
+
+/* Lesson + Homework Card */
+.lesson-card {
+  background-color: #fdfcfe;
+  border: 2px solid #d0f0fd;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 20px;
+  color: #333;
+  box-shadow: 0 0 10px rgba(208, 240, 253, 0.2);
+  width: 100%;
+  max-width: 900px;
+  box-sizing: border-box;
+  clear: both;
+  position: relative;
+  display: block;
+}
+
+/* Markdown-style list */
+.markdown...

@@ -81,7 +81,7 @@ body {
 
 .room-button {
   font-family: 'Press Start 2P', cursive; /* Arcade-style font */
-  background: linear-gradient(to bottom, #B0A4E3, #9B8AD6); /* Gradient with palette */
+  background: linear-gradient(to bottom, #B0A4E3, #9B8AD6); /* Gradient */
   color: #FFD700; /* Gold text */
   border: 3px solid #FFD700; /* Gold border */
   padding: 14px 20px; /* Chunky padding */
@@ -92,7 +92,7 @@ body {
   text-transform: uppercase; /* Arcade vibe */
   width: 100%;
   text-align: center;
-  box-shadow: 0 0 8px rgba(255, 215, 0, 0.6), inset 0 0 5px rgba(255, 215, 0, 0.3); /* Glowing effect */
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.6), inset 0 0 5px rgba(255, 215, 0, 0.3); /* Glow */
   transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
 }
 
@@ -106,7 +106,7 @@ body {
 
 .room-button:focus {
   outline: none;
-  box-shadow: 0 0 0 3px #FF8C00, 0 0 15px rgba(255, 140, 0, 0.7); /* Orange focus ring */
+  box-shadow: 0 0 0 3px #FF8C00, 0 0 15px rgba(255, 140, 0, 0.7); /* Orange focus */
 }
 
 @keyframes pulse {
@@ -137,8 +137,8 @@ body {
 }
 
 .avatar-image {
-  width: 65px; /* Original size, unchanged */
-  height: 65px; /* Original size, unchanged */
+  width: 65px; /* Locked at original size */
+  height: 65px; /* Locked at original size */
   border-radius: 50%;
   border: 3px solid #FF8C00;
   box-shadow: 0 0 10px rgba(255, 140, 0, 0.5);
@@ -146,7 +146,7 @@ body {
 }
 
 .avatar-image:hover {
-  transform: scale(1.1); /* Hover scale, as in original */
+  transform: scale(1.1); /* Original hover effect */
 }
 
 .avatar-item p {
@@ -173,7 +173,7 @@ body {
 /* Responsive */
 @media (max-width: 768px) {
   .app-container {
-    flex-direction: column; /* Stack sidebar and main content vertically */
+    flex-direction: column; /* Stack sidebar and main content */
   }
 
   .sidebar {
@@ -192,18 +192,18 @@ body {
   }
 
   .room-button {
-    font-size: 0.8rem; /* Smaller for mobile */
+    font-size: 0.8rem;
     padding: 12px 16px;
   }
 
   .avatar-container {
-    gap: 20px; /* Slightly smaller gap for mobile */
+    gap: 20px;
     padding: 15px;
   }
 
   .avatar-image {
-    width: 65px; /* Ensure unchanged */
-    height: 65px; /* Ensure unchanged */
+    width: 65px; /* Unchanged */
+    height: 65px; /* Unchanged */
   }
 
   .footer {
@@ -222,8 +222,8 @@ body {
   }
 
   .avatar-image {
-    width: 65px; /* Explicitly unchanged */
-    height: 65px; /* Explicitly unchanged */
+    width: 65px; /* Unchanged */
+    height: 65px; /* Unchanged */
   }
 
   .footer {

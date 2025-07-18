@@ -11,7 +11,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 
 import Login from "./components/Login";
-import Landing from "./pages/Landing";
+import Landing from "./components/Landing";
 import ClassGenerator from "./components/ClassGenerator";
 import Homework from "./components/Homework";
 import Lessons from "./components/Lessons";
@@ -35,6 +35,7 @@ import CreativeWritingGame from "./components/CreativeWritingGame";
 import VocabularyCards from "./components/VocabularyCards";
 import WordSearch from "./components/WordSearch";
 import Crossword from "./components/Crossword";
+import "./styles.css";
 
 function MainApp({ user, setUser }) {
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ function MainApp({ user, setUser }) {
 
   const [course, setCourse] = useState(() => {
     try {
-      const storedCourse = localStorage.getItem(course_${user});
+      const storedCourse = localStorage.getItem(`course_${user}`);
       if (storedCourse && storedCourse !== "undefined") {
         return JSON.parse(storedCourse);
       }
@@ -57,7 +58,7 @@ function MainApp({ user, setUser }) {
   useEffect(() => {
     const handleStorageChange = () => {
       try {
-        const storedCourse = localStorage.getItem(course_${user});
+        const storedCourse = localStorage.getItem(`course_${user}`);
         if (storedCourse && storedCourse !== "undefined") {
           setCourse(JSON.parse(storedCourse));
         } else {
@@ -115,20 +116,20 @@ function MainApp({ user, setUser }) {
   };
 
   const renderContent = () => {
-    if (!user) return <p>Please log in to access the app.</p>;
+    if (!user) return <p className="error">Please log in to access the app.</p>;
 
     if (mode === "course" && selectedRoom && !canAccessRoom(selectedRoom)) {
       const incompleteSkill = course.skills?.find(s => (s.completed || 0) < (s.required || 0));
       return (
-        <p style={{ fontSize: "18px" }}>
+        <p className="error">
           🔒 Room locked.{" "}
           {speakingCompleted < 5
-            ? Complete ${5 - speakingCompleted} more ${moduleReason} Speaking lessons.
+            ? `Complete ${5 - speakingCompleted} more ${moduleReason} Speaking lessons.`
             : selectedRoom === "arcade"
             ? "Complete 2 Vocabulary lessons to unlock the Game Room."
             : selectedRoom === "library"
             ? "Complete 2 Grammar lessons to unlock the Library."
-            : Complete ${(incompleteSkill?.required || 0) - (incompleteSkill?.completed || 0)} more in ${incompleteSkill?.skill}.}
+            : `Complete ${(incompleteSkill?.required || 0) - (incompleteSkill?.completed || 0)} more in ${incompleteSkill?.skill}.`}
         </p>
       );
     }
@@ -138,7 +139,7 @@ function MainApp({ user, setUser }) {
         return <ClassGenerator course={course} />;
       case "arcade":
         return (
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
+          <div className="game-container">
             <WordChainGame words={vocab} />
             <WordChainGameExpanded words={wordChainExpandedWords} />
             <QuizGame questions={quizQuestions} />
@@ -160,14 +161,14 @@ function MainApp({ user, setUser }) {
         return <QuizGame questions={quizQuestions} />;
       case "media":
         return (
-          <div style={{ maxWidth: "400px", padding: "20px" }}>
+          <div className="section-border">
             <h3>Media Room</h3>
             <p>Video & Song lessons coming soon!</p>
           </div>
         );
       default:
         return (
-          <div style={{ maxWidth: "400px", padding: "20px", fontSize: "18px" }}>
+          <div className="section-border">
             <h2>Welcome to the Language Learning Arcade!</h2>
             <p>Click a room to start your quest.</p>
           </div>
@@ -176,27 +177,47 @@ function MainApp({ user, setUser }) {
   };
 
   return (
-    <div style={{ padding: "20px", fontFamily: "'Segoe UI', sans-serif" }}>
-      <div style={{ marginBottom: 10, display: "flex", justifyContent: "space-between" }}>
-        <div>Logged in as: <strong>{user}</strong></div>
-        <div>
+    <div className="App">
+      <header className="App-header">
+        <img src="/logo.png" className="App-logo" alt="logo" />
+        <h1>My School App</h1>
+        <nav>
+          <button onClick={() => setMode("arcade")} className={mode === "arcade" ? "active" : ""}>
+            🎮 Arcade
+          </button>
+          <button onClick={() => setMode("course")} className={mode === "course" ? "active" : ""}>
+            📘 Course
+          </button>
           <button onClick={() => navigate("/homework")}>📚 Homework</button>
           <button onClick={() => navigate("/lessons")}>📘 Lessons</button>
           <button onClick={() => navigate("/progress")}>📊 Progress</button>
           <button onClick={handleLogout}>Log Out</button>
+        </nav>
+      </header>
+      <div className="app-container">
+        <div className="sidebar">
+          <h3>Navigation</h3>
+          <ul>
+            <li><button onClick={() => navigate("/homework")} className="App-link">Homework</button></li>
+            <li><button onClick={() => navigate("/lessons")} className="App-link">Lessons</button></li>
+            <li><button onClick={() => navigate("/progress")} className="App-link">Progress</button></li>
+            <li><button onClick={handleLogout} className="App-link">Log Out</button></li>
+          </ul>
+          <div className="user-info">
+            <p>Logged in as: <strong>{user}</strong></p>
+            <p>Mode: <strong>{mode}</strong></p>
+          </div>
+        </div>
+        <div className="main-content">
+          <div className="section-border">
+            <SchoolMap onSelectRoom={setSelectedRoom} />
+            {renderContent()}
+          </div>
         </div>
       </div>
-
-      <div style={{ marginBottom: "20px" }}>
-        <strong>🧭 Mode:</strong>
-        <button onClick={() => setMode("arcade")}>🎮 Arcade</button>
-        <button onClick={() => setMode("course")}>📘 Course</button>
-      </div>
-
-      <div style={{ display: "flex", gap: "30px" }}>
-        <SchoolMap onSelectRoom={setSelectedRoom} />
-        <div style={{ flexGrow: 1 }}>{renderContent()}</div>
-      </div>
+      <footer className="footer">
+        <p>© 2025 Language Learning Arcade. All rights reserved.</p>
+      </footer>
     </div>
   );
 }
@@ -244,8 +265,8 @@ export default function App() {
     return () => unsubscribe();
   }, []);
 
-  if (authLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (authLoading) return <div className="section-border">Loading...</div>;
+  if (error) return <div className="section-border error">Error: {error}</div>;
 
   return (
     <BrowserRouter>
@@ -278,7 +299,7 @@ export default function App() {
                     if (!formData.reason) missing.push("Reason");
 
                     if (missing.length > 0) {
-                      throw new Error(Missing or invalid fields: ${missing.join(", ")});
+                      throw new Error(`Missing or invalid fields: ${missing.join(", ")}`);
                     }
 
                     const userProfileRef = doc(db, "users", userId);
@@ -306,8 +327,8 @@ export default function App() {
                       })),
                     };
 
-                    localStorage.setItem(course_${userId}, JSON.stringify(courseData));
-                    localStorage.setItem(badges_${userId}, JSON.stringify([]));
+                    localStorage.setItem(`course_${userId}`, JSON.stringify(courseData));
+                    localStorage.setItem(`badges_${userId}`, JSON.stringify([]));
 
                     const users = JSON.parse(localStorage.getItem("users") || "{}");
                     users[userId] = {
@@ -321,7 +342,7 @@ export default function App() {
                     setNeedsSetup(false);
                   } catch (error) {
                     console.error("Error saving setup data:", error.message);
-                    alert(Setup failed: ${error.message});
+                    alert(`Setup failed: ${error.message}`);
                   }
                 }}
               />
@@ -333,6 +354,7 @@ export default function App() {
         <Route path="/homework" element={user ? <Homework /> : <Navigate to="/login" />} />
         <Route path="/lessons" element={user ? <Lessons /> : <Navigate to="/login" />} />
         <Route path="/progress" element={user ? <Progress /> : <Navigate to="/login" />} />
+        <Route path="/about" element={<About />} />
       </Routes>
     </BrowserRouter>
   );

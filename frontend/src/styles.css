@@ -83,12 +83,12 @@ body {
   font-family: 'Press Start 2P', cursive; /* Arcade-style font */
   background: linear-gradient(to bottom, #B0A4E3, #9B8AD6); /* Gradient with palette */
   color: #FFD700; /* Gold text */
-  border: 3px solid #FFD700; /* Thicker gold border */
-  padding: 14px 20px; /* Chunkier padding */
-  border-radius: 12px; /* Slightly rounder */
+  border: 3px solid #FFD700; /* Gold border */
+  padding: 14px 20px; /* Chunky padding */
+  border-radius: 12px; /* Rounded edges */
   cursor: pointer;
-  font-size: 0.9rem; /* Smaller for pixel font readability */
-  font-weight: 400; /* Pixel fonts don't need bold */
+  font-size: 0.9rem; /* Readable pixel font */
+  font-weight: 400; /* No bold for pixel font */
   text-transform: uppercase; /* Arcade vibe */
   width: 100%;
   text-align: center;
@@ -97,9 +97,9 @@ body {
 }
 
 .room-button:hover {
-  background: linear-gradient(to bottom, #9B8AD6, #B0A4E3); /* Reverse gradient on hover */
-  color: #FF8C00; /* Orange text on hover */
-  transform: scale(1.1); /* Bigger scale for arcade pop */
+  background: linear-gradient(to bottom, #9B8AD6, #B0A4E3); /* Reverse gradient */
+  color: #FF8C00; /* Orange text */
+  transform: scale(1.1); /* Scale up */
   box-shadow: 0 0 12px rgba(255, 140, 0, 0.8), inset 0 0 8px rgba(255, 140, 0, 0.4); /* Stronger glow */
   animation: pulse 0.5s infinite alternate; /* Pulsating effect */
 }
@@ -120,36 +120,40 @@ body {
   }
 }
 
-/* Lesson Generator */
-.lesson-generator {
-  width: 100%;
-  max-width: 900px;
-  margin: 20px auto;
-  padding: 16px;
-  background: #fdfcfe;
-  border: 2px solid #d0f0fd;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(208, 240, 253, 0.2);
-  box-sizing: border-box;
+/* Avatars */
+.avatar-container {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  gap: 30px;
+  padding: 20px;
 }
 
-/* Section Border */
-.section-border {
-  border: 2px dotted #B0A4E3;
-  border-radius: 12px;
-  background: #ffffffcc;
-  padding: 20px;
-  box-shadow: 0 0 10px rgba(176, 164, 227, 0.5);
-  margin: 20px auto;
-  max-width: 900px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  box-sizing: border-box;
+.avatar-item {
+  text-align: center;
+  flex: 0 0 auto;
+}
+
+.avatar-image {
+  width: 65px; /* Original size, unchanged */
+  height: 65px; /* Original size, unchanged */
+  border-radius: 50%;
+  border: 3px solid #FF8C00;
+  box-shadow: 0 0 10px rgba(255, 140, 0, 0.5);
+  transition: transform 0.3s ease;
+}
+
+.avatar-image:hover {
+  transform: scale(1.1); /* Hover scale, as in original */
+}
+
+.avatar-item p {
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #555;
+  margin-top: 5px;
 }
 
 /* Footer */
@@ -188,13 +192,18 @@ body {
   }
 
   .room-button {
-    font-size: 0.8rem; /* Slightly smaller for mobile */
+    font-size: 0.8rem; /* Smaller for mobile */
     padding: 12px 16px;
   }
 
-  .section-border,
-  .lesson-generator {
-    padding: 10px;
+  .avatar-container {
+    gap: 20px; /* Slightly smaller gap for mobile */
+    padding: 15px;
+  }
+
+  .avatar-image {
+    width: 65px; /* Ensure unchanged */
+    height: 65px; /* Ensure unchanged */
   }
 
   .footer {
@@ -210,6 +219,11 @@ body {
   .room-button {
     font-size: 0.7rem;
     padding: 10px 12px;
+  }
+
+  .avatar-image {
+    width: 65px; /* Explicitly unchanged */
+    height: 65px; /* Explicitly unchanged */
   }
 
   .footer {

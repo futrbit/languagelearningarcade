@@ -73,7 +73,7 @@ nav a:hover {
   gap: 15px;
   flex-wrap: wrap;
   width: 100%;
-  max-width: 900px; /* Matches .section-border max-width */
+  max-width: 900px;
 }
 
 .room-button {
@@ -99,6 +99,20 @@ nav a:hover {
 .room-button:focus {
   outline: 2px solid #7b2cbf;
   outline-offset: 2px;
+}
+
+/* Lesson Generator (New) */
+.lesson-generator {
+  width: 100%;
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 16px;
+  background: #fdfcfe;
+  border: 2px solid #d0f0fd;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(208, 240, 253, 0.2);
+  box-sizing: border-box;
+  clear: both; /* Prevents floating issues */
 }
 
 /* Buttons - Pastel Style */
@@ -230,20 +244,10 @@ h1, h2, h3, h4 {
   margin-bottom: 20px;
   color: #333;
   box-shadow: 0 0 10px rgba(208, 240, 253, 0.2);
-}
-
-.highlight-box {
-  background-color: #f0fdf4;
-  padding: 10px;
-  border-radius: 6px;
-  color: #336633;
-}
-
-.gray-box {
-  background-color: #f5f5f5;
-  padding: 10px;
-  border-radius: 6px;
-  color: #333;
+  width: 100%;
+  max-width: 900px;
+  box-sizing: border-box;
+  clear: both; /* Prevents floating issues */
 }
 
 /* Markdown-style list */
@@ -318,6 +322,10 @@ h1, h2, h3, h4 {
   }
 
   .lesson-card {
+    padding: 10px;
+  }
+
+  .lesson-generator {
     padding: 10px;
   }
 

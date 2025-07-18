@@ -12,22 +12,60 @@ body {
 
 .App {
   text-align: center;
-  padding: 2rem 1rem 100px;
+  font-family: 'Montserrat', sans-serif;
+  padding: 1rem;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #B0A4E3 0%, #9B8AD6 100%);
+  color: #333;
 }
 
 /* Header */
 .App-header {
-  background: linear-gradient(to right, #b8a1d9, #d0f0fd);
+  background: linear-gradient(to bottom, #B0A4E3, #9B8AD6);
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
   padding: 2rem;
-  color: #333;
-  text-shadow: none;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-.App-header h1 {
-  font-family: 'Press Start 2P', cursive;
-  font-size: 2rem;
-  margin: 0;
-  color: #7b2cbf;
+.App-logo {
+  height: 150px;
+  margin-bottom: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.App-logo:hover {
+  transform: scale(1.05);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.App-link {
+  color: #FFD700;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.App-link:hover {
+  color: #FF8C00;
 }
 
 nav {
@@ -38,14 +76,14 @@ nav {
 }
 
 nav a {
-  color: #7b2cbf;
-  font-weight: bold;
+  color: #FFD700; /* Updated to match .App-link */
+  font-weight: 700;
   text-decoration: none;
   font-size: 1.1rem;
 }
 
 nav a:hover {
-  color: #ffb6b9;
+  color: #FF8C00; /* Updated to match .App-link:hover */
 }
 
 /* School Map */
@@ -62,9 +100,10 @@ nav a:hover {
 .school-map-title {
   font-family: 'Press Start 2P', cursive;
   font-size: 1.5rem;
-  color: #7b2cbf;
+  color: #FFD700; /* Matches nav a */
   margin-bottom: 1rem;
   text-align: center;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Matches .App-header */
 }
 
 .room-buttons {
@@ -79,8 +118,8 @@ nav a:hover {
 .room-button {
   font-family: 'Montserrat', sans-serif;
   background: #ffd3b6;
-  color: #7b2cbf;
-  border: 2px solid #b8a1d9;
+  color: #333;
+  border: 2px solid #B0A4E3; /* Matches .App background */
   padding: 10px 16px;
   border-radius: 10px;
   cursor: pointer;
@@ -92,16 +131,16 @@ nav a:hover {
 
 .room-button:hover {
   background: #ffe0c3;
-  border-color: #a8e6cf;
+  border-color: #9B8AD6; /* Matches .App gradient */
   transform: scale(1.03);
 }
 
 .room-button:focus {
-  outline: 2px solid #7b2cbf;
+  outline: 2px solid #FFD700; /* Matches nav a */
   outline-offset: 2px;
 }
 
-/* Lesson Generator (New) */
+/* Lesson Generator */
 .lesson-generator {
   width: 100%;
   max-width: 900px;
@@ -112,7 +151,7 @@ nav a:hover {
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(208, 240, 253, 0.2);
   box-sizing: border-box;
-  clear: both; /* Prevents floating issues */
+  clear: both;
 }
 
 /* Buttons - Pastel Style */
@@ -121,7 +160,7 @@ button,
   font-family: 'Montserrat', sans-serif;
   background: #ffd3b6;
   color: #333;
-  border: 2px solid #b8a1d9;
+  border: 2px solid #B0A4E3;
   padding: 12px 20px;
   border-radius: 10px;
   cursor: pointer;
@@ -133,7 +172,7 @@ button,
 button:hover,
 .button-primary:hover {
   background: #ffe0c3;
-  border-color: #a8e6cf;
+  border-color: #9B8AD6;
   transform: scale(1.03);
 }
 
@@ -149,7 +188,7 @@ input, textarea {
   padding: 10px;
   font-size: 1rem;
   border-radius: 6px;
-  border: 2px solid #b8a1d9;
+  border: 2px solid #B0A4E3;
   background: #fff;
   color: #000;
   width: 100%;
@@ -159,24 +198,27 @@ input, textarea {
 
 input:focus, textarea:focus {
   outline: none;
-  border-color: #ffb6b9;
+  border-color: #FF8C00; /* Matches .App-link:hover */
 }
 
 /* Section Border */
 .section-border {
-  border: 2px dotted #b8a1d9;
+  border: 2px dotted #B0A4E3;
   border-radius: 12px;
   background: #ffffffcc;
   padding: 20px;
-  box-shadow: 0 0 10px #b8a1d950;
+  box-shadow: 0 0 10px rgba(176, 164, 227, 0.5);
   margin: 20px auto;
   max-width: 900px;
+  display: flex;
+  flex-direction: column; /* Ensures vertical stacking */
+  align-items: center;
 }
 
 /* Headings */
 h1, h2, h3, h4 {
-  color: #7b2cbf;
-  text-shadow: none;
+  color: #FFD700; /* Matches nav a */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 /* Progress Bars */
@@ -187,7 +229,7 @@ h1, h2, h3, h4 {
 .progress-bar {
   width: 100%;
   background-color: #eee;
-  border: 2px solid #b8a1d9;
+  border: 2px solid #B0A4E3;
   border-radius: 10px;
   overflow: hidden;
   margin-top: 10px;
@@ -217,7 +259,7 @@ h1, h2, h3, h4 {
 
 .skill-progress-bar {
   background-color: #f0f0f0;
-  border: 2px solid #b8a1d9;
+  border: 2px solid #B0A4E3;
   border-radius: 8px;
   height: 20px;
   overflow: hidden;
@@ -225,7 +267,7 @@ h1, h2, h3, h4 {
 
 .skill-progress-fill {
   height: 100%;
-  background: linear-gradient(to right, #d0f0fd, #b8a1d9);
+  background: linear-gradient(to right, #d0f0fd, #9B8AD6);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -247,7 +289,7 @@ h1, h2, h3, h4 {
   width: 100%;
   max-width: 900px;
   box-sizing: border-box;
-  clear: both; /* Prevents floating issues */
+  clear: both;
 }
 
 /* Markdown-style list */
@@ -280,8 +322,8 @@ h1, h2, h3, h4 {
   width: 65px;
   height: 65px;
   border-radius: 50%;
-  border: 3px solid #ffb6b9;
-  box-shadow: 0 0 10px #ffb6b955;
+  border: 3px solid #FF8C00;
+  box-shadow: 0 0 10px rgba(255, 140, 0, 0.5);
   transition: transform 0.3s ease;
 }
 
@@ -307,7 +349,7 @@ h1, h2, h3, h4 {
   padding: 10px;
   font-size: 0.8rem;
   z-index: 999;
-  border-top: 2px solid #b8a1d9;
+  border-top: 2px solid #B0A4E3;
 }
 
 /* Responsive */
@@ -321,10 +363,7 @@ h1, h2, h3, h4 {
     font-size: 0.9rem;
   }
 
-  .lesson-card {
-    padding: 10px;
-  }
-
+  .lesson-card,
   .lesson-generator {
     padding: 10px;
   }
@@ -344,7 +383,16 @@ h1, h2, h3, h4 {
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
+  .App-header {
+    font-size: 1rem;
+    padding: 1rem;
+  }
+
+  .App-logo {
+    height: 100px;
+  }
+
   .footer {
     font-size: 0.7rem;
   }

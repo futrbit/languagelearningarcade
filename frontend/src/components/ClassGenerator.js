@@ -37,7 +37,7 @@ export default function ClassGenerator() {
 
   const API_URL = process.env.NODE_ENV === "production"
     ? "https://languagelearningarcade.onrender.com"
-    : "http://127.0.0.1:8000";
+    : "https://languagearcade.xyz";
 
   const teachers = [
     { name: "Emma", avatar: "/emma.png" },

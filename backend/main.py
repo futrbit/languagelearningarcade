@@ -31,7 +31,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        "http://127.0.0.1:3000",
+        "https://languagearcade.xyz",
         "https://llafrontend.onrender.com",
     ],
     allow_credentials=True,
@@ -235,7 +235,7 @@ async def get_remaining_calls_endpoint(user: dict = Depends(get_current_user)):
     return JSONResponse(
         content={"remaining_calls": remaining},
         headers={
-            "Access-Control-Allow-Origin": "https://llafrontend.onrender.com",
+            "Access-Control-Allow-Origin": "https://languagearcade.xyz",
             "Access-Control-Allow-Credentials": "true",
         }
     )
